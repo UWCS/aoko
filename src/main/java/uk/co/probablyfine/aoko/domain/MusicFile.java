@@ -3,12 +3,14 @@ package uk.co.probablyfine.aoko.domain;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import uk.co.probablyfine.aoko.util.FileType;
 
+@Embeddable
 @Entity
 public class MusicFile {
 

@@ -21,14 +21,22 @@ public class QueueItem implements Comparable<QueueItem>{
 	private MusicFile file;
 	
 	@Column(nullable = false)
-	public User user;
+	private String userName;
 	
 	private PlayerState state;
 	
 	public QueueItem(User user, MusicFile file) {
-		this.user = user;
+		this.userName = user.getUsername();
 		this.file = file;
 		this.setState(PlayerState.QUEUED);
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 	public int getId() {
@@ -37,14 +45,6 @@ public class QueueItem implements Comparable<QueueItem>{
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	public int getBucket() {

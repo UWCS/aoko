@@ -1,5 +1,6 @@
 package uk.co.probablyfine.aoko.domain;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -43,6 +44,5 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 	
 }

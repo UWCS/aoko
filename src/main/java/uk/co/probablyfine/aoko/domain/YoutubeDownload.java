@@ -12,6 +12,10 @@ import uk.co.probablyfine.aoko.util.DownloadState;
 @Entity
 public class YoutubeDownload {
 	
+	public YoutubeDownload() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Id
 	@GeneratedValue
 	private int id;

@@ -1,15 +1,35 @@
 package uk.co.probablyfine.aoko.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import uk.co.probablyfine.aoko.util.PlayerState;
 
 @Entity
 public class QueueItem implements Comparable<QueueItem>{
 
+	@Id
+	@GeneratedValue
 	private int id;
+	
 	private int bucket;
+	
 	private int position;
+	
 	private MusicFile file;
-	private User user;
+	
+	@Column(nullable = false)
+	public User user;
+	
+	private PlayerState state;
+	
+	public QueueItem(User user, MusicFile file) {
+		this.user = user;
+		this.file = file;
+		this.setState(PlayerState.QUEUED);
+	}
 	
 	public int getId() {
 		return id;
@@ -52,7 +72,17 @@ public class QueueItem implements Comparable<QueueItem>{
 	}
 
 	public int compareTo(QueueItem arg0) {
+		//TODO: Make this not utterly broken		
 		return -1;
+		
+	}
+
+	public void setState(PlayerState state) {
+		this.state = state;
+	}
+
+	public PlayerState getState() {
+		return state;
 	}
 
 	

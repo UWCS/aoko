@@ -23,7 +23,7 @@ public class QueueItem implements Comparable<QueueItem>{
 	@Column(nullable = false)
 	private String userName;
 	
-	private PlayerState state;
+	private PlayerState status;
 	
 	public QueueItem(User user, MusicFile file) {
 		this.userName = user.getUsername();
@@ -78,11 +78,11 @@ public class QueueItem implements Comparable<QueueItem>{
 	}
 
 	public void setState(PlayerState state) {
-		this.state = state;
+		this.status = state;
 	}
 
 	public PlayerState getState() {
-		return state;
+		return status;
 	}
 
 	

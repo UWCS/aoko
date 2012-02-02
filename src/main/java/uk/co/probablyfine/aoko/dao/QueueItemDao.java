@@ -1,5 +1,9 @@
 package uk.co.probablyfine.aoko.dao;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,17 +11,20 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
-import javax.persistence.criteria.Predicate.BooleanOperator;
 
 import org.springframework.stereotype.Repository;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.QueueItem;
 import uk.co.probablyfine.aoko.domain.QueueItem_;
 import uk.co.probablyfine.aoko.domain.User;
+import uk.co.probablyfine.aoko.util.PlayerState;
 
 @Repository
 public class QueueItemDao {
@@ -25,12 +32,59 @@ public class QueueItemDao {
 	@PersistenceContext
 	private EntityManager em;
 	
-	public void queueTrack(User user, MusicFile track) {
+	public void queueTrack(final User user, final MusicFile track) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
-		cq.select(root.get(QueueItem_.bucket));
-		cq.where(cb.equal(root.get(QueueItem_.userName),user.getUsername()));
+		
+		//Get all queued items that haven't been played or are playing
+		cq.where(cb.notEqual(root.get(QueueItem_.status), "played"));
+		
+		List<QueueItem> results = em.createQuery(cq).getResultList();
+		List<QueueItem> process = new ArrayList<QueueItem>();
+		
+		process.addAll(process);
+				
+		Collections.sort(process);
+		
+		//The bucket we're in at the moment
+		int currentbucket = process.get(0).getBucket();
+
+		//Filter out only the items from this user
+		Collections2.filter(process, new Predicate<QueueItem>() {
+			@Override
+			public boolean apply(QueueItem input) {
+				return input.getUserName() == user.getUsername();
+			}
+		});
+		
+		//Get all of the buckets that this user has items in
+		Collections2.transform(process, new Function<QueueItem, Integer>() {
+			@Override
+			public Integer apply(QueueItem input) {
+				return input.getBucket();
+			}
+		});
+		
+		while (process.contains(currentbucket)) {
+			currentbucket++;
+		}
+		
+		final int finalBucket = currentbucket;
+		
+		int max = Collections.max(Collections2.filter(results, new Predicate<QueueItem>() {
+			@Override
+			public boolean apply(QueueItem input) {
+				return input.getBucket() == finalBucket;
+			}
+		})).getPosition() ;
+		
+		QueueItem qi = new QueueItem(user, track);
+		qi.setBucket(finalBucket);
+		qi.setPosition(max);
+
+		em.merge(qi);
+		
 	}
 	
 	

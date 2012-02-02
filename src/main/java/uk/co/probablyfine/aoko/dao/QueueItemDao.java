@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -32,13 +33,14 @@ public class QueueItemDao {
 	@PersistenceContext
 	private EntityManager em;
 	
+	@Transactional
 	public void queueTrack(final User user, final MusicFile track) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		
 		//Get all queued items that haven't been played or are playing
-		cq.where(cb.notEqual(root.get(QueueItem_.status), "played"));
+		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
 		
 		List<QueueItem> results = em.createQuery(cq).getResultList();
 		List<QueueItem> process = new ArrayList<QueueItem>();
@@ -50,16 +52,16 @@ public class QueueItemDao {
 		//The bucket we're in at the moment
 		int currentbucket = process.get(0).getBucket();
 
-		//Filter out only the items from this user
+		//
 		Collections2.filter(process, new Predicate<QueueItem>() {
 			@Override
 			public boolean apply(QueueItem input) {
 				return input.getUserName() == user.getUsername();
 			}
 		});
-		
-		//Get all of the buckets that this user has items in
+				
 		Collections2.transform(process, new Function<QueueItem, Integer>() {
+
 			@Override
 			public Integer apply(QueueItem input) {
 				return input.getBucket();
@@ -85,6 +87,23 @@ public class QueueItemDao {
 
 		em.merge(qi);
 		
+	}
+	
+	@Transactional(readOnly = true)
+	public QueueItem nextTrack() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
+		Root<QueueItem> root = cq.from(QueueItem.class);
+		
+		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
+	
+		return em.createQuery(cq).setMaxResults(1).getSingleResult();
+		
+		
+	}
+	
+	public void merge(QueueItem qi) {
+		em.merge(qi);
 	}
 	
 	

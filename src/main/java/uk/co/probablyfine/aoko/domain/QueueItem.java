@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 
 import uk.co.probablyfine.aoko.util.PlayerState;
 
@@ -18,7 +20,9 @@ public class QueueItem implements Comparable<QueueItem>{
 	
 	private int position;
 	
-	private MusicFile file;
+	//HACK
+	@OneToOne(targetEntity=MusicFile.class)
+	private MusicFile musicFile;
 	
 	@Column(nullable = false)
 	private String userName;
@@ -27,7 +31,7 @@ public class QueueItem implements Comparable<QueueItem>{
 	
 	public QueueItem(User user, MusicFile file) {
 		this.userName = user.getUsername();
-		this.file = file;
+		this.musicFile = file;
 		this.setState(PlayerState.QUEUED);
 	}
 	
@@ -64,11 +68,11 @@ public class QueueItem implements Comparable<QueueItem>{
 	}
 
 	public MusicFile getFile() {
-		return file;
+		return musicFile;
 	}
 
 	public void setFile(MusicFile file) {
-		this.file = file;
+		this.musicFile = file;
 	}
 
 	public int compareTo(QueueItem arg0) {

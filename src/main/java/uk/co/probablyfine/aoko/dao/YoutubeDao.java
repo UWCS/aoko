@@ -17,7 +17,7 @@ import uk.co.probablyfine.aoko.util.DownloadState;
 public class YoutubeDao {
 
 	@PersistenceContext
-	private EntityManager em;
+	EntityManager em;
 	
 	@Transactional(readOnly = true)
 	public YoutubeDownload next() {

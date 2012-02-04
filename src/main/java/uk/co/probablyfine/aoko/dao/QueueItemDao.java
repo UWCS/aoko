@@ -31,7 +31,7 @@ import uk.co.probablyfine.aoko.util.PlayerState;
 public class QueueItemDao {
 
 	@PersistenceContext
-	private EntityManager em;
+	EntityManager em;
 	
 	@Transactional
 	public void queueTrack(final User user, final MusicFile track) {
@@ -99,9 +99,9 @@ public class QueueItemDao {
 	
 		return em.createQuery(cq).setMaxResults(1).getSingleResult();
 		
-		
 	}
 	
+	@Transactional
 	public void merge(QueueItem qi) {
 		em.merge(qi);
 	}

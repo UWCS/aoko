@@ -12,10 +12,6 @@ import uk.co.probablyfine.aoko.util.DownloadState;
 @Entity
 public class YoutubeDownload {
 	
-	public YoutubeDownload() {
-		// TODO Auto-generated constructor stub
-	}
-	
 	@Id
 	@GeneratedValue
 	private int id;
@@ -27,12 +23,13 @@ public class YoutubeDownload {
 	@Enumerated(EnumType.STRING)
 	private DownloadState state;
 	
-	private User queuedBy;
-
-	public YoutubeDownload(String url) {
+	@Column(nullable = false)
+	private String queuedBy;
+	
+	/*public YoutubeDownload(String url) {
 		this.url = url;
 		this.state = DownloadState.WAITING;
-	}
+	}*/
 	
 	public int getId() {
 		return id;
@@ -58,11 +55,11 @@ public class YoutubeDownload {
 		this.state = state;
 	}
 
-	public void setQueuedBy(User queuedBy) {
+	public void setQueuedBy(String queuedBy) {
 		this.queuedBy = queuedBy;
 	}
 
-	public User getQueuedBy() {
+	public String getQueuedBy() {
 		return queuedBy;
 	}
 

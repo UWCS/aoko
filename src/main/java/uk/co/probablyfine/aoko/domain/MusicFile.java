@@ -3,14 +3,15 @@ package uk.co.probablyfine.aoko.domain;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 import uk.co.probablyfine.aoko.util.FileType;
 
-@Embeddable
 @Entity
 public class MusicFile {
 
@@ -36,6 +37,7 @@ public class MusicFile {
 	/*
 	 * File metadata, for display/view purposes
 	 */
+	@ElementCollection
 	@Column(nullable = false)
 	private Map<String,String> metaData;
 	

@@ -27,6 +27,16 @@
 				</configuration>
 			</plugin>
 			<plugin>
+         <groupId>org.mortbay.jetty</groupId>
+         <artifactId>jetty-maven-plugin</artifactId>
+         <configuration>
+             <scanIntervalSeconds>10</scanIntervalSeconds>
+             <webAppConfig>
+                 <contextPath>/</contextPath>
+             </webAppConfig>
+         </configuration>
+       </plugin>
+			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
 				<version>2.0.5</version>
@@ -115,12 +125,6 @@
 			<version>1.6.4</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.10</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.2.0.Final</version>
@@ -152,6 +156,11 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>4.0.1.Final</version>
 		</dependency>
+				<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
 		
 		<!-- Other dependencies -->
 		<dependency>
@@ -169,6 +178,11 @@
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
 		</dependency>
+		  <dependency>
+	    <groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	    <version>5.1.6</version>
+	</dependency>
 
 	</dependencies>
 </project>

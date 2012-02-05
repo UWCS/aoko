@@ -1,10 +1,10 @@
 package uk.co.probablyfine.aoko.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
 import uk.co.probablyfine.aoko.util.PlayerState;
@@ -12,6 +12,10 @@ import uk.co.probablyfine.aoko.util.PlayerState;
 @Entity
 public class QueueItem implements Comparable<QueueItem>{
 
+	public QueueItem() {
+		this.setState(PlayerState.QUEUED);
+	}
+	
 	@Id
 	@GeneratedValue
 	private int id;
@@ -21,7 +25,8 @@ public class QueueItem implements Comparable<QueueItem>{
 	private int position;
 	
 	//HACK
-	@OneToOne(targetEntity=MusicFile.class)
+	
+	@OneToOne(targetEntity=MusicFile.class,cascade=CascadeType.ALL)
 	private MusicFile musicFile;
 	
 	@Column(nullable = false)
@@ -89,5 +94,8 @@ public class QueueItem implements Comparable<QueueItem>{
 		return status;
 	}
 
+	public String toString() {
+		return musicFile.getUniqueId() + " - " + userName;
+	}
 	
 }

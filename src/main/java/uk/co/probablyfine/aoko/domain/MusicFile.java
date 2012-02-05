@@ -1,14 +1,15 @@
 package uk.co.probablyfine.aoko.domain;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 
 import uk.co.probablyfine.aoko.util.FileType;
 
@@ -37,9 +38,8 @@ public class MusicFile {
 	/*
 	 * File metadata, for display/view purposes
 	 */
-	@ElementCollection
-	@Column(nullable = false)
-	private Map<String,String> metaData;
+	@ElementCollection(fetch = FetchType.LAZY)
+	private Map<String,String> metaData = new HashMap<String, String>();
 	
 	/*
 	 * Filehash for uploads, song/video id for others
@@ -47,12 +47,13 @@ public class MusicFile {
 	@Column(nullable = false)
 	private String uniqueId;
 
-	public MusicFile(FileType type, String location,
-			Map<String, String> metaData, String uniqueId) {
-		super();
+	public MusicFile() {
+		
+	}
+	
+	public MusicFile(FileType type, String location, String uniqueId) {
 		this.type = type;
 		this.location = location;
-		this.metaData = metaData;
 		this.uniqueId = uniqueId;
 	}
 	

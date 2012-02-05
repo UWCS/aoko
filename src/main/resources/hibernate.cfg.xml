@@ -3,6 +3,7 @@
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
+    <property name="hibernate.hbm2ddl.auto">update</property>
     <mapping class="uk.co.probablyfine.aoko.domain.MusicFile"/>
 		<mapping class="uk.co.probablyfine.aoko.domain.QueueItem"/>
 		<mapping class="uk.co.probablyfine.aoko.domain.User"/>

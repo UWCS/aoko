@@ -59,12 +59,8 @@ public class QueueItemDao {
 		
 		//The bucket we're in at the moment
 		if (process.size() != 0) {
-			System.out.println("No items from this user");
 			int currentbucket = process.get(0).getBucket();
 			
-			
-					
-			//List<Integer> buckets = new ArrayList<Integer>();
 			List<QueueItem> bucketItems = new ArrayList<QueueItem>();
 			bucketItems.addAll(Collections2.filter(process, new Predicate<QueueItem>() {
 				@Override
@@ -107,15 +103,10 @@ public class QueueItemDao {
 				position = Collections.max(currentBucketList).getPosition()+1;
 			}
 			
-			
-			
-				
 		} else if (results.size() != 0) {
-			System.err.println("No results from this user");
 			finalBucket = results.get(results.size()-1).getBucket()+1;
 			position = 1;
 		} else {
-			System.out.println("Entire thing is empty");
 			finalBucket = 1;
 			position = 1;
 		}
@@ -156,6 +147,57 @@ public class QueueItemDao {
 	public void merge(QueueItem qi) {
 			em.merge(qi);
 
+	}
+	
+	@Transactional
+	public void shift(String user, int bucket, int mod) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
+		Root<QueueItem> root = cq.from(QueueItem.class);
+		
+		cq.where(cb.equal(root.get(QueueItem_.userName), user));
+		cq.where(cb.between(root.get(QueueItem_.bucket), bucket, bucket+mod));
+		cq.where(cb.equal(root.get(QueueItem_.status), PlayerState.QUEUED));
+		
+		List<QueueItem> results = new ArrayList<QueueItem>();
+		results.addAll(em.createQuery(cq).getResultList());
+		
+		//If we have less than 2 results, then there's nothing to do.
+		if (results.size() < 2)	
+			return;
+		
+		Collections.sort(results);
+		
+		QueueItem qi1 = results.get(0);
+		QueueItem qi2 = results.get(1);
+		
+		int bucket1 = qi1.getBucket();
+		int bucket2 = qi2.getBucket();
+		
+		int pos1 = qi1.getPosition();
+		int pos2 = qi2.getPosition();
+
+		qi1.setBucket(bucket2);
+		qi1.setPosition(pos2);
+		
+		qi2.setBucket(-1);
+		qi2.setPosition(-1);
+	
+		em.merge(qi2);
+		em.merge(qi1);
+		
+		qi2.setPosition(pos1);
+		qi2.setBucket(bucket1);
+		em.merge(qi2);
+		
+	}
+	
+	public void shiftUp(String user, int bucket) {
+		this.shift(user, bucket, -1);
+	}
+	
+	public void shiftDown(String user, int bucket) {
+		this.shift(user, bucket, 1);
 	}
 	
 	

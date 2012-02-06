@@ -19,4 +19,10 @@ public class HomeController {
 		return "index";
 	}
 	
+	@RequestMapping("/update")
+	public String getUpdate(Model m) {
+		//m.addAttribute("ALL THE DIFF JIZZ");
+		return "index";
+	}
+	
 }

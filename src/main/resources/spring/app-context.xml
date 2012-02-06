@@ -5,51 +5,18 @@
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
     <context:component-scan base-package="uk.co.probablyfine.aoko" />
     <mvc:annotation-driven  validator="validator" />
 		<context:annotation-config />
-	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-    
+	
+		<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
 		<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
         <property name="prefix" value="/WEB-INF/jsp/"></property>
         <property name="suffix" value=".jsp"></property>
     </bean>
-    
-    <tx:annotation-driven transaction-manager="transactionManager" />
-
-		<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-			<property name="entityManagerFactory" ref="entityManagerFactory" />
-			<property name="dataSource" ref="dataSource"/>
-			
-		</bean>
-
-		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-			<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-			<property name="url" value="jdbc:mysql://localhost/musicserver" />
-			<property name="username" value="musicserver" />
-			<property name="password" value="ponies" />
-		</bean>
-		
-		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-			<property name="dataSource" ref="dataSource" />
-			<property name="jpaVendorAdapter">
-				<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-					<property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect" />
-					<property name="showSql" value="true" />
-					<property name="generateDdl" value="true" />
-				</bean>
-			</property>
-			<property name="jpaProperties">
-				<props>
-					<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
-				</props>
-			</property>
-		</bean>
 
 </beans>

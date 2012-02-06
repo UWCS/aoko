@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -27,7 +28,6 @@ import com.google.common.collect.Collections2;
 
 @Repository
 public class QueueItemDao {
-
 	
 	@PersistenceContext
 	EntityManager em;
@@ -127,8 +127,14 @@ public class QueueItemDao {
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		
 		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
-	
-		return em.createQuery(cq).setMaxResults(1).getSingleResult();
+		QueueItem qi = null;
+		try {
+			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
+		} catch (NoResultException e) {
+			return qi;
+		}
+		
+		return qi; 
 		
 	}
 	@Transactional(readOnly = true)
@@ -136,17 +142,25 @@ public class QueueItemDao {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
-		
 		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
-	
 		return em.createQuery(cq).getResultList();
+	}
 	
+	@Transactional
+	public void finishedPlaying(QueueItem qi) {
+		qi.setState(PlayerState.PLAYED);
+		em.merge(qi);
+	}
+	
+	@Transactional
+	public void startedPlaying(QueueItem qi) {
+		qi.setState(PlayerState.PLAYING);
+		em.merge(qi);
 	}
 	
 	@Transactional
 	public void merge(QueueItem qi) {
 			em.merge(qi);
-
 	}
 	
 	@Transactional
@@ -155,6 +169,11 @@ public class QueueItemDao {
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		
+		/* Get all items with:
+		 *  - Name = User
+		 *  - Bucket Index = Equal to this one or the one above/below it
+		 *  - Status = Not yet played/playing
+		 */
 		cq.where(cb.equal(root.get(QueueItem_.userName), user));
 		cq.where(cb.between(root.get(QueueItem_.bucket), bucket, bucket+mod));
 		cq.where(cb.equal(root.get(QueueItem_.status), PlayerState.QUEUED));

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import uk.co.probablyfine.aoko.dao.QueueItemDao;
 
 @Controller
-
 public class HomeController {
 	
 	@Autowired

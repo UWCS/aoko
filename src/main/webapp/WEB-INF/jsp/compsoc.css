@@ -1,0 +1,694 @@
+/*** Basic Setup ***/
+
+/* Reset everything to give us a chance of a clean start in all browsers */
+
+html, body, p, ul, ol, li, form, fieldset, blockquote, h1, h2, h3, h4, h5, h6, img {
+	margin: 0;
+	padding: 0;
+	font-weight: normal;
+	font-size: 1em;
+	list-style: none;
+	border: 0;
+}
+
+input {
+	margin: 0;
+	padding: 0;
+	font-weight: normal;
+	font-size: 1em;
+}
+
+/* Set some defaults */
+
+body {
+	font-size: 0.85em;
+	font-family:"Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+}
+
+p {
+	line-height: 1.5em;
+}
+
+/*** Layout ***/
+
+body, html {
+	height: 100%;
+} 
+
+body {
+	margin: 0 auto;
+	min-width: 800px;
+	max-width: 1200px;
+	text-align: left;
+}
+
+html {
+	text-align: center;
+}
+
+#container {
+    min-height: 100%;
+    margin-bottom: -40px;
+}
+
+/* IE6 Hack for min-height */
+* html #container {
+    height: 100%;
+}
+
+/* Footer */
+
+#footer-spacer {
+	padding-top: 20px;
+	height: 40px;
+	clear: both;
+}
+
+#footer {
+	height: 29px;
+	font-size: 0.8em;
+	text-align: right;
+	padding: 5px;
+}
+
+/* Header */
+
+#header {
+	width: 100%;
+	padding-top: 20px;	
+	height: 140px;
+}
+
+#logo {
+	padding-left: 30px;
+}
+
+#logo img {
+	vertical-align: top;
+}
+
+#logo h1 {
+	display: inline;
+}
+
+/* Top right box */
+
+#top-right {
+	float: right;
+	padding-right: 30px;
+	text-align: right;
+}
+
+/* Search box */
+#top-right input {
+	width: 170px;
+	margin-top: 10px;
+	padding-left: 20px;
+}
+
+/* Menu */
+
+#menu {
+	margin-top: -20px;
+	float: right;
+	padding-right: 30px;
+}
+
+#menu ul {
+	list-style: none;
+}
+
+#menu li {
+	display: inline;
+}
+
+#menu a {
+	display: block;
+	float: left;
+	margin-left: 20px;
+	text-decoration: none;
+	font-size: 1.36em;
+}
+
+/* Sidebar */
+
+#sidebar {
+	float: right;
+	width: 200px;
+	margin-left: 20px;
+	margin-right: 30px;
+	/* Horrific IE6 Hack */
+	-margin-right: 15px;
+}
+
+#sidebar ul {
+	padding: 10px 0;
+}
+
+#sidebar li {
+	margin-left: 10px;
+}
+
+#sidebar li li form  {
+	padding-left: 15px;
+	margin: 10px;
+}
+
+#sidebar li li a {
+	padding: 5px 5px 5px 20px;
+	width: 141px;
+	display: block;
+}
+
+#sidebar h2 {
+	padding: 5px 0 0 20px;
+}
+
+#sidebar .cms {
+	margin: 10px 10px 10px 5px;
+	padding-bottom: 10px;
+}
+
+#sidebar ul .cms ul {
+	padding: 0 0 0 15px;
+}
+
+#sidebar ul .cms li {
+	padding-top: 5px;
+}
+
+#sidebar ul .cms li a {
+	display: inline;
+	border: 0;
+	padding: 0;
+}
+
+#sidebar form.revisions input {
+ margin: 10px;
+}
+
+/* Page layout */
+
+#page {
+	margin-top: 30px;
+	margin-left: 30px;
+}
+
+#content {
+	margin-right: 260px;
+}
+
+/* Content layout */
+
+dl {
+	margin: 10px;
+	padding: 0px
+}
+
+dl dl {
+	margin-left: -150px;
+}
+
+dt {
+	float: left;
+	width: 14em;
+	font-weight: bold;
+	text-align: right;
+	padding-right: 20px;
+	line-height: 1em;
+}
+
+dd {
+    line-height:1em;
+	margin-bottom: 5px;
+	margin-left: 210px;
+}
+
+h2, h3 {
+	font-weight: normal;
+	font-size: 24px;
+}
+
+p {
+	margin: 10px;
+}
+
+input {
+	padding: 1px;
+}
+
+/* Content appearance */
+
+.entry p {
+	line-height: 1.35em;
+}
+
+
+.entry h2 {
+	margin-top: 1em;
+}
+
+/* Specific items */
+
+/* Admin edit buttons */
+a.edit {
+	float: right;
+	padding: 5px;
+	font-weight: bold;
+}
+
+.post {
+	padding: 20px;
+	margin-bottom: 20px;
+}
+
+.meta, .meta p {
+	text-align: right;
+	margin: 0;
+}
+
+.box {
+	margin: 10px 0;
+}
+
+.box label {
+	/*margin: 0 20px;*/
+	font-weight: bold;
+	float: left;
+	width: 7em;
+	margin-right: 1em;
+	text-align: right;
+	line-height: 1.5em;
+}
+
+.box .input {
+	margin: 10px;
+}
+
+.box textarea {
+	vertical-align: top;
+}
+
+.box .errorlist li {
+	display: block;
+}
+
+.box .errorlist {
+	display: block;
+	float: right;
+	padding: 5px 10px;
+	margin-left: 50px;
+	background-color: #333;
+}
+
+.crumbs {
+	margin-bottom: 20px;
+}
+
+.notification {
+	text-align: center;
+	padding: 10px;
+}
+
+p.comment {
+	padding: 5px 10px;
+	margin: 10px;
+}
+
+.search_result a {
+	font-size: large;
+}
+
+.result_text {
+	font-size: smaller;
+}
+
+.byline {
+	margin: 0;
+}
+
+/*** Colours ***/
+
+body {
+	color: #ccc;
+	background-color: #222;
+}
+
+html {
+	background-color: #444;
+}
+
+a {
+	color: #F0BC20;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #46B;
+}
+
+input, input, textarea, select{
+	color: #ddd;
+	border: 1px solid #888;
+	background-color: #181818;
+}
+
+#footer, #container {
+	border-right: 1px solid #888;
+	border-left: 1px solid #888;
+}
+
+#container {
+	background-color: #222;
+}
+
+#footer {
+	border-top: 1px solid #aaa;
+	background-color: #111;
+	color: #aaa;
+}
+
+#header {
+	border-bottom: 1px solid #aaa;
+	background-color: #111;
+	color: #ddd;
+}
+
+#menu a {
+	color: #ddd;
+}
+
+#menu a:hover, .active a {
+	border-bottom: 3px solid #ddd;
+}
+
+#sidebar {
+	background: #333 url(/static/sidebg.png) repeat-y left;
+	border: 1px solid #444;
+}
+
+#sidebar {
+	float: right;
+	width: 200px;
+	margin-left: 20px;
+	margin-right: 30px;
+	/* Horrific IE6 Hack */
+	-margin-right: 15px;
+}
+
+#sidebar li li a {
+	border-bottom: 1px dotted #bbb;
+	text-decoration: none;
+	color: #3193FF;
+}
+
+#sidebar .cms {
+	border-top: 1px dotted #bbb;
+	border-bottom: 1px dotted #bbb;
+}
+
+
+/* Search box */
+#top-right input {
+	background: #181818 url(/static/img/magnifier.png) no-repeat 2px center;
+	border: 1px solid #888;
+}
+
+/* Specific items */
+
+.post {
+	background: #222 url(/static/img/postbg.png) repeat-x top;
+	border: 1px solid #333;
+}
+
+.title {
+	border-bottom: 2px solid #484848;
+}
+
+.notification {
+	background-color: #333;
+}
+
+p.comment {
+	background-color: #444;
+}
+
+.box {
+	border-bottom: 1px solid #aaa;
+}
+
+/* Rollout stuff, tidy up later */
+
+#archivelist {
+	overflow: hidden;
+	height: 214px;
+}
+
+#archivemore {
+	display: block;
+	padding: 5px 10px 0px 100px;
+	color: #3193FF;
+	text-decoration: none;
+}
+
+table, td, tr, th {
+	border-spacing: 0;
+	padding: 0;
+	margin: 0;
+}
+th {
+	border-bottom: 1px solid;
+	padding: 2px 10px;
+	text-align: center;
+}
+td {
+	width: auto;
+	padding: 2px 10px;
+}
+
+.entry h1 {
+	font-size: 1.2em;
+	padding: 10px 5px;
+	font-weight: bold;
+}
+
+.entry h2 {
+	font-size: 1.1em;
+	padding: 0 10px;
+	font-weight: bold;
+}
+
+.entry h3 {
+	font-size: 1.1em;
+	padding: 0 15px;
+    padding-top: 15px;
+	font-weight: bold;
+}
+
+.entry {
+	padding-top: 10px;
+}
+
+.entry li {
+	line-height: 1.35em;
+	padding-left: 5px;
+	margin-left: 30px;
+}
+
+.entry ul li {
+	list-style-type: square !important;
+}
+
+.entry ol li {
+    list-style-type: decimal !important;
+}
+
+.entry ol li li {
+    list-style-type: lower-roman !important;
+}
+
+.entry ol li li li {
+    list-style-type: armenian !important;
+}
+
+
+.next {
+    float: right;
+}
+
+.prev {
+    float: left;
+}
+
+.player-form {
+    float: right;
+}
+
+.winner-form {
+    float: left;
+}
+
+.winner-form, .player-form {
+    border: 1px solid white;
+}
+
+.winner-form form, .player-form form {
+    margin: 10px;
+}
+
+.advanced {
+    text-align:right;
+}
+
+.cms-page-form textarea {
+	width: 100%;
+	height: 500px;
+}
+
+.form th {
+    border-bottom:0 none;
+}
+
+.form td {
+    width: 100%;
+}
+
+.recaptcha_theme_red #recaptcha_response_field {
+    color:white;
+}
+
+.online {
+    color:green;
+}
+
+.offline {
+    color:red;
+}
+
+dl.details p {
+    margin: 0px 0px 10px 0px;
+}
+
+pre {
+	width: 100%;
+	background-color: #111;
+	overflow: auto;
+}
+
+.errorlist li {
+    background-color: red;
+}
+
+#facebook_like {
+	width: 100px;
+	float: right;
+	margin-left:10px;
+	background-color: #181818;
+	text-align:center;
+	border: 1px solid #333;
+}
+
+.package
+{
+	background: #222 url(/static/postbg.png) repeat-x top;
+	padding: 20px;
+	margin: 5px;
+	border-color: #333333;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.package .title
+{
+	display: block;
+	font-size: 24px;
+	margin: 10px 5px 10px 10px;
+	font-weight: normal;
+	border-bottom: 2px solid #555555
+}
+
+.package .title a {
+	text-decoration: none;
+}
+
+.package .title a:hover
+{
+	color: #46B;
+}
+
+.package .install
+{
+	display: inline-block;
+	float: right;
+	padding: 5px;
+}
+
+.package .launch
+{
+	background-color: #333;
+	color: #3193FF;
+	display: inline-block;
+	float: right;
+	margin: 5px;
+	padding: 5px;
+	border-color: white;
+	border-style: dotted;
+	border-width: 1px;
+}
+
+.package .launching
+{
+	background-color: #333;
+	color: #3193FF;
+	display: inline-block;
+	float: right;
+	margin: 5px;
+	padding: 5px;
+	border-color: white;
+	border-style: dotted;
+	border-width: 1px;
+}
+
+.package .info
+{
+	display: block;
+	padding: 0 10px 10px 10px;
+}
+
+.package .progress
+{
+	display: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+
+.package .progress .barContainer
+{
+	border: 2px solid #555;
+	width: 100%;
+	height: 25px;
+}
+
+.package .progress .barContainer .done
+{
+	overflow: hidden;
+	background-color: #F0BC20;
+	color: #46B;
+	border: 0px;
+	white-space: nowrap;
+	width: 0%;
+	height: 25px;
+	line-height: 25px;
+	position: relative;
+	top: -25px;
+}
+
+.package .progress .barContainer .undone
+{
+	overflow: hidden;
+	white-space: nowrap;
+	width: 100%;
+	height: 25px;
+	line-height: 25px;
+}

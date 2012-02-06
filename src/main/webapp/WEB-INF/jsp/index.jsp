@@ -1,5 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
+<link href="compsoc.css" rel="stylesheet" type="text/css" />
+<title>UWCS Music Server</title>
 <body>
 <html>
 <body>

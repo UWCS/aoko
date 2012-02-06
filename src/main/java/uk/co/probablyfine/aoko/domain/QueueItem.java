@@ -24,8 +24,6 @@ public class QueueItem implements Comparable<QueueItem>{
 	
 	private int position;
 	
-	//HACK
-	
 	@OneToOne(targetEntity=MusicFile.class,cascade=CascadeType.ALL)
 	private MusicFile musicFile;
 	

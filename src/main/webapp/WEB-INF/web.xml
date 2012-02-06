@@ -17,7 +17,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:spring/app-context.xml
+            classpath:spring/app-context.xml 	<!-- Configuration for the mvc stuff -->
+            classpath:spring/app-database.xml <!-- Configuration for the database -->
         </param-value>
     </context-param>
 

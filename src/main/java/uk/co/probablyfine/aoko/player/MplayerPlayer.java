@@ -21,22 +21,24 @@ public class MplayerPlayer {
 	
 	@PostConstruct
 	public void playTracks() throws InterruptedException {
-		
-		dao.queueTrack(new User("MrWilson", "ponies"), new MusicFile(FileType.UPLOAD, "/foo/bar", "I love ponies"));
-		
+						
 		new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				while (true) {
 					try {
-
 						Thread.sleep(2000);
+						QueueItem qi = dao.nextTrack();
+						if (qi != null) {
+							dao.startedPlaying(qi);
+							System.out.println(qi.toString());
+							dao.finishedPlaying(qi);
+						}
+						
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					System.out.println("Here!");
 
 					
 				}

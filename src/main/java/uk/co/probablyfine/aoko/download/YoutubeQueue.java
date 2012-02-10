@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 
 import uk.co.probablyfine.aoko.dao.MusicFileDao;
 import uk.co.probablyfine.aoko.dao.QueueItemDao;
-import uk.co.probablyfine.aoko.dao.UserDao;
+import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.YoutubeDao;
 import uk.co.probablyfine.aoko.domain.MusicFile;
-import uk.co.probablyfine.aoko.domain.User;
+import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload;
 import uk.co.probablyfine.aoko.util.FileType;
 
@@ -45,7 +45,7 @@ public class YoutubeQueue {
 	QueueItemDao qiDao;
 	
 	@Autowired
-	UserDao userDao;
+	AccountDao userDao;
 	
 	private Thread dlThread;
 	
@@ -64,7 +64,7 @@ public class YoutubeQueue {
 							hash = Files.getDigest(new File(downloadPath+yd.getId()), MessageDigest.getInstance("SHA1"));
 							String hexVal = new BigInteger(hash).toString();
 							
-							User user = userDao.getFromUsername(yd.getQueuedBy());
+							Account user = userDao.getFromUsername(yd.getQueuedBy());
 							
 							MusicFile file;
 							

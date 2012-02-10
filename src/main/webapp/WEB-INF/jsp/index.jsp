@@ -5,6 +5,7 @@
 		<title>UWCS Music Server</title>
 	</head>
 	<body>
+		Hello,World!
 		<c:forEach items="${queue}" var="qi">
 			${qi.userName} ${qi.bucket} ${qi.position} <br />
 		</c:forEach>

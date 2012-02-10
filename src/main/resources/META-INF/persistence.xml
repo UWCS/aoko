@@ -5,7 +5,7 @@
 	<persistence-unit name="aoko">
     <class>uk.co.probablyfine.aoko.domain.MusicFile</class>
 		<class>uk.co.probablyfine.aoko.domain.QueueItem</class>
-		<class>uk.co.probablyfine.aoko.domain.User</class>
+		<class>uk.co.probablyfine.aoko.domain.Account</class>
 		<class>uk.co.probablyfine.aoko.domain.YoutubeDownload</class>
 	</persistence-unit>
 </persistence>

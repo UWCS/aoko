@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.QueueItem;
 import uk.co.probablyfine.aoko.domain.QueueItem_;
-import uk.co.probablyfine.aoko.domain.User;
+import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.util.PlayerState;
 
 import com.google.common.base.Function;
@@ -33,7 +33,7 @@ public class QueueItemDao {
 	EntityManager em;
 	
 	@Transactional
-	public void queueTrack(final User user, final MusicFile track) {
+	public void queueTrack(final Account user, final MusicFile track) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);

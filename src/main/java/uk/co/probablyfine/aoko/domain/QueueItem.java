@@ -32,7 +32,7 @@ public class QueueItem implements Comparable<QueueItem>{
 	
 	private PlayerState status;
 	
-	public QueueItem(User user, MusicFile file) {
+	public QueueItem(Account user, MusicFile file) {
 		this.userName = user.getUsername();
 		this.musicFile = file;
 		this.setState(PlayerState.QUEUED);

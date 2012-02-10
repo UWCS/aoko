@@ -1,5 +1,7 @@
 package uk.co.probablyfine.aoko.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -35,14 +37,14 @@ public class LoginController {
 		System.out.println(username);
 		System.out.println(password);
 		if (users.getFromUsername(username) == null) {
-			Account user = new Account(username,pass.encode(username));
+			Account user = new Account(username,pass.encode(password));
 			users.merge(user);
 			m.addAttribute("register", "Succesfully registered, can now log in");
 		} else {
 			m.addAttribute("error", "Username already exists, pick another!");
 		}
 		
-		return "redirect:/login/register/";
+		return "redirect:/login/";
 	}
 	
 }

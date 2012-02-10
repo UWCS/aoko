@@ -1,7 +1,8 @@
 package uk.co.probablyfine.aoko.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +16,12 @@ public class HomeController {
 	QueueItemDao dao;
 	
 	@RequestMapping("/")
-	public String home(Model m) {
-		m = m.addAttribute("queue", dao.getAll());
+	public String home(Model m, Principal p) {
+		if (null != p) {
+			System.out.println("Current logged in user - "+p.getName());
+			m.addAttribute("username", p.getName());
+		}
+		m.addAttribute("queue", dao.getAll());
 		return "index";
 	}
 	

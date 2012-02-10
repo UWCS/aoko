@@ -6,6 +6,10 @@
 		<br /> Reason: <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />.
 		</font>
 	</c:if>
+	<c:if test="${not empty username}">
+		<font color="blue">Currently logged in s <c:out value="${username}"/><br />
+		</font>
+	</c:if>	
 	<form name="login" action="<c:url value='/j_spring_security_check'/>" method="POST">
 		<table>
 			<tr>

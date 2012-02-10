@@ -6,6 +6,10 @@
 	</head>
 	<body>
 		Hello,World!
+	<c:if test="${not empty username}">
+		<font color="blue">Currently logged in s <c:out value="${username}"/><br />
+		</font>
+	</c:if>	
 		<c:forEach items="${queue}" var="qi">
 			${qi.userName} ${qi.bucket} ${qi.position} <br />
 		</c:forEach>

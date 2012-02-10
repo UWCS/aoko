@@ -1,8 +1,13 @@
 package uk.co.probablyfine.aoko.domain;
 
+import java.util.Collections;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 public class User {
@@ -46,6 +51,10 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public UserDetails toUser() {
+		return new org.springframework.security.core.userdetails.User(username, password, Collections.<GrantedAuthority>emptySet());
 	}
 	
 }

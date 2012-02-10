@@ -3,3 +3,5 @@
 .settings/
 target/
 musicserver.properties
+derby.log
+aoko/

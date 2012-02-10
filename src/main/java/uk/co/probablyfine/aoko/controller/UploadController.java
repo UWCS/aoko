@@ -23,6 +23,7 @@ public class UploadController {
 class FileUpload {
 	
 	private MultipartFile file;
+	
 
 	public MultipartFile getFile() {
 		return file;

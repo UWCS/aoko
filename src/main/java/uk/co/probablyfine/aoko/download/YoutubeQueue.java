@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import uk.co.probablyfine.aoko.dao.MusicFileDao;
@@ -25,7 +26,14 @@ import com.google.common.io.Files;
 @Service
 public class YoutubeQueue {
 
-	private String path;
+	@Value("#{settings['scripts.youtubedl']}")
+	String ytdPath;
+	
+	@Value("#{settings['media.downloadtarget']}")
+	String downloadPath;
+	
+	@Value("#{settings['media.repository']}")
+	String mediaPath;
 	
 	@Autowired
 	YoutubeDao ytDao;
@@ -41,20 +49,19 @@ public class YoutubeQueue {
 	
 	private Thread dlThread;
 	
-	@PostConstruct
 	public void downloadVideos() {
 		dlThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				YoutubeDownload yd = ytDao.next();
 				try {
-					int code = Runtime.getRuntime().exec(new String[] {path, "-o", "/var/tmp/"+yd.getId(), yd.getUrl()}).waitFor();
+					int code = Runtime.getRuntime().exec(new String[] {ytdPath, "-o", downloadPath+yd.getId(), yd.getUrl()}).waitFor();
 					
 					if (code == 0) {
 						byte[] hash;
 						try {
 							//Get the filehash
-							hash = Files.getDigest(new File("/var/tmp/"+yd.getId()), MessageDigest.getInstance("SHA1"));
+							hash = Files.getDigest(new File(downloadPath+yd.getId()), MessageDigest.getInstance("SHA1"));
 							String hexVal = new BigInteger(hash).toString();
 							
 							User user = userDao.getFromUsername(yd.getQueuedBy());
@@ -64,7 +71,7 @@ public class YoutubeQueue {
 							if (mfDao.containsFile(hexVal)) {
 								file = mfDao.getFromUniqueId(hexVal);
 							} else {
-								Files.move(new File("/var/tmp/"+yd.getId()), new File("/home/media/something"));
+								Files.move(new File(downloadPath+yd.getId()), new File("/home/media/something"));
 								
 								file = new MusicFile();
 								file.setLocation("/var/tmp/"+yd.getId());

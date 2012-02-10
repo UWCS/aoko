@@ -12,7 +12,8 @@
     <context:component-scan base-package="uk.co.probablyfine.aoko" />
     <mvc:annotation-driven  validator="validator" />
 		<context:annotation-config />
-	
+		
+		<!-- Config properties file for injecting into variables -->
 		<util:properties id="settings" location="classpath:spring/musicserver.properties" />  
 	
 		<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />

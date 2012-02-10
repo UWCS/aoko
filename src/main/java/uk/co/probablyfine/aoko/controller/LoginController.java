@@ -34,8 +34,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login/register/",method = RequestMethod.POST)
 	public String processNewUser(@RequestParam String username, @RequestParam String password, Model m) {
-		System.out.println(username);
-		System.out.println(password);
+
 		if (users.getFromUsername(username) == null) {
 			Account user = new Account(username,pass.encode(password));
 			users.merge(user);

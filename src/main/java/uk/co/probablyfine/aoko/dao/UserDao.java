@@ -1,7 +1,13 @@
 package uk.co.probablyfine.aoko.dao;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Repository;
+
 import uk.co.probablyfine.aoko.domain.User;
 
+@Repository
 public class UserDao {
 
 	public User getFromUsername(String queuedBy) {

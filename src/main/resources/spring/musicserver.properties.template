@@ -1,0 +1,8 @@
+#Locations for media files
+media.downloadtarget=
+media.repository=
+
+#Locations of scripts
+script.spotify.play=
+script.spotify.trackdata=
+script.youtubedl=

@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import uk.co.probablyfine.aoko.util.FileType;
 
 @Entity
 public class MusicFile {

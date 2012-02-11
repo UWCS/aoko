@@ -7,7 +7,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import uk.co.probablyfine.aoko.util.DownloadState;
 
 @Entity
 public class YoutubeDownload {

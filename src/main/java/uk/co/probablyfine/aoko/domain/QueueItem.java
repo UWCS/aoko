@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import uk.co.probablyfine.aoko.util.PlayerState;
 
 @Entity
 public class QueueItem implements Comparable<QueueItem>{

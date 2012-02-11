@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,9 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.MusicFileDao;
 import uk.co.probablyfine.aoko.dao.QueueItemDao;
+import uk.co.probablyfine.aoko.domain.FileType;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.QueueItem;
-import uk.co.probablyfine.aoko.util.FileType;
 
 import com.google.common.io.Files;
 
@@ -44,21 +45,28 @@ public class FileUploadHandler {
 		
 		if (mfDao.containsFile(hash)) {
 			
-			qiDao.merge(new QueueItem(accounts.getFromUsername(username), mfDao.getFromUniqueId(username)));
+			qiDao.merge(new QueueItem(accounts.getFromUsername(username), mfDao.getFromUniqueId(hash)));
 		
 		} else {
+			
 			String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 			
 			String newFileName = downloadPath+hash+extension;
 			
 			System.out.println("Moving file to "+newFileName);
 			
-			Files.move(hashFile, new File(newFileName));
+			File newFile = new File(newFileName);
+			
+			Files.move(hashFile, newFile);
+			
+			Map<String,String> metadata = FileMetadataTagger.getMetaData(newFile);
+			metadata.put("originalname", file.getOriginalFilename());
 			
 			MusicFile mf = new MusicFile();
 			mf.setType(FileType.UPLOAD);
 			mf.setLocation(newFileName);
 			mf.setUniqueId(hash);
+			mf.setMetaData(metadata);
 			
 			qiDao.merge(new QueueItem(accounts.getFromUsername(username), mf));
 			

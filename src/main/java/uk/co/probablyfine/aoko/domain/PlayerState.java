@@ -1,4 +1,4 @@
-package uk.co.probablyfine.aoko.util;
+package uk.co.probablyfine.aoko.domain;
 
 public enum PlayerState {
 	QUEUED,

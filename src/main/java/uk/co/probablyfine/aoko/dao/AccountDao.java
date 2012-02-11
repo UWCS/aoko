@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.Account_;
+import uk.co.probablyfine.aoko.domain.PlayerState;
 import uk.co.probablyfine.aoko.domain.QueueItem;
-import uk.co.probablyfine.aoko.util.PlayerState;
 
 @Repository
 public class AccountDao {

@@ -9,9 +9,9 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import uk.co.probablyfine.aoko.domain.DownloadState;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload_;
-import uk.co.probablyfine.aoko.util.DownloadState;
 
 @Repository
 public class YoutubeDao {

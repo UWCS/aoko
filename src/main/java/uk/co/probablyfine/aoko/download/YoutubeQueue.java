@@ -16,10 +16,10 @@ import uk.co.probablyfine.aoko.dao.MusicFileDao;
 import uk.co.probablyfine.aoko.dao.QueueItemDao;
 import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.YoutubeDao;
+import uk.co.probablyfine.aoko.domain.FileType;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload;
-import uk.co.probablyfine.aoko.util.FileType;
 
 import com.google.common.io.Files;
 

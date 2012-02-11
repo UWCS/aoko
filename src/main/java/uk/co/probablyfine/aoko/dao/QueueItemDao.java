@@ -130,7 +130,7 @@ public class QueueItemDao {
 		QueueItem qi = null;
 		try {
 			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
-		} catch (NoResultException e) {
+		} catch (Exception e) {
 			return qi;
 		}
 		

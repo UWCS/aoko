@@ -2,6 +2,9 @@
 media.downloadtarget=
 media.repository=
 
+#Path/command for music player
+path.player=
+
 #Locations of scripts
 script.spotify.play=
 script.spotify.trackdata=

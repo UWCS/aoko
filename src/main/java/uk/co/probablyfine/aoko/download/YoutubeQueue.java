@@ -62,7 +62,7 @@ public class YoutubeQueue {
 						try {
 							//Get the filehash
 							hash = Files.getDigest(new File(downloadPath+yd.getId()), MessageDigest.getInstance("SHA1"));
-							String hexVal = new BigInteger(hash).toString();
+							String hexVal = new BigInteger(hash).toString(16);
 							
 							Account user = userDao.getFromUsername(yd.getQueuedBy());
 							

@@ -14,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.MusicFileDao;
 import uk.co.probablyfine.aoko.dao.QueueItemDao;
+import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.QueueItem;
+import uk.co.probablyfine.aoko.util.FileType;
 
 import com.google.common.io.Files;
 
@@ -38,7 +40,7 @@ public class FileUploadHandler {
 		File hashFile = File.createTempFile(file.getName(),null);
 		Files.write(file.getBytes(), hashFile);
 		
-		String hash = new BigInteger(Files.getDigest(hashFile,MessageDigest.getInstance("SHA1"))).toString(); 
+		String hash = new BigInteger(Files.getDigest(hashFile,MessageDigest.getInstance("SHA1"))).toString(16); 
 		
 		if (mfDao.containsFile(hash)) {
 			
@@ -52,6 +54,13 @@ public class FileUploadHandler {
 			System.out.println("Moving file to "+newFileName);
 			
 			Files.move(hashFile, new File(newFileName));
+			
+			MusicFile mf = new MusicFile();
+			mf.setType(FileType.UPLOAD);
+			mf.setLocation(newFileName);
+			mf.setUniqueId(hash);
+			
+			qiDao.merge(new QueueItem(accounts.getFromUsername(username), mf));
 			
 		}
 		

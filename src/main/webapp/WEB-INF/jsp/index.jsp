@@ -6,13 +6,14 @@
 		<title>UWCS Music Server</title>
 	</head>
 	<body>
-		Hello,World!
+		Hello,World!<br />
 		<c:if test="${not empty username}">
-			<font color="blue"><br />Currently logged in s <c:out value="${username}"/><br />
+			<font color="blue"><br />Currently logged in s <c:out value="${username}"/>
 			</font>
 		</c:if>	
+		<br />
 		<c:forEach items="${queue}" var="qi">
-			${qi.userName} ${qi.bucket} ${qi.position} <br />
+			${qi.toString()} <br />
 		</c:forEach>
 		<sec:authorize access="isAuthenticated()">
 		<h1>Please upload a file</h1>
@@ -21,6 +22,5 @@
             <input type="submit"/>
         </form>
 		</sec:authorize>
-
 	</body>
 </html>

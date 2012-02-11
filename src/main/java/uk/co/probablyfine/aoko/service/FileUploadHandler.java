@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.MusicFileDao;
+import uk.co.probablyfine.aoko.dao.QueueItemDao;
+import uk.co.probablyfine.aoko.domain.QueueItem;
 
 import com.google.common.io.Files;
 
@@ -19,23 +22,40 @@ import com.google.common.io.Files;
 public class FileUploadHandler {
 
 	@Autowired
-	MusicFileDao dao;
+	MusicFileDao mfDao;
 	
-	@Value("#{settings['media.downloadtarget']}")
+	@Autowired
+	QueueItemDao qiDao;
+	
+	@Autowired
+	AccountDao accounts;
+	
+	@Value("#{settings['media.repository']}")
 	private String downloadPath;
 	
 	public void processFile(MultipartFile file, String username) throws IOException, NoSuchAlgorithmException {
 		
-		long marker = System.currentTimeMillis();
+		File hashFile = File.createTempFile(file.getName(),null);
+		Files.write(file.getBytes(), hashFile);
 		
-		File outFile = new File(downloadPath+marker);
-		Files.write(file.getBytes(), outFile);
+		String hash = new BigInteger(Files.getDigest(hashFile,MessageDigest.getInstance("SHA1"))).toString(); 
 		
-		String hash = new BigInteger(Files.getDigest(outFile,MessageDigest.getInstance("SHA1"))).toString(); 
+		if (mfDao.containsFile(hash)) {
+			
+			qiDao.merge(new QueueItem(accounts.getFromUsername(username), mfDao.getFromUniqueId(username)));
 		
-		if (dao.containsFile(hash)) {
+		} else {
+			String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+			
+			String newFileName = downloadPath+hash+extension;
+			
+			System.out.println("Moving file to "+newFileName);
+			
+			Files.move(hashFile, new File(newFileName));
 			
 		}
+		
+		
 		
 	}
 }

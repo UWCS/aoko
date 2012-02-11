@@ -4,3 +4,5 @@
 target/
 musicserver.properties
 derby.log
+.factorpath
+.apt-generated

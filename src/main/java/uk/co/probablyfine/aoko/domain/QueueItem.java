@@ -110,15 +110,15 @@ public class QueueItem implements Comparable<QueueItem>{
 		List<String> params = new ArrayList<String>();
 		Map<String, String> data = musicFile.getMetaData();
 		
-		if (data.containsKey("artist")) {
+		if (data.containsKey("artist") && data.get("artist") != "") {
 			params.add(data.get("artist"));
 		}
 		
-		if (data.containsKey("title")) {
+		if (data.containsKey("title") && data.get("artist") != "") {
 			params.add(data.get("title"));
 		}
 		
-		if (data.containsKey("album")) {
+		if (data.containsKey("album") && data.get("album") != "") {
 			params.add(data.get("album"));
 		}
 		

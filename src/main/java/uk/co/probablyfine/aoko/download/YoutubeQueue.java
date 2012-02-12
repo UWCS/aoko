@@ -33,9 +33,6 @@ public class YoutubeQueue {
 	@Value("#{settings['script.youtubedl']}")
 	String ytdPath;
 	
-	@Value("#{settings['media.downloadtarget']}")
-	String downloadPath;
-	
 	@Value("#{settings['media.repository']}")
 	String mediaPath;
 	
@@ -71,7 +68,8 @@ public class YoutubeQueue {
 					System.out.println("Getting "+yd.getUrl());
 					try {
 						//Save file to <media-download-path>\<title>.<format>
-						String outputFormat = downloadPath+"%(stitle)s.%(ext)s";
+						File tempDir = Files.createTempDir();
+						String outputFormat = tempDir.getAbsolutePath()+File.separator+"%(stitle)s.%(ext)s";
 						Process p = Runtime.getRuntime().exec(new String[] {"python", ytdPath, "-o", outputFormat, yd.getUrl()});
 						
 						BufferedReader foo = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -87,12 +85,9 @@ public class YoutubeQueue {
 							byte[] hash;
 							try {
 								//Get the filehash
-								File downloadedFile = new File(downloadPath).listFiles()[0];
-								System.out.println(downloadedFile.getAbsolutePath());
+								File downloadedFile = tempDir.listFiles()[0];
 								hash = Files.getDigest(downloadedFile, MessageDigest.getInstance("SHA1"));
 								String hexVal = new BigInteger(hash).toString(16);
-								System.out.println(hexVal);
-								
 								Account user = userDao.getFromUsername(yd.getQueuedBy());
 								
 								MusicFile file;
@@ -102,7 +97,9 @@ public class YoutubeQueue {
 								} else {
 									File newFile = new File(mediaPath+downloadedFile.getName());
 									Files.move(downloadedFile, newFile);
-									System.out.println(mediaPath+downloadedFile.getName());
+									
+									tempDir.delete();
+									
 									file = new MusicFile();
 									
 									Map<String,String> data = new HashMap<String, String>();

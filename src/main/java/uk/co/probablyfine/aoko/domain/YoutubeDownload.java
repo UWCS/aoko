@@ -7,7 +7,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-
 @Entity
 public class YoutubeDownload {
 	
@@ -25,10 +24,12 @@ public class YoutubeDownload {
 	@Column(nullable = false)
 	private String queuedBy;
 	
-	/*public YoutubeDownload(String url) {
+	public YoutubeDownload() {}
+	
+	public YoutubeDownload(String url) {
 		this.url = url;
 		this.state = DownloadState.WAITING;
-	}*/
+	}
 	
 	public int getId() {
 		return id;

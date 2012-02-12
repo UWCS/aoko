@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
@@ -44,7 +45,7 @@ public class MusicPlayer {
 							Thread.sleep(2000);
 							
 							qiDao.startedPlaying(qi);
-								
+							System.out.println(Arrays.toString(new String[] {playerPath, qi.getFile().getLocation()}));
 							Runtime.getRuntime().exec(new String[] {playerPath, qi.getFile().getLocation()}).waitFor();
 							
 						} catch (InterruptedException e) {

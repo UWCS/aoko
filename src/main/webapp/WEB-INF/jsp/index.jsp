@@ -8,7 +8,7 @@
 	<body>
 		Hello,World!<br />
 		<c:if test="${not empty username}">
-			<font color="blue"><br />Currently logged in s <c:out value="${username}"/>
+			<font color="blue"><br />Currently logged in as - <strong><c:out value="${username}"/></strong>
 			</font>
 		</c:if>	
 		<br />
@@ -16,9 +16,14 @@
 			${qi.toString()} <br />
 		</c:forEach>
 		<sec:authorize access="isAuthenticated()">
-		<h1>Please upload a file</h1>
-        <form method="post" commandName="FORM" action="/upload/" enctype="multipart/form-data">
+		<h1>Upload a file</h1>
+        <form method="post" commandName="FORM" action="/submit/upload" enctype="multipart/form-data">
             <input type="file" name="file"/>
+            <input type="submit"/>
+        </form><br />
+    <h1>YouTubeDl</h1>
+        <form method="post" action="/submit/youtube">
+            <input type="text" name="url"/>
             <input type="submit"/>
         </form>
 		</sec:authorize>

@@ -70,9 +70,9 @@ public class FileUploadHandler {
 			
 			qiDao.merge(new QueueItem(accounts.getFromUsername(username), mf));
 			
-		}
+		} 
 		
-		
+		hashFile.delete();
 		
 	}
 }

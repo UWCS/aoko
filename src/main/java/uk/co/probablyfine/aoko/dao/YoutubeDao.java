@@ -25,7 +25,15 @@ public class YoutubeDao {
 		CriteriaQuery<YoutubeDownload> cq = cb.createQuery(YoutubeDownload.class);
 		final Root<YoutubeDownload> dl = cq.from(YoutubeDownload.class);
 		cq.where(cb.equal(dl.get(YoutubeDownload_.state), DownloadState.WAITING));
-		return em.createQuery(cq).getSingleResult();
+		YoutubeDownload yt = null;
+		try {
+			yt = em.createQuery(cq).getSingleResult();
+		} catch (Exception e) {
+			System.out.println("Could not get single result");
+		}
+		
+		return yt;
+		
 	}
 	
 	@Transactional

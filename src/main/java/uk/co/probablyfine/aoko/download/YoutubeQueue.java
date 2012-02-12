@@ -1,6 +1,5 @@
 package uk.co.probablyfine.aoko.download;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +7,8 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -104,7 +104,11 @@ public class YoutubeQueue {
 									Files.move(downloadedFile, newFile);
 									System.out.println(mediaPath+downloadedFile.getName());
 									file = new MusicFile();
+									
+									Map<String,String> data = new HashMap<String, String>();
+									data.put("originalname", downloadedFile.getName());
 									file.setLocation(mediaPath+downloadedFile.getName());
+									file.setMetaData(data);
 									file.setType(FileType.YOUTUBE);
 									file.setUniqueId(hexVal);
 								}

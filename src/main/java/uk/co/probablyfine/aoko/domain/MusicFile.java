@@ -36,7 +36,7 @@ public class MusicFile {
 	/*
 	 * File metadata, for display/view purposes
 	 */
-	@ElementCollection(fetch = FetchType.LAZY)
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String,String> metaData = new HashMap<String, String>();
 	
 	/*

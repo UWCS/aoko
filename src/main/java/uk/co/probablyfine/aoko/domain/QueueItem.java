@@ -1,11 +1,17 @@
 package uk.co.probablyfine.aoko.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import com.google.common.base.Joiner;
 
 
 @Entity
@@ -78,8 +84,17 @@ public class QueueItem implements Comparable<QueueItem>{
 	}
 
 	public int compareTo(QueueItem arg0) {
-		//TODO: Make this not utterly broken		
-		return -1;
+		if (arg0.getBucket() < this.getBucket()) {
+			return 1;
+		} else if (arg0.getBucket() > this.getBucket()) {
+			return -1;
+		} else if (arg0.getPosition() < this.getPosition()) {
+			return 1;
+		} else if (arg0.getPosition() < this.getPosition()) {
+			return -1;
+		} else {
+			return 0;
+		}
 		
 	}
 
@@ -92,7 +107,29 @@ public class QueueItem implements Comparable<QueueItem>{
 	}
 
 	public String toString() {
-		return musicFile.getUniqueId() + " - " + userName;
+		List<String> params = new ArrayList<String>();
+		Map<String, String> data = musicFile.getMetaData();
+		
+		if (data.containsKey("artist")) {
+			params.add(data.get("artist"));
+		}
+		
+		if (data.containsKey("title")) {
+			params.add(data.get("title"));
+		}
+		
+		if (data.containsKey("album")) {
+			params.add(data.get("album"));
+		}
+		
+		if (params.isEmpty()) {
+			params.add(data.get("originalname"));
+		}
+		
+		params.add(userName);
+		
+		return Joiner.on(" -- ").skipNulls().join(params);
+		
 	}
 	
 }

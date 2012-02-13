@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <body>
+	<h2>Login Page</h2>
 	<c:if test="${not empty param.error}">
 		<font color="red"> Your login attempt was not successful, try again.<br />
 		<br /> Reason: <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />.
@@ -17,7 +18,7 @@
 				<td><input type='password' name='j_password' /></td>
 			</tr>
 			<tr>
-				<td colspan='2'><input name="submit" type="submit"></td>
+				<td colspan='2'><input name="Login" type="submit"></td>
 			</tr>
 		</table>
 	</form>

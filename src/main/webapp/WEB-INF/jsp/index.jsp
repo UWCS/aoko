@@ -8,10 +8,15 @@
 	</head>
 	<body>
 		Hello,World!<br />
-		<c:if test="${not empty username}">
-			<font color="blue"><br />Currently logged in as - <strong><c:out value="${username}"/></strong>
+		<c:choose>
+		  <c:when test="${not empty username}">
+		    <font color="blue"><br />Currently logged in as - <strong><c:out value="${username}"/></strong>
 			</font>
-		</c:if>	
+			</c:when>
+		   <c:otherwise>
+		    You aren't logged in! <a href="<c:url value="/login/"/>">Login</a> or <a href="<c:url value="/login/register"/>">register</a>
+		  </c:otherwise>
+		</c:choose>
 		<br />
 		<c:forEach items="${queue}" var="qi">
 			${qi.toString()} <br />

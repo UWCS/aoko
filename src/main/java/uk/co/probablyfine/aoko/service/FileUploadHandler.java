@@ -68,7 +68,7 @@ public class FileUploadHandler {
 			mf.setUniqueId(hash);
 			mf.setMetaData(metadata);
 			
-			qiDao.merge(new QueueItem(accounts.getFromUsername(username), mf));
+			qiDao.queueTrack(accounts.getFromUsername(username), mf);
 			
 		} 
 		

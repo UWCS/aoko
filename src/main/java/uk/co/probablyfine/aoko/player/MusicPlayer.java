@@ -1,9 +1,6 @@
 package uk.co.probablyfine.aoko.player;
 
 import java.io.IOException;
-import java.util.Arrays;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +18,7 @@ public class MusicPlayer {
 	@Autowired
 	QueueItemDao qiDao;
 	
-	@PostConstruct
+	//@PostConstruct
 	public void playTracks() throws InterruptedException {
 						
 		new Thread(new Runnable() {

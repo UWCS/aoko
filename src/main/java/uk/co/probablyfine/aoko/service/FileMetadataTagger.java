@@ -18,28 +18,28 @@ public class FileMetadataTagger {
 	
 	public static Map<String,String> getMetaData(File file) {
 		
-	Map<String,String> metadata = new HashMap<String, String>();
-	
-	AudioFile f;
-	try {
-		f = AudioFileIO.read(file);
-	} catch (Exception e) {
-		log.error("Exception, ",e);
-		return metadata;
-	}
-	Tag tag = f.getTag();
-	
-	for (FieldKey key : FieldKey.values()) {
+		Map<String,String> metadata = new HashMap<String, String>();
+		
+		AudioFile f;
 		try {
-			tag.getFirst(key);
-			System.out.println("Found "+key.name()+": "+tag.getFirst(key));
-			metadata.put(key.name().toLowerCase(), tag.getFirst(key));
+			f = AudioFileIO.read(file);
 		} catch (Exception e) {
-			continue;
+			log.error("Exception, ",e);
+			return metadata;
 		}
-	}
-	
-	return metadata;
+		Tag tag = f.getTag();
+		
+		for (FieldKey key : FieldKey.values()) {
+			try {
+				tag.getFirst(key);
+				System.out.println("Found "+key.name()+": "+tag.getFirst(key));
+				metadata.put(key.name().toLowerCase(), tag.getFirst(key));
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		
+		return metadata;
 
 	}
 	

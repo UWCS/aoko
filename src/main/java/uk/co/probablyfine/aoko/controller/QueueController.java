@@ -17,22 +17,30 @@ public class QueueController {
 	@Autowired
 	QueueItemDao qiDao;
 	
-	@RequestMapping("/move/${direction}/${id}")
-	public void moveSong(	@PathVariable("direction") String direction,
-							@PathVariable("id") int trackId, Principal p) {
-		if (null == p)
-			return;
+	@RequestMapping("move/{direction}/{id}")
+	public String moveSong(	@PathVariable("direction") String direction,
+							@PathVariable("id") int bucketId, Principal p) {
+		if (null == p) {
+			System.out.println("Not logged in");
+			return "redirect:/";
+		}
 			
-		if (direction == "up") {
-			QueueItem qi = qiDao.getFromId(trackId);	
-			qiDao.shiftUp(p.getName(), qi.getBucket());
-		} else if (direction == "down") {
-			QueueItem qi = qiDao.getFromId(trackId);	
-			qiDao.shiftDown(p.getName(), qi.getBucket());
+		
+		System.out.println("Direction = "+direction);
+		System.out.println("Bucket id = "+bucketId);
+			
+		if (direction.matches("up")) {
+			System.out.println("Shifting up");
+			qiDao.shiftUp(p.getName(), bucketId);
+		} else if (direction.matches("down")) {
+			System.out.println("Shifting down");
+			qiDao.shiftDown(p.getName(), bucketId);
 		} else {
+			System.out.println(":(");
 			//Do nothing
 		}
 		
+		return "redirect:/";
 		
 		
 	}

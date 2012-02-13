@@ -19,7 +19,10 @@
 		</c:choose>
 		<br />
 		<c:forEach items="${queue}" var="qi">
-			${qi.toString()} <br />
+			${qi.toString()} 
+			<a href="<c:url value="/a/move/up/${qi.getBucket()}"/>">Up</a>
+			<a href="<c:url value="/a/move/down/${qi.getBucket()}"/>">Down</a>
+			<br />
 		</c:forEach>
 		<sec:authorize access="isAuthenticated()">
 		<h1>Upload a file</h1>

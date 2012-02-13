@@ -29,11 +29,14 @@ import com.google.common.collect.Collections2;
 @Repository
 public class QueueItemDao {
 	
+	private Logger log = LoggerFactory.getLogger(QueueItemDao.class);
+	
 	@PersistenceContext
 	EntityManager em;
 	
 	@Transactional
 	public void queueTrack(final Account user, final MusicFile track) {
+		log.debug("queueTrack - Queueing track from {}",user.getUsername());
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
@@ -143,7 +146,9 @@ public class QueueItemDao {
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
-		return em.createQuery(cq).getResultList();
+		List<QueueItem> resultsList = em.createQuery(cq).getResultList();
+		Collections.sort(resultsList);
+		return resultsList;
 	}
 	
 	@Transactional
@@ -182,13 +187,15 @@ public class QueueItemDao {
 		results.addAll(em.createQuery(cq).getResultList());
 		
 		//If we have less than 2 results, then there's nothing to do.
-		if (results.size() < 2)	
+		if (results.size() < 2)	{
+			System.out.println("Only "+results.size()+" results");
 			return;
+		}
 		
 		Collections.sort(results);
 		
-		QueueItem qi1 = results.get(0);
-		QueueItem qi2 = results.get(1);
+		QueueItem qi1 = em.merge(results.get(0));
+		QueueItem qi2 = em.merge(results.get(1));
 		
 		int bucket1 = qi1.getBucket();
 		int bucket2 = qi2.getBucket();
@@ -196,25 +203,27 @@ public class QueueItemDao {
 		int pos1 = qi1.getPosition();
 		int pos2 = qi2.getPosition();
 
+		log.debug("Item 1. Bucket = {}, Pos = {}",bucket1,pos1);
+		log.debug("Item 2. Bucket = {}, Pos = {}",bucket2,pos1);
+		
 		qi1.setBucket(bucket2);
 		qi1.setPosition(pos2);
 		
-		qi2.setBucket(-1);
-		qi2.setPosition(-1);
-	
-		em.merge(qi2);
-		em.merge(qi1);
+		//em.merge(qi1);		
 		
 		qi2.setPosition(pos1);
 		qi2.setBucket(bucket1);
-		em.merge(qi2);
+		
+		//em.persist(qi2);
 		
 	}
 	
+	@Transactional
 	public void shiftUp(String user, int bucket) {
 		this.shift(user, bucket, -1);
 	}
 	
+	@Transactional
 	public void shiftDown(String user, int bucket) {
 		this.shift(user, bucket, 1);
 	}

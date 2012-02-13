@@ -126,8 +126,6 @@ public class QueueItem implements Comparable<QueueItem>{
 			params.add(data.get("originalname"));
 		}
 		
-		params.add(userName);
-		
 		return Joiner.on(" -- ").skipNulls().join(params);
 		
 	}

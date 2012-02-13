@@ -3,7 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 	<head>
-		<link href="compsoc.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="compsoc.css">
 		<title>UWCS Music Server</title>
 	</head>
 	<body>
@@ -19,7 +19,7 @@
 		</c:choose>
 		<br />
 		<c:forEach items="${queue}" var="qi">
-			${qi.toString()} <br />
+			${qi.toString()}     queued by ${qi.userName} <br />
 		</c:forEach>
 		<sec:authorize access="isAuthenticated()">
 		<h1>Upload a file</h1>

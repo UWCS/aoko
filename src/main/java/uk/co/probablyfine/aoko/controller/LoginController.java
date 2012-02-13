@@ -2,6 +2,8 @@ package uk.co.probablyfine.aoko.controller;
 
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.domain.Account;
 
 @Controller
+@RequestMapping("/login/")
 public class LoginController {
 
 	@Autowired
@@ -22,19 +25,18 @@ public class LoginController {
 	@Autowired
 	PasswordEncoder pass;
 	
-	@RequestMapping("/login/")
+	@RequestMapping("/")
 	public String home() {
 		return "login";
 	}
 	
-	@RequestMapping("/login/register/")
+	@RequestMapping("register")
 	public String register() {
 		return "register";
 	}
 	
-	@RequestMapping(value = "/login/register/",method = RequestMethod.POST)
+	@RequestMapping(value = "register",method = RequestMethod.POST)
 	public String processNewUser(@RequestParam String username, @RequestParam String password, Model m) {
-
 		if (users.getFromUsername(username) == null) {
 			Account user = new Account(username,pass.encode(password));
 			users.merge(user);

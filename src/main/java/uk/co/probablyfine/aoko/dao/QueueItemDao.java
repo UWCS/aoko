@@ -195,11 +195,6 @@ public class QueueItemDao {
 				cb.equal(root.get(QueueItem_.status), PlayerState.QUEUED)
 				)
 			);
-
-		/*cq.where(cb.equal(root.get(QueueItem_.userName), user));
-		cq.where(cb.between(root.get(QueueItem_.bucket), bucket, bucket+mod));
-		cq.where(cb.equal(root.get(QueueItem_.status), PlayerState.QUEUED));
-		*/
 		
 		List<QueueItem> results = new ArrayList<QueueItem>();
 		results.addAll(em.createQuery(cq).getResultList());
@@ -248,6 +243,29 @@ public class QueueItemDao {
 		this.shift(user, bucket, 1);
 	}
 
+	@Transactional(readOnly = true)
+	public QueueItem getFromBucketAndUser(int bucket, String user) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
+		Root<QueueItem> root = cq.from(QueueItem.class);
+		
+		cq.where(
+			cb.and(
+				cb.equal(root.get(QueueItem_.bucket), bucket),
+				cb.equal(root.get(QueueItem_.userName), user)
+			)
+		);	
+				
+		QueueItem qi = null;
+		try {
+			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
+		} catch (Exception e) {
+			return qi;
+		}
+		
+		return qi; 
+	}
+	
 	@Transactional
 	public QueueItem getFromId(int trackId) {
 		log.debug("Getting track from id {}",trackId);
@@ -264,6 +282,16 @@ public class QueueItemDao {
 		}
 		
 		return qi; 
+	}
+
+	@Transactional
+	public void deleteItem(int bucket, String user) {
+		em.remove(getFromBucketAndUser(bucket, user));
+	}
+	
+	@Transactional
+	public void deleteItem(QueueItem qi) {
+		em.remove(qi);
 	}
 	
 	

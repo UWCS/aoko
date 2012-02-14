@@ -7,7 +7,11 @@
 		<title>UWCS Music Server</title>
 	</head>
 	<body>
-		Hello,World!<br />
+		Some kind of music server! 
+		<sec:authorize access="isAuthenticated()">
+			<a href="<c:url value="/login/register"/>">Logout</a>
+		</sec:authorize>
+		<br />
 		<c:choose>
 		  <c:when test="${not empty username}">
 		    <font color="blue"><br />Currently logged in as - <strong><c:out value="${username}"/></strong>
@@ -21,8 +25,9 @@
 		<c:forEach items="${queue}" var="qi">
 			${qi.toString()}     queued by ${qi.userName}
 			<c:if test="${qi.userName == username}">
-			<a href="<c:url value="/a/move/up/${qi.getBucket()}"/>">Up</a>
-			<a href="<c:url value="/a/move/down/${qi.getBucket()}"/>">Down</a>
+				<a href="<c:url value="/a/move/up/${qi.getBucket()}"/>">Up</a>
+				<a href="<c:url value="/a/move/down/${qi.getBucket()}"/>">Down</a>
+				<a href="<c:url value="/a/delete/${qi.getBucket()}"/>">Del</a>
 			</c:if>
 			<br />
 		</c:forEach>

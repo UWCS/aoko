@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import uk.co.probablyfine.aoko.dao.QueueItemDao;
+import uk.co.probablyfine.aoko.domain.QueueItem;
 
 @Controller
 @RequestMapping("/a/")
@@ -37,11 +38,24 @@ public class QueueController {
 
 		}
 		
-		
 		log.debug("Returning user to homepage");
 		return "redirect:/";
 		
+	}
+	
+	@RequestMapping("delete/{id}")
+	public String deleteSong(@PathVariable("id") int bucketId, Principal p) {
 		
+		if (null == p) {
+			log.debug("User not logged in, redirecting to home");
+			return "redirect:/";
+		}
+	
+				
+		qiDao.deleteItem(bucketId,p.getName());
+			
+		log.debug("Returning user to homepage");
+		return "redirect:/";
 	}
 	
 	

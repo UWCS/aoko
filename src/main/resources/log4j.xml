@@ -10,14 +10,12 @@
   </appender> 
 
   <root> 
-    <priority value ="off" /> 
+    <priority value ="info" /> 
     <appender-ref ref="console" /> 
   </root>
 
   <logger name="uk.co.probablyfine.aoko">
 		  <level value="debug"/> 
 	</logger>
-	
-	
   
 </log4j:configuration>

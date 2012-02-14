@@ -9,7 +9,7 @@
 	<body>
 		Some kind of music server! 
 		<sec:authorize access="isAuthenticated()">
-			<a href="<c:url value="/login/register"/>">Logout</a>
+			<a href="<c:url value="/logout"/>">Logout</a>
 		</sec:authorize>
 		<br />
 		<c:choose>

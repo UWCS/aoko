@@ -45,12 +45,12 @@
 		<div id="menu">
 		<c:forEach items="${queue}" var="qi">
 			<div class="package">
-			<span class="title">${qi.toString()} queued by ${qi.userName}</span>
+			<span class="title">${qi} queued by ${qi.userName}</span>
 			<span class="info">			
 			<c:if test="${qi.userName == username}">
-				<a href="<c:url value="/a/move/up/${qi.getBucket()}"/>">Up</a>
-				<a href="<c:url value="/a/move/down/${qi.getBucket()}"/>">Down</a>
-				<a href="<c:url value="/a/delete/${qi.getBucket()}"/>">Del</a>
+				<a href="<c:url value="/a/move/up/${qi.bucket}"/>">Up</a>
+				<a href="<c:url value="/a/move/down/${qi.bucket}"/>">Down</a>
+				<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
 			</c:if>
 			</span>
 			</div>

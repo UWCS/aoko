@@ -13,8 +13,8 @@
     <mvc:annotation-driven  validator="validator" />
 		<context:annotation-config />
 		
-		<!-- Config properties file for injecting into variables -->
-		<util:properties id="settings" location="classpath:spring/musicserver.properties" />  
+	<!-- Config properties file for injecting into variables -->
+	<context:property-placeholder location="classpath:spring/musicserver.properties" />  
 	
 		<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
@@ -24,8 +24,8 @@
         <property name="suffix" value=".jsp"></property>
     </bean>
     
-    <mvc:resources mapping="/resources/**" location="/, classpath:/META-INF/resources/"/>
-    
+    <mvc:resources mapping="/resources/**" location="/, classpath:/META-INF/resources/, file:${media.art}"/>
+        
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
    		<!-- one of the properties available; the maximum file size in bytes -->
 	    <property name="maxUploadSize" value="25000000"/>

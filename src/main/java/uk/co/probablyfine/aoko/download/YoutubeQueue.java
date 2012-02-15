@@ -123,7 +123,7 @@ public class YoutubeQueue {
 									
 									try {
 										artDownloader.getAlbumArt(id);
-										file.setArtLocation(artPath+id+".jpg");
+										file.setArtLocation(id+".jpg");
 									} catch (Exception e) {
 										System.out.println(" "+e);
 									}

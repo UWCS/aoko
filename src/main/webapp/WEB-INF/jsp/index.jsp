@@ -50,6 +50,7 @@
 		<div id="menu">
 		<c:forEach items="${queue}" var="qi">
 			<div class="package">
+			<img src="<c:url value="/resources/${qi.file.artLocation}"/>"/>
 			<span class="title">${qi} queued by ${qi.userName}</span>
 			<span class="info">			
 			<c:if test="${qi.userName == username}">

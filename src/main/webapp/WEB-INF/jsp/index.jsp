@@ -8,6 +8,11 @@
 	</head>
 	<body>
 	<div id="container">
+		<div id="header">
+			<div id="logo">
+				<img src="<c:url value="/resources/logo.png"/>" />
+			</div>
+		</div>
 		<div id="page">
 		Some kind of music server! 
 		<sec:authorize access="isAuthenticated()">

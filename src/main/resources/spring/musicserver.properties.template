@@ -1,5 +1,6 @@
 #Locations for media files
 media.repository=
+media.art=
 
 #Path/command for music player
 path.player=

@@ -5,10 +5,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
@@ -36,6 +42,10 @@ public class YoutubeQueue {
 	@Value("#{settings['media.repository']}")
 	String mediaPath;
 	
+	@Value("#{settings['media.art']}")
+	String artPath;
+	
+	
 	@Autowired
 	YoutubeDao ytDao;
 	
@@ -49,6 +59,9 @@ public class YoutubeQueue {
 	AccountDao userDao;
 	
 	private Thread dlThread;
+
+	@Autowired
+	protected YouTubeArtDownloader artDownloader;
 	
 	@PostConstruct
 	public void downloadVideos() {
@@ -101,6 +114,19 @@ public class YoutubeQueue {
 									tempDir.delete();
 									
 									file = new MusicFile();
+									
+									//TRYING TO GET FILE ART HERE
+									Pattern pat = Pattern.compile("(?<=v=).*?(?=&|$)");
+									Matcher m = pat.matcher(yd.getUrl());
+									m.find();
+									String id = m.group(0);
+									
+									try {
+										artDownloader.getAlbumArt(id);
+										file.setArtLocation(artPath+id+".jpg");
+									} catch (Exception e) {
+										System.out.println(" "+e);
+									}
 									
 									Map<String,String> data = new HashMap<String, String>();
 									data.put("originalname", downloadedFile.getName());

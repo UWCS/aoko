@@ -25,13 +25,14 @@ public class MusicFile {
 	private FileType type;
 		
 	/*
-	 * File location for uploads
-	 * Video id for YouTube
+	 * File location for uploads + youtube
 	 * Grooveshark url for grooveshark tracks
 	 * Spotify id for Spotify
 	 */
 	@Column(nullable = false)
 	private String location;
+	
+	private String artLocation;
 	
 	/*
 	 * File metadata, for display/view purposes
@@ -93,6 +94,14 @@ public class MusicFile {
 
 	public void setUniqueId(String uniqueId) {
 		this.uniqueId = uniqueId;
+	}
+
+	public String getArtLocation() {
+		return artLocation;
+	}
+
+	public void setArtLocation(String artLocation) {
+		this.artLocation = artLocation;
 	}
 	
 }

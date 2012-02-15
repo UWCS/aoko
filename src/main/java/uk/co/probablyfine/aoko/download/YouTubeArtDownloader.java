@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class YouTubeArtDownloader {
 
-	@Value("#{settings['media.art']}")
+	@Value("${media.art}")
 	private String downloadPath;
 		
 	public void getAlbumArt(String youtubeId) throws IOException {

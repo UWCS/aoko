@@ -36,13 +36,13 @@ import com.google.common.io.Files;
 @Service
 public class YoutubeQueue {
 
-	@Value("#{settings['script.youtubedl']}")
+	@Value("${script.youtubedl}")
 	String ytdPath;
 	
-	@Value("#{settings['media.repository']}")
+	@Value("${media.repository}")
 	String mediaPath;
 	
-	@Value("#{settings['media.art']}")
+	@Value("${media.art}")
 	String artPath;
 	
 	

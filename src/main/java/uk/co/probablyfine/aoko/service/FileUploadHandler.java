@@ -33,7 +33,7 @@ public class FileUploadHandler {
 	@Autowired
 	AccountDao accounts;
 	
-	@Value("#{settings['media.repository']}")
+	@Value("${media.repository}")
 	private String downloadPath;
 	
 	public void processFile(MultipartFile file, String username) throws IOException, NoSuchAlgorithmException {

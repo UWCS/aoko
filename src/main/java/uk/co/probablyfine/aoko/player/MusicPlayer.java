@@ -12,7 +12,7 @@ import uk.co.probablyfine.aoko.domain.QueueItem;
 @Service
 public class MusicPlayer {
 
-	@Value("#{settings['path.player']}")
+	@Value("${path.player}")
 	String playerPath;
 	
 	@Autowired

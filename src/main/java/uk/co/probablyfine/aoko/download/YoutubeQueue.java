@@ -61,7 +61,7 @@ public class YoutubeQueue {
 	private Thread dlThread;
 
 	@Autowired
-	protected YouTubeArtDownloader artDownloader;
+	protected ArtDownloader artDownloader;
 	
 	@PostConstruct
 	public void downloadVideos() {
@@ -122,7 +122,7 @@ public class YoutubeQueue {
 									String id = m.group(0);
 									
 									try {
-										artDownloader.getAlbumArt(id);
+										artDownloader.getYoutubeArt(id);
 										file.setArtLocation(id+".jpg");
 									} catch (Exception e) {
 										System.out.println(" "+e);

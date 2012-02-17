@@ -10,6 +10,8 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -54,18 +56,17 @@ public class ArtDownloader {
 		
 		String artUrl;
 		
-		if (args.get("amazon_id") != "") {
-			
+		if (args.containsKey("amazon_id")) {
 			artUrl = "http://ec1.images-amazon.com/images/P/"+args.get("amazon_id")+".jpg";
-		
 		} else {
 			
 			if (args.containsKey("album") && (args.containsKey("artist") || args.containsKey("album_artist"))) {
-				queryString.add("release:"+args.get("album"));
-				queryString.add("artistname:"+args.get("artist"));
-				queryString.add("artistname:"+args.get("album_artist"));
-				
-				
+					queryString.add("release:"+args.get("album"));
+					if (args.containsKey("artist")) {
+						queryString.add("artist:"+args.get("artist"));
+					} else {
+						queryString.add("artist:"+args.get("album_artist"));
+					}
 			} else {
 				throw new RuntimeException("Insufficient data for album art");
 			}
@@ -75,12 +76,17 @@ public class ArtDownloader {
 			System.out.println(url);
 			
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new URL(url).openStream());
+			
+			/*Pattern pat = Pattern.compile("<asin>(.*?)<\\/asin>");
+			Matcher m = pat.matcher(doc.get);
+			m.find();
+			String id = m.group(0);
+			*/
 			NodeList nodes = doc.getElementsByTagName("asin");
-			System.out.println(nodes.item(0).getNodeValue());
 			
+			System.out.println(nodes.toString());
 			
-			
-			String asin = nodes.item(0).getNodeValue();
+			String asin = nodes.item(0).getChildNodes().item(0).getNodeValue();
 			
 			if (asin == null) {
 				throw new RuntimeException("GET request did not return asin");

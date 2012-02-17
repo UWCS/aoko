@@ -33,7 +33,8 @@ public class FileMetadataTagger {
 			try {
 				tag.getFirst(key);
 				System.out.println("Found "+key.name()+": "+tag.getFirst(key));
-				metadata.put(key.name().toLowerCase(), tag.getFirst(key));
+				if (tag.getFirst(key) != null && tag.getFirst(key) != "")
+					metadata.put(key.name().toLowerCase(), tag.getFirst(key));
 			} catch (Exception e) {
 				continue;
 			}

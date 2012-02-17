@@ -32,7 +32,7 @@ public class ArtDownloader {
 		
 	public void getYoutubeArt(String youtubeId) throws IOException {
 		
-		String url = "http://img.youtube.com/vi/"+youtubeId+"/0.jpg";
+		String url = "http://img.youtube.com/vi/"+youtubeId+"/1.jpg";
 		
 		System.out.println(url);
 		

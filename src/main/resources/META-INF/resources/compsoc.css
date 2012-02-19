@@ -139,6 +139,7 @@ html {
 	margin-right: 30px;
 	/* Horrific IE6 Hack */
 	-margin-right: 15px;
+	overflow: hidden;
 }
 
 #sidebar ul {
@@ -147,10 +148,12 @@ html {
 
 #sidebar li {
 	margin-left: 10px;
+	margin-right: 10px;
 }
 
 #sidebar li li form  {
 	padding-left: 15px;
+	padding-right: 15px;
 	margin: 10px;
 }
 
@@ -185,6 +188,10 @@ html {
 
 #sidebar form.revisions input {
  margin: 10px;
+}
+
+#sidebar input {
+	width: 100%;
 }
 
 /* Page layout */

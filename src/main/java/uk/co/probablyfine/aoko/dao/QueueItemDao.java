@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -16,11 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.PlayerState;
 import uk.co.probablyfine.aoko.domain.QueueItem;
 import uk.co.probablyfine.aoko.domain.QueueItem_;
-import uk.co.probablyfine.aoko.domain.Account;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -292,6 +291,23 @@ public class QueueItemDao {
 	@Transactional
 	public void deleteItem(QueueItem qi) {
 		em.remove(qi);
+	}
+
+	public List<QueueItem> allQueuedByUser(Account a) {
+		log.debug("Getting all items from {}",a.getUsername());
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
+		Root<QueueItem> root = cq.from(QueueItem.class);
+		
+		cq.where(cb.equal(root.get(QueueItem_.userName), a.getUsername()));
+		QueueItem qi = null;
+		/*try {
+			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
+		} catch (Exception e) {
+			return qi;
+		}*/
+		
+		return null; 
 	}
 	
 	

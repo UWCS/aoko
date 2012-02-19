@@ -130,6 +130,10 @@ public class YoutubeQueue {
 									
 									Map<String,String> data = new HashMap<String, String>();
 									data.put("originalname", downloadedFile.getName());
+									
+									String actualName = downloadedFile.getName().substring(0,downloadedFile.getName().lastIndexOf(".")).replace("_", " ");
+									
+									data.put("name", actualName);
 									file.setLocation(mediaPath+downloadedFile.getName());
 									file.setMetaData(data);
 									file.setType(FileType.YOUTUBE);

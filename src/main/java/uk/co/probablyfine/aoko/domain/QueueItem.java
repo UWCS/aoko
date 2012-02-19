@@ -106,11 +106,37 @@ public class QueueItem implements Comparable<QueueItem>{
 		return status;
 	}
 
+	public String toHTMLString() {
+		List<String> params = new ArrayList<String>();
+		Map<String, String> data = musicFile.getMetaData();
+		
+		if (data.containsKey("artist") && data.get("artist") != "") {
+			params.add("<span class='artist'>"+data.get("artist"));
+		}
+		
+		if (data.containsKey("title") && data.get("artist") != "") {
+			params.add(data.get("title"));
+		}
+		
+		if (data.containsKey("album") && data.get("album") != "") {
+			params.add(data.get("album"));
+		}
+		
+		if (params.isEmpty()) {
+			params.add(data.get("originalname"));
+		}
+		
+		return Joiner.on(" -- ").skipNulls().join(params);
+		
+	}
+	
+	
 	public String toString() {
 		List<String> params = new ArrayList<String>();
 		Map<String, String> data = musicFile.getMetaData();
 		
 		if (data.containsKey("artist") && data.get("artist") != "") {
+			//TODO: MAKE ANOTHER THING LIKE THIS.
 			params.add(data.get("artist"));
 		}
 		

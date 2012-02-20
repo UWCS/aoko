@@ -2,6 +2,11 @@ Aoko, a music server written in as close to pure java as I can get.
 
 License: MIT
 
+Requirements:
+
+ * Maven (have tested with Maven3)
+ * Java
+
 How to run
 
  * Modify the musicserver.properties.template appropriately in /src/main/resources and rename to musicserver.properties

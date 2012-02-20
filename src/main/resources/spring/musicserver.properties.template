@@ -1,3 +1,5 @@
+#This file is whitespace sensitive, include the paths and nothing more
+
 #Locations for media files
 media.repository=
 media.art=

@@ -1,19 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="<c:url value="/resources/compsoc.css"/>">
-		<title>UWCS Music Server</title>
-	</head>
-	<body>
-	<div id="container">
-		<div id="header">
-			<div id="logo">
-				<img src="<c:url value="/resources/logo.png"/>" />
-			</div>
-		</div>
-		<div id="page">
+	<%@ include file="header.html" %>
 		Some kind of music server! 
 		<sec:authorize access="isAuthenticated()">
 			<a href="<c:url value="/logout"/>">Logout</a>
@@ -47,26 +35,24 @@
 		  </c:otherwise>
 		</c:choose>
 		<p>
-		<div id="menu">
-		<c:forEach items="${queue}" var="qi">
-			<div class="package">
-			<span class="title">
-			<c:if test="${not empty qi.file.artLocation}">
-			<img src="<c:url value="/resources/${qi.file.artLocation}"/>" height="100" width="100"/>
-			</c:if>
-			${qi} queued by ${qi.userName}</span>
-			<span class="info">			
-			<c:if test="${qi.userName == username}">
-				<a href="<c:url value="/a/move/up/${qi.bucket}"/>">Up</a>
-				<a href="<c:url value="/a/move/down/${qi.bucket}"/>">Down</a>
-				<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
-			</c:if>
-			</span>
+			<div id="menu">
+				<c:forEach items="${queue}" var="qi">
+						<div class="package">
+							<span class="title">
+								<c:if test="${not empty qi.file.artLocation}">
+								<img src="<c:url value="/resources/${qi.file.artLocation}"/>" height="100" width="100"/>
+								</c:if>
+								${qi} queued by ${qi.userName}
+							</span>
+							<span class="info">			
+								<c:if test="${qi.userName == username}">
+									<a href="<c:url value="/a/move/up/${qi.bucket}"/>">Up</a>
+									<a href="<c:url value="/a/move/down/${qi.bucket}"/>">Down</a>
+									<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
+								</c:if>
+							</span>
+						</div>
+						<br />
+				</c:forEach>
 			</div>
-			<br />
-		</c:forEach>
-		</div>
-		</div>
-	</div>
-	</body>
-</html>
+<%@ include file="footer.html" %>

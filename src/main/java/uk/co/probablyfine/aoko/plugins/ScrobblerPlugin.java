@@ -18,7 +18,7 @@ public class ScrobblerPlugin {
 		
 		QueueItem qi = (QueueItem) pjp.getArgs()[0];
 		
-		System.out.println("Oh look, I'm scrobbling "+qi.getFile().getMetaData().get("originalname"));;
+		System.out.println("Oh look, I'm scrobbling "+qi.getFile().getMetaData().get("originalname"));
 		
 		return pjp.proceed();
 	}

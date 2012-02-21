@@ -5,16 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.QueueItemDao;
-import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.QueueItem;
 
 @Controller
-@RequestMapping("/user/")
 public class UserController {
 
 	@Autowired
@@ -23,8 +21,8 @@ public class UserController {
 	@Autowired
 	AccountDao acDao;
 	
-	@RequestMapping("{username}")
-	public String getAllFromUser(@RequestParam String username, Model m) {
+	@RequestMapping("/user/{username}")
+	public String getAllFromUser(@PathVariable("username") String username, Model m) {
 		
 		if (acDao.getFromUsername(username) == null) {
 			m.addAttribute("error", username+" is not a registered user.");
@@ -32,6 +30,7 @@ public class UserController {
 		} else {
 			List<QueueItem> queued = qiDao.allQueuedByUser(acDao.getFromUsername(username));
 			if (queued != null) {
+				System.out.println(queued);
 				m.addAttribute("queued", queued);
 				m.addAttribute("user",username);
 			} else {
@@ -39,8 +38,7 @@ public class UserController {
 			}
 		}
 		
-		
-		return "foo";
+		return "userlist";
 	}
 	
 }

@@ -300,14 +300,16 @@ public class QueueItemDao {
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		
 		cq.where(cb.equal(root.get(QueueItem_.userName), a.getUsername()));
-		QueueItem qi = null;
-		/*try {
-			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
+		List<QueueItem> qi = null;
+		try {
+			 qi = em.createQuery(cq).getResultList();
 		} catch (Exception e) {
-			return qi;
-		}*/
+			log.error("Exception: ",e);
+		}
 		
-		return null; 
+		return qi;
+		
+
 	}
 	
 	

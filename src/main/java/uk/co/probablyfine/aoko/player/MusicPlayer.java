@@ -41,7 +41,6 @@ public class MusicPlayer {
 	
 	public void playTrack(QueueItem qi) {
 		try {
-			
 			qiDao.startedPlaying(qi);
 			Runtime.getRuntime().exec(new String[] {playerPath, qi.getFile().getLocation()}).waitFor();
 		} catch (IOException e) {

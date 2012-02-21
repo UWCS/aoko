@@ -1,5 +1,8 @@
 package uk.co.probablyfine.aoko.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -51,5 +54,21 @@ public class YoutubeDao {
 	@Transactional
 	public void merge(YoutubeDownload dl) {
 		em.merge(dl);
+	}
+
+	public List<YoutubeDownload> getAllQueued() {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<YoutubeDownload> cq = cb.createQuery(YoutubeDownload.class);
+		final Root<YoutubeDownload> dl = cq.from(YoutubeDownload.class);
+		cq.where(cb.equal(dl.get(YoutubeDownload_.state), DownloadState.WAITING));
+		List<YoutubeDownload> yt = new ArrayList<YoutubeDownload>();
+		try {
+			yt = em.createQuery(cq).getResultList();
+		} catch (Exception e) {
+			System.out.println("Could not get single result");
+		}
+		
+		return yt;
+		
 	}
 }

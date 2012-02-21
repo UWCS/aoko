@@ -20,7 +20,7 @@ public class MusicPlayer {
 	@Autowired
 	QueueItemDao qiDao;
 	
-	//@PostConstruct
+	@PostConstruct
 	public void play() throws InterruptedException {
 		new Thread(new Runnable() {
 			@Override

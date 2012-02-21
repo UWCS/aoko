@@ -50,7 +50,6 @@ public class QueueController {
 			log.debug("User not logged in, redirecting to home");
 			return "redirect:/";
 		}
-	
 				
 		qiDao.deleteItem(bucketId,p.getName());
 			

@@ -4,9 +4,6 @@
 	<%@ include file="header.html" %>
 		Some kind of music server! 
 		<sec:authorize access="isAuthenticated()">
-			<a href="<c:url value="/logout"/>">Logout</a>
-		</sec:authorize>
-		<sec:authorize access="isAuthenticated()">
 			<div id="sidebar">
 				<ul>
 					<li>File Upload</li>
@@ -26,14 +23,7 @@
 	        </div>
 		</sec:authorize>
 		<br />
-		<c:choose>
-		  	<c:when test="${not empty username}">
-		    Currently logged in as - <strong><c:out value="${username}"/></strong>
-			</c:when>
-		   <c:otherwise>
-		    You aren't logged in! <a href="<c:url value="/login/"/>">Login</a> or <a href="<c:url value="/login/register"/>">register</a>
-		  </c:otherwise>
-		</c:choose>
+
 		<p>
 			<div id="menu">
 				<c:forEach items="${queue}" var="qi">

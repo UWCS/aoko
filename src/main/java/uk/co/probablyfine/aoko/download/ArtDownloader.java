@@ -61,7 +61,7 @@ public class ArtDownloader {
 		} else {
 			
 			if (args.containsKey("album") && (args.containsKey("artist") || args.containsKey("album_artist"))) {
-					queryString.add("release="+args.get("album"));
+					queryString.add("release:"+args.get("album"));
 					if (args.containsKey("artist")) {
 						queryString.add("artist:"+args.get("artist"));
 					} else {

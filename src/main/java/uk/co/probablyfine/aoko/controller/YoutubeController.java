@@ -13,6 +13,7 @@ public class YoutubeController {
 
 	@Autowired
 	YoutubeDao ytDao;
+	
 	@RequestMapping("/youtube/")
 	public String getAllQueued(Model m) {
 	

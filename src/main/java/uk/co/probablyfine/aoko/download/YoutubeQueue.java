@@ -5,19 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,6 +34,8 @@ import com.google.common.io.Files;
 @Service
 public class YoutubeQueue {
 
+	private final Logger log = LoggerFactory.getLogger(YoutubeQueue.class);
+	
 	@Value("${script.youtubedl}")
 	String ytdPath;
 	
@@ -44,7 +44,6 @@ public class YoutubeQueue {
 	
 	@Value("${media.art}")
 	String artPath;
-	
 	
 	@Autowired
 	YoutubeDao ytDao;
@@ -78,18 +77,18 @@ public class YoutubeQueue {
 					YoutubeDownload yd = ytDao.next();
 					if (null != yd) {
 					
-					System.out.println("Getting "+yd.getUrl());
+					log.debug("Attempting to download {}",yd.getUrl());
 					try {
 						//Save file to <media-download-path>\<title>.<format>
 						File tempDir = Files.createTempDir();
 						String outputFormat = tempDir.getAbsolutePath()+File.separator+"%(stitle)s.%(ext)s";
 						Process p = Runtime.getRuntime().exec(new String[] {"python", ytdPath, "-o", outputFormat, yd.getUrl()});
 						
-						BufferedReader foo = new BufferedReader(new InputStreamReader(p.getInputStream()));
+						BufferedReader outputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 						
-						String bar;
-						while ((bar = foo.readLine()) != null) {
-							System.out.println(bar);
+						String outputLine;
+						while ((outputLine = outputReader.readLine()) != null) {
+							log.trace(outputLine);
 						}
 						
 						int code = p.waitFor();
@@ -101,6 +100,9 @@ public class YoutubeQueue {
 								File downloadedFile = tempDir.listFiles()[0];
 								hash = Files.getDigest(downloadedFile, MessageDigest.getInstance("SHA1"));
 								String hexVal = new BigInteger(hash).toString(16);
+							
+								log.debug("{} has hash {}",downloadedFile.getName(),hexVal);
+								
 								Account user = userDao.getFromUsername(yd.getQueuedBy());
 								
 								MusicFile file;
@@ -125,7 +127,7 @@ public class YoutubeQueue {
 										artDownloader.getYoutubeArt(id);
 										file.setArtLocation(id+".jpg");
 									} catch (Exception e) {
-										System.out.println(" "+e);
+										log.error("Exception: ",e);
 									}
 									
 									Map<String,String> data = new HashMap<String, String>();
@@ -143,7 +145,7 @@ public class YoutubeQueue {
 								qiDao.queueTrack(user, file);
 								ytDao.dlSuccess(yd);
 							} catch (NoSuchAlgorithmException e) {
-								System.out.println("Fucked");
+								log.error("No such algorithm. ",e);
 															
 							}
 			
@@ -152,13 +154,11 @@ public class YoutubeQueue {
 							ytDao.dlFail(yd);
 						}
 					} catch (IOException e) {
-						System.out.println("SOMETHING WENT HORRIBLY WRONG.");
+						log.error("IOException: ",e);
 						ytDao.dlFail(yd);
-						return;
 					} catch (InterruptedException e) {
-						System.out.println("INTERRUPTED.");
+						log.error("Thread was interrupted: ",e);
 						ytDao.dlFail(yd);
-						return;
 					}
 					
 				}
@@ -170,10 +170,12 @@ public class YoutubeQueue {
 	}
 	
 	public void stopDownloader() {
+		log.debug("Stopping the downloader.");
 		dlThread.interrupt();
 	}
 	
 	public void startDownloader() {
+		log.debug("Starting the downloader.");
 		dlThread.start();
 	}
 	

@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,8 @@ import uk.co.probablyfine.aoko.domain.YoutubeDownload_;
 @Repository
 public class YoutubeDao {
 
+	private final Logger log = LoggerFactory.getLogger(YoutubeDao.class);
+	
 	@PersistenceContext
 	EntityManager em;
 	
@@ -31,8 +36,10 @@ public class YoutubeDao {
 		YoutubeDownload yt = null;
 		try {
 			yt = em.createQuery(cq).getSingleResult();
-		} catch (Exception e) {
-			System.out.println("Could not get single result");
+		} catch (NonUniqueResultException e) {
+		}
+		catch (Exception e) {
+			log.error("Error getting next track: ",e);
 		}
 		
 		return yt;
@@ -56,6 +63,7 @@ public class YoutubeDao {
 		em.merge(dl);
 	}
 
+	@Transactional(readOnly = true)
 	public List<YoutubeDownload> getAllQueued() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<YoutubeDownload> cq = cb.createQuery(YoutubeDownload.class);

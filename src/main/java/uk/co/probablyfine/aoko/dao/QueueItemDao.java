@@ -47,7 +47,7 @@ public class QueueItemDao {
 		List<QueueItem> process = new ArrayList<QueueItem>(Collections2.filter(results, new Predicate<QueueItem>() {
 			@Override
 			public boolean apply(QueueItem input) {
-				return input.getState() != PlayerState.PLAYED;
+				return input.getStatus() != PlayerState.PLAYED;
 			}
 		}));
 		
@@ -153,14 +153,14 @@ public class QueueItemDao {
 	@Transactional
 	public void finishedPlaying(QueueItem qi) {
 		log.debug("Setting {} as finished playing",qi.getFile().getUniqueId());
-		qi.setState(PlayerState.PLAYED);
+		qi.setStatus(PlayerState.PLAYED);
 		em.merge(qi);
 	}
 	
 	@Transactional
 	public void startedPlaying(QueueItem qi) {
 		log.debug("Setting {} as playing",qi.getFile().getUniqueId());
-		qi.setState(PlayerState.PLAYING);
+		qi.setStatus(PlayerState.PLAYING);
 		em.merge(qi);
 	}
 	

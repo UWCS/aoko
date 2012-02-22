@@ -63,15 +63,15 @@ public class ArtDownloader {
 			if (args.containsKey("album") && (args.containsKey("artist") || args.containsKey("album_artist"))) {
 					queryString.add("release="+args.get("album"));
 					if (args.containsKey("artist")) {
-						queryString.add("artist="+args.get("artist"));
+						queryString.add("artist:"+args.get("artist"));
 					} else {
-						queryString.add("artist="+args.get("album_artist"));
+						queryString.add("artist:"+args.get("album_artist"));
 					}
 			} else {
 				throw new RuntimeException("Insufficient data for album art");
 			}
 			
-			String url = "http://musicbrainz.org/ws/2/release/?type=xml&query='"+URLEncoder.encode(Joiner.on("&").join(queryString),"UTF-8") + "'";
+			String url = "http://musicbrainz.org/ws/2/release/?type=xml&query="+URLEncoder.encode(Joiner.on(" ").join(queryString),"UTF-8");
 			
 			System.out.println(url);
 			

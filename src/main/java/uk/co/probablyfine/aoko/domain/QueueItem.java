@@ -18,7 +18,7 @@ import com.google.common.base.Joiner;
 public class QueueItem implements Comparable<QueueItem>{
 
 	public QueueItem() {
-		this.setState(PlayerState.QUEUED);
+		this.setStatus(PlayerState.QUEUED);
 	}
 	
 	@Id
@@ -40,7 +40,7 @@ public class QueueItem implements Comparable<QueueItem>{
 	public QueueItem(Account user, MusicFile file) {
 		this.userName = user.getUsername();
 		this.musicFile = file;
-		this.setState(PlayerState.QUEUED);
+		this.setStatus(PlayerState.QUEUED);
 	}
 	
 	public String getUserName() {
@@ -98,11 +98,11 @@ public class QueueItem implements Comparable<QueueItem>{
 		
 	}
 
-	public void setState(PlayerState state) {
+	public void setStatus(PlayerState state) {
 		this.status = state;
 	}
 
-	public PlayerState getState() {
+	public PlayerState getStatus() {
 		return status;
 	}
 

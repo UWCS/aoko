@@ -293,6 +293,7 @@ public class QueueItemDao {
 		em.remove(qi);
 	}
 
+	@Transactional(readOnly = true)
 	public List<QueueItem> allQueuedByUser(Account a) {
 		log.debug("Getting all items from {}",a.getUsername());
 		CriteriaBuilder cb = em.getCriteriaBuilder();

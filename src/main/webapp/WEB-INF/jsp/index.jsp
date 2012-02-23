@@ -35,10 +35,9 @@
 						</span>
 						<span class="info">			
 							<c:if test="${qi.userName == username}">
-								<a href="<c:url value="/a/move/up/${qi.bucket}"/>">Up</a>
-								<a href="<c:url value="/a/move/down/${qi.bucket}"/>">Down</a>
-								
 								<c:if test='${qi.status != "PLAYING"}'>
+									<a href="<c:url value="/a/move/up/${qi.bucket}"/>">Up</a>
+									<a href="<c:url value="/a/move/down/${qi.bucket}"/>">Down</a>
 									<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
 								</c:if>
 							</c:if>

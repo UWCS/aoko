@@ -35,10 +35,8 @@ public class UploadController {
 			 try {
 				fuh.processFile(form.getFile(), p.getName());
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		 }
@@ -58,7 +56,7 @@ public class UploadController {
 			//return error?
 		}
 		
-		return "redirect:/";
+		return "redirect:/youtube/";
 	}
 	
 }

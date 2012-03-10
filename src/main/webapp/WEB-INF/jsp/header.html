@@ -7,21 +7,29 @@
 	<div id="container">
 		<div id="header">
 			<div id="logo">
-				<img src="<c:url value="/resources/logo.png"/>" />
-				<a href="<c:url value="/about"/>">About</a>
-				<a href="<c:url value="/youtube/"/>">YouTube</a>
-				
-				<c:choose>
+				<a href="<c:url value="/"/>"><img src="<c:url value="/resources/logo.png"/>"/></a>
+			</div>
+			
+
+			<c:choose>
 			  		<c:when test="${not empty username}">
+			  			<span class="login">
 				    	Currently logged in as - <strong><c:out value="${username}"/></strong>
-				    	<sec:authorize access="isAuthenticated()">
+				    	<sec:authorize access="isAuthenticated()"><br />
+				    	<span/>
+				    	<span class="headerlinks">
 							<a href="<c:url value="/logout"/>">Logout</a>
+							<a href="<c:url value="/about"/>">About</a>
+							<a href="<c:url value="/youtube/"/>">YouTube</a>
 						</sec:authorize>
 					</c:when>
 				  	<c:otherwise>
+				  		<span class="headerlinks">
+				  		<a href="<c:url value="/about"/>">About</a>
+							<a href="<c:url value="/youtube/"/>">YouTube</a>
 					    <a href="<c:url value="/login/"/>">Login</a>
 					    <a href="<c:url value="/login/register"/>">Register</a>
 				  	</c:otherwise>
 				</c:choose>
-			</div>
+		</span>		
 		</div>

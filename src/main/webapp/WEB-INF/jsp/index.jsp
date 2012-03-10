@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 	<%@ include file="header.html" %>
-		Some kind of music server! 
 		<sec:authorize access="isAuthenticated()">
 			<div id="sidebar">
 				<ul>

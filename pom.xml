@@ -58,6 +58,28 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<appendAssemblyId>false</appendAssemblyId>
+					<archive>
+						<manifest>
+							<mainClass>uk.co.probablyfine.aoko.AokoBootstrap</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	
@@ -217,6 +239,12 @@
 			<artifactId>aspectjtools</artifactId>
 			<version>1.6.2</version>
 		</dependency>
+
+<dependency>
+	<groupId>org.mortbay.jetty</groupId>
+	<artifactId>jetty</artifactId>
+	<version>6.1.26</version>
+</dependency>
             
 
 	</dependencies>

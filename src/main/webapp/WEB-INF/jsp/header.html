@@ -13,7 +13,7 @@
 			  		<c:when test="${not empty username}">
 			  			<span class="login">
 				    	Currently logged in as - <strong><c:out value="${username}"/></strong>
-				    	<sec:authorize access="isAuthenticated()"><br />
+				    <sec:authorize access="isAuthenticated()"><br />
 				    	<span/>
 				    	<span class="links">
 							<a href="<c:url value="/logout"/>">Logout</a>

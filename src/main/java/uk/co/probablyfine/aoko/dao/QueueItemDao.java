@@ -139,15 +139,39 @@ public class QueueItemDao {
 		
 	}
 	@Transactional(readOnly = true)
-	public List<QueueItem> getAll() {
+	public List<List<QueueItem>> getAll() {
 		log.debug("Trying to get all items");
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
 		List<QueueItem> resultsList = em.createQuery(cq).getResultList();
+	
+		List<List<QueueItem>> bucketList = new ArrayList<List<QueueItem>>();
+		
+		if (resultsList.size() == 0)
+			return new ArrayList<List<QueueItem>>();
+		
 		Collections.sort(resultsList);
-		return resultsList;
+		
+		int firstBucket = resultsList.get(0).getBucket();
+		
+		List<QueueItem> currentBucket = new ArrayList<QueueItem>();
+		
+		for(int i = 0; i < resultsList.size(); i++) {
+			if (resultsList.get(i).getBucket() == firstBucket) {
+				currentBucket.add(resultsList.get(i));
+			} else {
+				firstBucket = resultsList.get(i).getBucket();
+				bucketList.add(currentBucket);
+				bucketList.clear();
+			}
+		}
+		
+		if (!currentBucket.isEmpty()) 
+			bucketList.add(currentBucket);
+		
+		return bucketList;
 	}
 	
 	@Transactional

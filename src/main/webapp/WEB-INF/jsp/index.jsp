@@ -30,8 +30,10 @@
 		<br />
 
 		<div id="menu">
-			<c:forEach items="${queue}" var="qi">
-					
+			<c:forEach items="${queue}" var="bucket">
+				<div id="bucket">
+				<c:forEach items="bucket" var="qi">
+
 					<div class="package">
 						
 						<c:if test="${not empty qi.file.artLocation}">
@@ -42,7 +44,7 @@
 						
 						
 							<div class="info">
-								<div class="track-data">
+							<div class="track-data">
 									${qi}
 								</div>
 								<div class="user">
@@ -60,9 +62,9 @@
 								</c:if>
 							</div>
 						</div>
-						
 					
-					<br />
 			</c:forEach>
+			</div>
+		</c:forEach>
 		</div>
 <%@ include file="footer.html" %>

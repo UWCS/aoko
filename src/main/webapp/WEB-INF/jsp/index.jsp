@@ -25,23 +25,37 @@
 
 		<div id="menu">
 			<c:forEach items="${queue}" var="qi">
+					
 					<div class="package">
-						<span class="title">
-							<c:if test="${not empty qi.file.artLocation}">
-							<img src="<c:url value="/resources/${qi.file.artLocation}"/>" height="100" width="100"/>
-							</c:if>
-							${qi} queued by ${qi.userName}
-						</span>
-						<span class="info">			
-							<c:if test="${qi.userName == username}">
-								<c:if test='${qi.status != "PLAYING"}'>
-									<a href="<c:url value="/a/move/up/${qi.bucket}"/>">Up</a>
-									<a href="<c:url value="/a/move/down/${qi.bucket}"/>">Down</a>
-									<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
+						
+						<c:if test="${not empty qi.file.artLocation}">
+							<div class="art">
+								<img src="<c:url value="/resources/${qi.file.artLocation}"/>"/>
+							</div>
+						</c:if>
+						
+						
+							<div class="info">
+								<div class="track-data">
+									${qi}
+								</div>
+								<div class="user">
+									${qi.userName}
+								</div>
+							</div>
+													
+							<div class="control">			
+								<c:if test="${qi.userName == username}">
+									<c:if test='${qi.status != "PLAYING"}'>
+										<a href="<c:url value="/a/move/up/${qi.bucket}"/>">Up</a> 
+										<a href="<c:url value="/a/move/down/${qi.bucket}"/>">Down</a>
+										<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
+									</c:if>
 								</c:if>
-							</c:if>
-						</span>
-					</div>
+							</div>
+						</div>
+						
+					
 					<br />
 			</c:forEach>
 		</div>

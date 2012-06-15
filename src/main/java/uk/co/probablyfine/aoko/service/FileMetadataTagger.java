@@ -7,7 +7,6 @@ import java.util.Map;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,24 +19,29 @@ public class FileMetadataTagger {
 		
 		Map<String,String> metadata = new HashMap<String, String>();
 		
-		AudioFile f;
+		final AudioFile f;
+		
 		try {
 			f = AudioFileIO.read(file);
 		} catch (Exception e) {
 			log.error("Exception, ",e);
 			return metadata;
 		}
-		Tag tag = f.getTag();
 		
-		for (FieldKey key : FieldKey.values()) {
+		final Tag tag = f.getTag();
+		
+		for (final FieldKey key : FieldKey.values()) {
+			
 			try {
 				tag.getFirst(key);
-				System.out.println("Found "+key.name()+": "+tag.getFirst(key));
-				if (tag.getFirst(key) != null && tag.getFirst(key) != "")
-					metadata.put(key.name().toLowerCase(), tag.getFirst(key));
 			} catch (Exception e) {
 				continue;
-			}
+			}	
+				
+			log.debug("Found {}: {}",key.name(),tag.getFirst(key));
+			if (tag.getFirst(key) != null && tag.getFirst(key) != "")
+				metadata.put(key.name().toLowerCase(), tag.getFirst(key).substring(0,255));
+			 
 		}
 		
 		return metadata;

@@ -5,20 +5,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import uk.co.probablyfine.aoko.dao.YoutubeDao;
+import uk.co.probablyfine.aoko.dao.MusicFileDao;
 
 @Controller
-public class YoutubeController {
+public class MediaController {
 
 	@Autowired
-	YoutubeDao ytDao;
+	MusicFileDao dao;
 	
-	@RequestMapping("/youtube/")
-	public String getAllQueued(Model m) {
-	
-		m.addAttribute("queued", ytDao.getAllQueued());
+	@RequestMapping("/media/")
+	public String getAllQueuedTracks(Model m) {
+		m.addAttribute("tracks", dao.getAll());
+		return "media";
 		
-		return "youtube";
 	}
-	
 }

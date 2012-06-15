@@ -58,6 +58,28 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<appendAssemblyId>false</appendAssemblyId>
+					<archive>
+						<manifest>
+							<mainClass>uk.co.probablyfine.aoko.AokoBootstrap</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	
@@ -67,12 +89,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -158,6 +174,7 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -170,14 +187,8 @@
 			<version>4.8.1</version>
 		</dependency>
 		
-		<!--  MySQL MODE. Uncomment for MySQl connector-->
-		<!--  
-		  	<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-	    	<version>5.1.6</version>
-		</dependency>
-		-->
+
+
 		
 		<!-- Derby - In-memory database for testing and stuff -->
 		<dependency>
@@ -216,6 +227,19 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjtools</artifactId>
 			<version>1.6.2</version>
+		</dependency>
+
+<dependency>
+	<groupId>org.mortbay.jetty</groupId>
+	<artifactId>jetty</artifactId>
+	<version>6.1.26</version>
+</dependency>
+
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+	    	<version>5.1.6</version>
+	    	<scope>runtime</scope>
 		</dependency>
             
 

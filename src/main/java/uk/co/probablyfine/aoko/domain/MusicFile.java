@@ -1,6 +1,8 @@
 package uk.co.probablyfine.aoko.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -9,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import com.google.common.base.Joiner;
 
 
 @Entity
@@ -102,6 +106,29 @@ public class MusicFile {
 
 	public void setArtLocation(String artLocation) {
 		this.artLocation = artLocation;
+	}
+	
+	@Override
+	public String toString() {
+		List<String> params = new ArrayList<String>();
+				
+		if (metaData.containsKey("artist") && metaData.get("artist") != "") {
+			params.add(metaData.get("artist"));
+		}
+		
+		if (metaData.containsKey("title") && metaData.get("artist") != "") {
+			params.add(metaData.get("title"));
+		}
+		
+		if (metaData.containsKey("album") && metaData.get("album") != "") {
+			params.add(metaData.get("album"));
+		}
+		
+		if (params.isEmpty()) {
+			params.add(metaData.get("originalname"));
+		}
+		
+		return Joiner.on(" -- ").skipNulls().join(params);
 	}
 	
 }

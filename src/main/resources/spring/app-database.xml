@@ -25,7 +25,6 @@
 		-->
 		
 		<!-- In-memory database connection config -->
-		
 		  
 		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 			<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />

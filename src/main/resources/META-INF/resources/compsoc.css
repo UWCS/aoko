@@ -48,7 +48,6 @@ p {
 /*** Layout ***/
 
 body, html {
-	height: 100%;
 } 
 
 body {
@@ -63,7 +62,7 @@ html {
 }
 
 #container {
-    min-height: 100%;
+	min-height: 100%;
     margin-bottom: -40px;
 }
 
@@ -125,10 +124,7 @@ html {
 /* Menu */
 
 #menu {
-	margin-top: -20px;
-	float: left;
-	padding-top: 20px;
-	padding-left: 30px;
+	width: 100%;
 }
 
 #menu ul {
@@ -145,71 +141,6 @@ html {
 	margin-left: 20px;
 	text-decoration: none;
 	font-size: 1.36em;
-}
-
-/* Sidebar */
-
-#sidebar {
-	float: right;
-	width: 200px;
-	margin-top: 20px;
-	margin-left: 20px;
-	margin-right: 30px;
-	/* Horrific IE6 Hack */
-	-margin-right: 15px;
-	overflow: hidden;
-}
-
-#sidebar ul {
-	padding: 10px 0;
-}
-
-#sidebar li {
-	margin-left: 10px;
-	margin-right: 10px;
-}
-
-#sidebar li li form  {
-	padding-left: 15px;
-	padding-right: 15px;
-	margin: 10px;
-}
-
-#sidebar li li a {
-	padding: 5px 5px 5px 20px;
-	width: 141px;
-	display: block;
-}
-
-#sidebar h2 {
-	padding: 5px 0 0 20px;
-}
-
-#sidebar .cms {
-	margin: 10px 10px 10px 5px;
-	padding-bottom: 10px;
-}
-
-#sidebar ul .cms ul {
-	padding: 0 0 0 15px;
-}
-
-#sidebar ul .cms li {
-	padding-top: 5px;
-}
-
-#sidebar ul .cms li a {
-	display: inline;
-	border: 0;
-	padding: 0;
-}
-
-#sidebar form.revisions input {
- margin: 10px;
-}
-
-#sidebar input {
-	width: 100%;
 }
 
 /* Page layout */
@@ -604,15 +535,6 @@ pre {
     background-color: red;
 }
 
-#facebook_like {
-	width: 100px;
-	float: right;
-	margin-left:10px;
-	background-color: #181818;
-	text-align:center;
-	border: 1px solid #333;
-}
-
 .package
 {
 	background: #222 url(/resources/postbg.png) repeat-x top;
@@ -642,81 +564,10 @@ pre {
 	color: #46B;
 }
 
-.package .install
-{
-	display: inline-block;
-	float: right;
-	padding: 5px;
-}
-
-.package .launch
-{
-	background-color: #333;
-	color: #3193FF;
-	display: inline-block;
-	float: right;
-	margin: 5px;
-	padding: 5px;
-	border-color: white;
-	border-style: dotted;
-	border-width: 1px;
-}
-
-.package .launching
-{
-	background-color: #333;
-	color: #3193FF;
-	display: inline-block;
-	float: right;
-	margin: 5px;
-	padding: 5px;
-	border-color: white;
-	border-style: dotted;
-	border-width: 1px;
-}
-
 .package .info
 {
 	display: block;
 	padding: 0 10px 10px 10px;
-}
-
-.package .progress
-{
-	display: none;
-	padding: 0;
-	margin: 0;
-	width: 100%;
-}
-
-.package .progress .barContainer
-{
-	border: 2px solid #555;
-	width: 100%;
-	height: 25px;
-}
-
-.package .progress .barContainer .done
-{
-	overflow: hidden;
-	background-color: #F0BC20;
-	color: #46B;
-	border: 0px;
-	white-space: nowrap;
-	width: 0%;
-	height: 25px;
-	line-height: 25px;
-	position: relative;
-	top: -25px;
-}
-
-.package .progress .barContainer .undone
-{
-	overflow: hidden;
-	white-space: nowrap;
-	width: 100%;
-	height: 25px;
-	line-height: 25px;
 }
 
 .art {
@@ -726,20 +577,20 @@ pre {
 
 .art img
 {
-  height: 100px;
-  width: 100px;
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
 }
 
 .track-data
 {
   font-size: 16px;
-  padding: 15px;
-  text-overflow: ellipsis;
+  padding: 5px;
 }
 
 
 .info {
-	text-align: right;
+	text-align: left;
 }
 
 
@@ -760,4 +611,9 @@ pre {
   font-size: 10px !important;
   float: none !important;
   display: inline !important;
+}
+
+.submitform {
+	float: left;
+	margin-right: 20px;	
 }

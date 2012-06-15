@@ -40,7 +40,7 @@ public class FileMetadataTagger {
 				
 			log.debug("Found {}: {}",key.name(),tag.getFirst(key));
 			if (tag.getFirst(key) != null && tag.getFirst(key) != "")
-				metadata.put(key.name().toLowerCase(), tag.getFirst(key).substring(0,255));
+				metadata.put(key.name().toLowerCase(), tag.getFirst(key));
 			 
 		}
 		

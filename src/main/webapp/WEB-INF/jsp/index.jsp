@@ -2,25 +2,31 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 	<%@ include file="header.html" %>
+		
 		<sec:authorize access="isAuthenticated()">
-			<div id="sidebar">
-				<ul>
-					<li>File Upload</li>
-			        <li>
+			
+			<div class="package">
+			
+				<div class="submitform">
+					File Upload
 				        <form method="post" commandName="FORM" action="/submit/upload" enctype="multipart/form-data">
 				            <input type="file" name="file"/><br/>
 				            <input type="submit"/>
 				        </form>
-				   	</li>
-				<br /><br />
-		    	<li>YouTubeDl</li>
-		        <li><form method="post" action="/submit/youtube">
-		            <input type="text" name="url"/>
+				</div>
+				
+		    	<div class="submitform">
+		    	YouTubeDl
+		        <form method="post" action="/submit/youtube">
+		            <input type="text" name="url"/><br/>
 		            <input type="submit"/>
-		        </form></li>
-		        </ul>
+		        </form>
+		        </div>
+		        
 	        </div>
+		
 		</sec:authorize>
+		
 		<br />
 
 		<div id="menu">

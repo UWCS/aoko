@@ -82,6 +82,8 @@
 					
 			</c:forEach>
 			</div>
+			</br>
 		</c:forEach>
+
 		</div>
 <%@ include file="footer.html" %>

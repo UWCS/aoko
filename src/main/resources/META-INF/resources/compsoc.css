@@ -604,6 +604,10 @@ pre {
 	float: right;
 }
 
+.bucket {
+	margin-bottom: 10px;
+}
+
 /* noideadog.jpg */
 
 .control a

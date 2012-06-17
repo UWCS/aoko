@@ -5,12 +5,13 @@ import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.QueueItemDao;
-import uk.co.probablyfine.aoko.domain.QueueItem;
 
 @Controller
 @RequestMapping("/a/")
@@ -19,7 +20,10 @@ public class QueueController {
 	private final Logger log = LoggerFactory.getLogger(QueueController.class);
 	
 	@Autowired
-	QueueItemDao qiDao;
+	QueueItemDao queue;
+	
+	@Autowired
+	AccountDao accounts;
 	
 	@RequestMapping("move/{direction}/{id}")
 	public String moveSong(	@PathVariable("direction") String direction,
@@ -31,9 +35,9 @@ public class QueueController {
 			log.debug("User = {}, Bucket = {}, Direction = {}", new Object[] {p.getName(),bucketId,direction });
 			
 		if (direction.matches("up")) {
-			qiDao.shiftUp(p.getName(), bucketId);
+			queue.shiftUp(p.getName(), bucketId);
 		} else if (direction.matches("down")) {
-			qiDao.shiftDown(p.getName(), bucketId);
+			queue.shiftDown(p.getName(), bucketId);
 		} else {
 
 		}
@@ -51,11 +55,24 @@ public class QueueController {
 			return "redirect:/";
 		}
 				
-		qiDao.deleteItem(bucketId,p.getName());
+		queue.deleteItem(bucketId,p.getName());
 			
 		log.debug("Returning user to homepage");
+		
 		return "redirect:/";
+		
 	}
+	
+	@RequestMapping("admin/{username}") 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String setUserAsAdmin(@PathVariable("username") String username) {
+		
+		accounts.setUserAsAdmin(username);
+		
+		return "redirect:/";
+		
+	}
+	
 	
 	
 }

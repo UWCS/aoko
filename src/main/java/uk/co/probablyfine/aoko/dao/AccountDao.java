@@ -52,4 +52,11 @@ public class AccountDao {
 	public void merge(Account user) {
 		em.merge(user);
 	}
+
+	@Transactional
+	public void setUserAsAdmin(String username) {
+		final Account account = getFromUsername(username);
+		account.setRole("ROLE_ADMIN");
+		em.merge(account);
+	}
 }

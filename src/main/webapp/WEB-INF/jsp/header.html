@@ -9,25 +9,25 @@
 			<div id="logo">
 				<a href="<c:url value="/"/>"><img src="<c:url value="/resources/logo.png"/>"/></a>
 			</div>
-			<c:set var="username"><sec:authentication property="name" /></c:set>
+			
 			<c:choose>
-			  		<c:when test="${username != 'anonymousUser'}">
+			  		<c:when test="${not empty username}">
 			  			<span class="login">
-				    		Currently logged in as - <strong>${username}</strong>
-				    	</span>
+				    	Currently logged in as - <strong><c:out value="${username}"/></strong>
+				    	<sec:authorize access="isAuthenticated()"><br />
+				    	<span/>
 				    	<span class="links">
 							<a href="<c:url value="/logout"/>">Logout</a>
 							<a href="<c:url value="/about"/>">About</a>
 							<a href="<c:url value="/youtube/"/>">YouTube</a>
-						
-						</c:when>
-					  	<c:otherwise>
-						  		<span class="links">
-						  		<a href="<c:url value="/about"/>">About</a>
-								<a href="<c:url value="/youtube/"/>">YouTube</a>
-							    <a href="<c:url value="/login/"/>">Login</a>
-							    <a href="<c:url value="/login/register"/>">Register</a>
-					  	</c:otherwise>
-						</c:choose>
-						</span>		
+						</sec:authorize>
+					</c:when>
+				  	<c:otherwise>
+				  		<span class="links">
+				  		<a href="<c:url value="/about"/>">About</a>
+							<a href="<c:url value="/youtube/"/>">YouTube</a>
+					    <a href="<c:url value="/login/"/>">Login</a>
+					    <a href="<c:url value="/login/register"/>">Register</a>
+				  	</c:otherwise>
+				</c:choose>
 		</div>

@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -15,9 +17,10 @@ public class Account {
 
 	public Account() {}
 	
-	public Account(String username, String password) {
+	public Account(String username, String password, String role) {
 		this.username = username;
 		this.password = password;
+		this.role = role;
 	}
 	
 	@Id
@@ -29,6 +32,9 @@ public class Account {
 	
 	@Column(nullable = false)
 	private String password;
+	
+	@Column(nullable = false)
+	private String role;
 	
 	public int getId() {
 		return id;
@@ -55,8 +61,15 @@ public class Account {
 	}
 
 	public UserDetails toUser() {
-		//Namespace collision :(
-		return new org.springframework.security.core.userdetails.User(username, password, Collections.<GrantedAuthority>emptySet());
+		return new User(this.username, this.password, Collections.<GrantedAuthority>singleton(new SimpleGrantedAuthority(this.role)));
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 }

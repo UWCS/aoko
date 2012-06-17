@@ -40,5 +40,6 @@ public class UserController {
 		
 		return "userlist";
 	}
+
 	
 }

@@ -164,7 +164,8 @@ public class QueueItemDao {
 			} else {
 				firstBucket = resultsList.get(i).getBucket();
 				bucketList.add(currentBucket);
-				bucketList.clear();
+				currentBucket = new ArrayList<QueueItem>();
+				currentBucket.add(resultsList.get(i));
 			}
 		}
 		

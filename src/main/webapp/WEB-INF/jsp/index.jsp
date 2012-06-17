@@ -16,7 +16,7 @@
 				</div>
 				
 		    	<div class="submitform">
-		    	YouTubeDl
+		    	YouTube
 		        <form method="post" action="/submit/youtube">
 		            <input type="text" name="url"/><br/>
 		            <input type="submit"/>
@@ -31,8 +31,9 @@
 
 		<div id="menu">
 			<c:forEach items="${queue}" var="bucket">
+			
 				<div id="bucket">
-				<c:forEach items="bucket" var="qi">
+				<c:forEach items="${bucket}" var="qi">
 
 					<div class="package">
 						
@@ -52,14 +53,30 @@
 								</div>
 							</div>
 													
-							<div class="control">			
+							<div class="control">
 								<c:if test="${qi.userName == username}">
 									<c:if test='${qi.status != "PLAYING"}'>
 										<a href="<c:url value="/a/move/up/${qi.bucket}"/>">Up</a> 
 										<a href="<c:url value="/a/move/down/${qi.bucket}"/>">Down</a>
+									</c:if>
+								</c:if>
+								<sec:authorize access="!hasRole('ROLE_ADMIN')">	
+									<c:if test="${qi.userName == username}">
+									<c:if test='${qi.status != "PLAYING"}'>
 										<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
 									</c:if>
 								</c:if>
+								</sec:authorize>
+								<sec:authorize access="hasRole('ROLE_ADMIN')">
+									<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
+								</sec:authorize>
+								
+								
+								
+								
+								
+								
+								
 							</div>
 						</div>
 					

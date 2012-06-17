@@ -15,7 +15,7 @@
   </root>
 
   <logger name="uk.co.probablyfine.aoko">
-		  <level value="info"/> 
+		  <level value="debug"/> 
   </logger>
   
 </log4j:configuration>

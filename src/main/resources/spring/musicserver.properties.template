@@ -7,7 +7,5 @@ media.art=
 #Path/command for music player
 path.player=
 
-#Locations of scripts
-script.spotify.play=
-script.spotify.trackdata=
+# Youtube-dl script. Make sure this is executable (there is a specific .exe for Windows)
 script.youtubedl=

@@ -124,8 +124,10 @@ public class QueueItemDao {
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
+		cq.orderBy(cb.asc(root.get(QueueItem_.bucket)));
 		
 		QueueItem qi = null;
+		
 		try {
 			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
 		} catch (Exception e) {

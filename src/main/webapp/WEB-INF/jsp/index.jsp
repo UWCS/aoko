@@ -49,7 +49,7 @@
 									${qi}
 								</div>
 								<div class="user">
-									${qi.userName}
+									<a href="<c:url value="/user/${qi.userName}"/>">${qi.userName}</a>
 								</div>
 							</div>
 													
@@ -60,23 +60,19 @@
 										<a href="<c:url value="/a/move/down/${qi.bucket}"/>">Down</a>
 									</c:if>
 								</c:if>
+								
+								<c:if test='${qi.status != "PLAYING"}'>
 								<sec:authorize access="!hasRole('ROLE_ADMIN')">	
 									<c:if test="${qi.userName == username}">
-									<c:if test='${qi.status != "PLAYING"}'>
 										<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
 									</c:if>
-								</c:if>
 								</sec:authorize>
+								
 								<sec:authorize access="hasRole('ROLE_ADMIN')">
 									<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
 								</sec:authorize>
-								
-								
-								
-								
-								
-								
-								
+								</c:if>
+							
 							</div>
 						</div>
 					

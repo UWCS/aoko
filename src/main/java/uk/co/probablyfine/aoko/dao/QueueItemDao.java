@@ -131,13 +131,16 @@ public class QueueItemDao {
 		try {
 			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
 		} catch (Exception e) {
-			log.debug("Cannot return new track");
-			log.error("Exception",e);
+			if (e.getMessage().equals("No entity found for query")) {
+				log.debug("Cannot return track, nothing found.");
+			} else {
+				log.error("Cannot return track",e);
+			}
 			return qi;
 		}
 		
 		log.debug("Succesfully returning new track with id {}",qi.getId());
-		return qi; 
+		return qi;
 		
 	}
 	@Transactional(readOnly = true)

@@ -20,8 +20,11 @@ public class MusicPlayer {
 
 	private final Logger log = LoggerFactory.getLogger(MusicPlayer.class);
 	
-	@Value("${path.player}")
+	@Value("${player.path}")
 	String playerPath;
+	
+	@Value("${player.timeout}")
+	long playerTimeout;
 	
 	@Autowired
 	QueueItemDao qiDao;
@@ -56,6 +59,8 @@ public class MusicPlayer {
 			qiDao.startedPlaying(qi);
 			
 			log.debug("Playing {}",downloadPath+qi.getFile().getLocation());
+			
+			final long startTime = System.currentTimeMillis();
 			
 			this.playTrackProcess = Runtime.getRuntime().exec(new String[] {playerPath, downloadPath+qi.getFile().getLocation()});
 			

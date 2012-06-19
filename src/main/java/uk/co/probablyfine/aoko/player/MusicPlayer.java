@@ -25,6 +25,11 @@ public class MusicPlayer {
 	
 	@Autowired
 	QueueItemDao qiDao;
+
+	private Process playTrackProcess;
+
+	@Value("${media.repository}")
+	private String downloadPath;
 	
 	@PostConstruct
 	public void play() throws InterruptedException {
@@ -49,9 +54,10 @@ public class MusicPlayer {
 		log.debug("Trying to play track - {} - {}",qi.getFile().getLocation(), qi.getFile().getMetaData().get("originalname"));
 		try {
 			qiDao.startedPlaying(qi);
-			Process p = Runtime.getRuntime().exec(new String[] {playerPath, qi.getFile().getLocation()});
 			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			this.playTrackProcess = Runtime.getRuntime().exec(new String[] {playerPath, downloadPath+qi.getFile().getLocation()});
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(playTrackProcess.getInputStream()));
 			
 			String line;
 			
@@ -59,7 +65,7 @@ public class MusicPlayer {
 				log.trace(line);
 			}
 			
-			int code = p.waitFor();
+			int code = playTrackProcess.waitFor();
 			
 			log.debug("Player exited with code = {}",code);
 			
@@ -70,6 +76,10 @@ public class MusicPlayer {
 		} finally {
 			qiDao.finishedPlaying(qi);
 		}
+	}
+	
+	public void stopTrack() {
+		this.playTrackProcess.destroy();
 	}
 	
 }

@@ -5,7 +5,6 @@ import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,17 +61,5 @@ public class QueueController {
 		return "redirect:/";
 		
 	}
-	
-	@RequestMapping("admin/{username}") 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public String setUserAsAdmin(@PathVariable("username") String username) {
-		
-		accounts.setUserAsAdmin(username);
-		
-		return "redirect:/";
-		
-	}
-	
-	
 	
 }

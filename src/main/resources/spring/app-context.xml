@@ -12,7 +12,7 @@
 	
     <context:component-scan base-package="uk.co.probablyfine.aoko" />
     <mvc:annotation-driven  validator="validator" />
-		<context:annotation-config />
+	<context:annotation-config />
 		
 	<!-- Config properties file for injecting into variables -->
 	<context:property-placeholder location="classpath:spring/musicserver.properties" />  
@@ -25,7 +25,7 @@
         <property name="suffix" value=".jsp"></property>
     </bean>
     
-    <mvc:resources mapping="/resources/**" location="/, classpath:/META-INF/resources/, file:${media.art}"/>
+    <mvc:resources mapping="/resources/**" location="/, classpath:/META-INF/resources/, file:${media.art}, file:${media.repository}"/>
         
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
    		<!-- one of the properties available; the maximum file size in bytes -->

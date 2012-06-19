@@ -62,7 +62,7 @@ public class FileUploadHandler {
 			
 			System.out.println("Moving file to "+downloadPath+newFileName);
 			
-			File newFile = new File(newFileName);
+			File newFile = new File(downloadPath+newFileName);
 			
 			Files.move(hashFile, newFile);
 			

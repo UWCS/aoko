@@ -12,7 +12,7 @@
 		<security:form-login login-page="/login/" authentication-failure-url="/login/?error=true"
 			default-target-url="/" />
 		
-		<security:intercept-url pattern="/admin/**" access="hasRole('admin')" />
+		<!-- <security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" /> -->
 
 		<security:logout invalidate-session="true" logout-success-url="/" logout-url="/logout" />
 

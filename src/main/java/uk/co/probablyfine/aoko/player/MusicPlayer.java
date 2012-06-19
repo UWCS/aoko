@@ -55,6 +55,8 @@ public class MusicPlayer {
 		try {
 			qiDao.startedPlaying(qi);
 			
+			log.debug("Playing {}",downloadPath+qi.getFile().getLocation());
+			
 			this.playTrackProcess = Runtime.getRuntime().exec(new String[] {playerPath, downloadPath+qi.getFile().getLocation()});
 			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(playTrackProcess.getInputStream()));

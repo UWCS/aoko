@@ -1,6 +1,7 @@
 package uk.co.probablyfine.aoko.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.co.probablyfine.aoko.domain.DownloadState;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload_;
+
 
 @Repository
 public class YoutubeDao {
@@ -59,10 +61,39 @@ public class YoutubeDao {
 	}
 	
 	@Transactional
+	public void queueDownload(YoutubeDownload dl) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+		final Root<YoutubeDownload> root = cq.from(YoutubeDownload.class);
+		cq.select(root.get(YoutubeDownload_.bucket));
+		cq.where(cb.equal(root.get(YoutubeDownload_.state), DownloadState.WAITING));
+		
+		List<Integer> yt = new ArrayList<Integer>();
+		
+		log.debug("{}",yt);
+		
+		try {
+			yt = em.createQuery(cq).getResultList();
+		} catch (Exception e) {
+			System.out.println("Could not get single result");
+		}
+		
+		dl.setBucket(yt.isEmpty() ? 0 : Collections.max(yt));
+		
+		merge(dl);
+
+	}
+	
+	@Transactional
 	public void merge(YoutubeDownload dl) {
 		em.merge(dl);
 	}
 
+	@Transactional
+	public void remove(YoutubeDownload dl) {
+		em.remove(dl);
+	}
+	
 	@Transactional(readOnly = true)
 	public List<YoutubeDownload> getAllQueued() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -78,5 +109,32 @@ public class YoutubeDao {
 		
 		return yt;
 		
+	}
+
+	@Transactional
+	public void delete(int videoId, String name) {
+		final CriteriaBuilder cb = em.getCriteriaBuilder();
+		final CriteriaQuery<YoutubeDownload> cq = cb.createQuery(YoutubeDownload.class);
+		final Root<YoutubeDownload> dl = cq.from(YoutubeDownload.class);
+
+		cq.where(
+				cb.and(
+					cb.equal(dl.get(YoutubeDownload_.queuedBy), name),
+					cb.equal(dl.get(YoutubeDownload_.id), videoId)
+					)
+				);
+		
+		YoutubeDownload yt = null;
+		try {
+			yt = em.createQuery(cq).getSingleResult();
+		} catch (NonUniqueResultException e) {
+			log.debug("Could not get result for this track, returning null");
+			log.error("Exception: {}",e);
+		}
+	
+		if (null == yt)
+			return;
+		
+		remove(yt);
 	}
 }

@@ -137,7 +137,7 @@ public class YoutubeQueue {
 									String actualName = downloadedFile.getName().substring(0,downloadedFile.getName().lastIndexOf(".")).replace("_", " ");
 									
 									data.put("name", actualName);
-									file.setLocation(mediaPath+newFile.getName());
+									file.setLocation(newFile.getName());
 									file.setMetaData(data);
 									file.setType(FileType.YOUTUBE);
 									file.setUniqueId(hexVal);

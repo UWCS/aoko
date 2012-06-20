@@ -14,8 +14,8 @@
 			  		<c:when test="${not empty username}">
 			  			<span class="login">
 				    	Currently logged in as - <strong><c:out value="${username}"/></strong>
-				    	<sec:authorize access="isAuthenticated()"><br />
 				    	<span/>
+				    	<sec:authorize access="isAuthenticated()">
 				    	<span class="links">
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
 								<a href="<c:url value="/admin/kill"/>">Kill</a>
@@ -23,6 +23,7 @@
 							<a href="<c:url value="/logout"/>">Logout</a>
 							<a href="<c:url value="/about"/>">About</a>
 							<a href="<c:url value="/youtube/"/>">YouTube</a>
+						</span>
 						</sec:authorize>
 					</c:when>
 				  	<c:otherwise>
@@ -31,6 +32,7 @@
 						<a href="<c:url value="/youtube/"/>">YouTube</a>
 					    <a href="<c:url value="/login/"/>">Login</a>
 					    <a href="<c:url value="/login/register"/>">Register</a>
+					    </span>
 				  	</c:otherwise>
 				</c:choose>
 		</div>

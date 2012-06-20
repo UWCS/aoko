@@ -22,6 +22,9 @@ public class YoutubeDownload {
 	private DownloadState state;
 	
 	@Column(nullable = false)
+	private int bucket;
+	
+	@Column(nullable = false)
 	private String queuedBy;
 	
 	public YoutubeDownload() {}
@@ -61,6 +64,14 @@ public class YoutubeDownload {
 
 	public String getQueuedBy() {
 		return queuedBy;
+	}
+
+	public int getBucket() {
+		return bucket;
+	}
+
+	public void setBucket(int bucket) {
+		this.bucket = bucket;
 	}
 
 	

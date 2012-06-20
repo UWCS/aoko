@@ -77,6 +77,7 @@ public class QueueItem implements Comparable<QueueItem>{
 		this.musicFile = file;
 	}
 
+	@Override
 	public int compareTo(QueueItem arg0) {
 		if (arg0.getBucket() < this.getBucket()) {
 			return 1;
@@ -84,7 +85,7 @@ public class QueueItem implements Comparable<QueueItem>{
 			return -1;
 		} else if (arg0.getPosition() < this.getPosition()) {
 			return 1;
-		} else if (arg0.getPosition() < this.getPosition()) {
+		} else if (arg0.getPosition() > this.getPosition()) {
 			return -1;
 		} else {
 			return 0;

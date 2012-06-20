@@ -51,7 +51,7 @@ public class UploadController {
 			System.out.println(url);
 			YoutubeDownload yd = new YoutubeDownload(url);
 			yd.setQueuedBy(p.getName());
-			ytDao.merge(yd);
+			ytDao.queueDownload(yd);
 		} else {
 			//return error?
 		}

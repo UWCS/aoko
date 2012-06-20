@@ -4,6 +4,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 	<%@ include file="header.html" %>
 		<div id="menu">
+			${queued}
 			<c:forEach items="${queued}" var="qi">
 					<div class="package">
 						<span class="title">

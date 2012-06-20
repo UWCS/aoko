@@ -88,7 +88,7 @@ public class YoutubeQueue {
 						
 						String outputLine;
 						while ((outputLine = outputReader.readLine()) != null) {
-							log.debug(outputLine);
+							log.trace(outputLine);
 						}
 						
 						int code = p.waitFor();
@@ -148,7 +148,7 @@ public class YoutubeQueue {
 							} catch (NoSuchAlgorithmException e) {
 								log.error("No such algorithm. ",e);
 															
-							}
+							} 
 			
 							
 						} else {

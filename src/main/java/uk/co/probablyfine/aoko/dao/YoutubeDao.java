@@ -20,7 +20,6 @@ import uk.co.probablyfine.aoko.domain.DownloadState;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload_;
 
-
 @Repository
 public class YoutubeDao {
 
@@ -29,20 +28,32 @@ public class YoutubeDao {
 	@PersistenceContext
 	EntityManager em;
 	
+	private int currentBucket = 0;
+	
 	@Transactional(readOnly = true)
 	public YoutubeDownload next() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<YoutubeDownload> cq = cb.createQuery(YoutubeDownload.class);
 		final Root<YoutubeDownload> dl = cq.from(YoutubeDownload.class);
 		cq.where(cb.equal(dl.get(YoutubeDownload_.state), DownloadState.WAITING));
+		cq.orderBy(cb.asc(dl.get(YoutubeDownload_.bucket)));
 		YoutubeDownload yt = null;
+		
 		try {
-			yt = em.createQuery(cq).getSingleResult();
-		} catch (NonUniqueResultException e) {
+			List<YoutubeDownload> list = em.createQuery(cq).getResultList();
+			
+			if (!list.isEmpty() || null == list) {
+				yt = list.get(0);
+				
+				if (currentBucket != yt.getBucket())
+					currentBucket = yt.getBucket();
+			}
+			
+		} catch (Exception e) {
+			log.error("Error getting next track: ",e);
 		}
-		catch (Exception e) {
-			//log.error("Error getting next track: ",e);
-		}
+		
+		log.debug("{}",yt);
 		
 		return yt;
 		
@@ -61,26 +72,39 @@ public class YoutubeDao {
 	}
 	
 	@Transactional
-	public void queueDownload(YoutubeDownload dl) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
-		final Root<YoutubeDownload> root = cq.from(YoutubeDownload.class);
-		cq.select(root.get(YoutubeDownload_.bucket));
-		cq.where(cb.equal(root.get(YoutubeDownload_.state), DownloadState.WAITING));
+	public void queueDownload(final YoutubeDownload download) {
+		log.debug("Queueing download from {}",download.getQueuedBy());
 		
-		List<Integer> yt = new ArrayList<Integer>();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<YoutubeDownload> cq = cb.createQuery(YoutubeDownload.class);
+		final Root<YoutubeDownload> root = cq.from(YoutubeDownload.class);
+
+		cq.where(
+				cb.and(
+					cb.equal(root.get(YoutubeDownload_.queuedBy), download.getQueuedBy()),
+					cb.notEqual(root.get(YoutubeDownload_.state), DownloadState.DOWNLOADED)
+				)
+		);
+		
+		List<YoutubeDownload> yt = new ArrayList<YoutubeDownload>();
 		
 		log.debug("{}",yt);
 		
 		try {
 			yt = em.createQuery(cq).getResultList();
 		} catch (Exception e) {
-			System.out.println("Could not get single result");
+			log.error("Exception: {}",e);
 		}
 		
-		dl.setBucket(yt.isEmpty() ? 0 : Collections.max(yt));
+		if (yt.isEmpty()){
+			log.debug("Setting {} bucket to current bucket.", download.getUrl());
+			download.setBucket(currentBucket);
+		} else {
+			log.debug("Setting {} bucket to last known bucket + 1", download.getUrl());
+			download.setBucket(Collections.max(yt).getBucket()+1);
+		}
 		
-		merge(dl);
+		em.persist(download);
 
 	}
 	
@@ -99,15 +123,21 @@ public class YoutubeDao {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<YoutubeDownload> cq = cb.createQuery(YoutubeDownload.class);
 		final Root<YoutubeDownload> dl = cq.from(YoutubeDownload.class);
+		
 		cq.where(cb.equal(dl.get(YoutubeDownload_.state), DownloadState.WAITING));
-		List<YoutubeDownload> yt = new ArrayList<YoutubeDownload>();
+		cq.orderBy(cb.asc(dl.get(YoutubeDownload_.bucket)));
+		
+		List<YoutubeDownload> videoList = new ArrayList<YoutubeDownload>();
+		
 		try {
-			yt = em.createQuery(cq).getResultList();
+			videoList = em.createQuery(cq).getResultList();
 		} catch (Exception e) {
 			System.out.println("Could not get single result");
 		}
 		
-		return yt;
+		Collections.sort(videoList);
+		
+		return videoList;
 		
 	}
 
@@ -121,8 +151,8 @@ public class YoutubeDao {
 				cb.and(
 					cb.equal(dl.get(YoutubeDownload_.queuedBy), name),
 					cb.equal(dl.get(YoutubeDownload_.id), videoId)
-					)
-				);
+				)
+		);
 		
 		YoutubeDownload yt = null;
 		try {

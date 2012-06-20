@@ -10,8 +10,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -77,11 +75,6 @@ public class ArtDownloader {
 			
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new URL(url).openStream());
 			
-			/*Pattern pat = Pattern.compile("<asin>(.*?)<\\/asin>");
-			Matcher m = pat.matcher(doc.get);
-			m.find();
-			String id = m.group(0);
-			*/
 			NodeList nodes = doc.getElementsByTagName("asin");
 			
 			System.out.println(nodes.toString());

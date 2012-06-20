@@ -5,8 +5,8 @@
   <artifactId>aoko</artifactId>
   <packaging>war</packaging>
   <version>0.0.1</version>
-  <name>aoko Maven Webapp</name>
-  <url>http://maven.apache.org</url>
+  <name>Java Music Server Webapp</name>
+  <url>https://github.com/mrwilson/aoko</url>
  	
 	<!-- Project properties -->
 	<properties>
@@ -228,11 +228,11 @@
 			<version>1.6.2</version>
 		</dependency>
 
-<dependency>
-	<groupId>org.mortbay.jetty</groupId>
-	<artifactId>jetty</artifactId>
-	<version>6.1.26</version>
-</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty</artifactId>
+			<version>6.1.26</version>
+		</dependency>
 
 		<dependency>
 		    <groupId>mysql</groupId>
@@ -243,4 +243,5 @@
             
 
 	</dependencies>
+
 </project>

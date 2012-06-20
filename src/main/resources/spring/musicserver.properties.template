@@ -5,7 +5,11 @@ media.repository=
 media.art=
 
 #Path/command for music player
-path.player=
+player.path=
+
+#Track timeout in seconds
+player.timeout=
 
 # Youtube-dl script. Make sure this is executable (there is a specific .exe for Windows)
 script.youtubedl=
+

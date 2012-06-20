@@ -46,7 +46,7 @@
 						
 							<div class="info">
 							<div class="track-data">
-									${qi}
+									<a href="<c:url value="/resources/${qi.file.location}"/>">${qi}</a>
 								</div>
 								<div class="user">
 									<a href="<c:url value="/user/${qi.userName}"/>">${qi.userName}</a>
@@ -66,7 +66,7 @@
 									<c:if test="${qi.userName == username}">
 										<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
 									</c:if>
-								</sec:authorize>
+								</sec:authorize>metaData.
 								
 								<sec:authorize access="hasRole('ROLE_ADMIN')">
 									<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>

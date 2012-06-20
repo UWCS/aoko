@@ -58,11 +58,11 @@ public class FileUploadHandler {
 			
 			String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 			
-			String newFileName = downloadPath+hash+extension;
+			String newFileName = hash+extension;
 			
-			System.out.println("Moving file to "+newFileName);
+			System.out.println("Moving file to "+downloadPath+newFileName);
 			
-			File newFile = new File(newFileName);
+			File newFile = new File(downloadPath+newFileName);
 			
 			Files.move(hashFile, newFile);
 			

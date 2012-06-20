@@ -17,8 +17,6 @@ How to run
  * To run, mvn clean jetty:run.
 	
 TODO:
-
- * A UI that doesn't want make me want to die inside
  * Search
  * Scrobble
  * IRC notices.

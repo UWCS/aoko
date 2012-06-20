@@ -32,9 +32,9 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value = "register",method = RequestMethod.POST)
-	public String processNewUser(@RequestParam String username, @RequestParam String password, Model m) {
-		if (users.getFromUsername(username) == null) {
-			Account user = new Account(username,pass.encode(password), "ROLE_USER");
+	public String processNewUser(@RequestParam String j_username, @RequestParam String j_password, Model m) {
+		if (users.getFromUsername(j_username) == null) {
+			Account user = new Account(j_username,pass.encode(j_password), "ROLE_USER");
 			users.merge(user);
 			m.addAttribute("register", "Succesfully registered, can now log in");
 		} else {

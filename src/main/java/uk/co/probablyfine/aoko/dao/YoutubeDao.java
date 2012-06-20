@@ -39,7 +39,7 @@ public class YoutubeDao {
 		} catch (NonUniqueResultException e) {
 		}
 		catch (Exception e) {
-			log.error("Error getting next track: ",e);
+			//log.error("Error getting next track: ",e);
 		}
 		
 		return yt;

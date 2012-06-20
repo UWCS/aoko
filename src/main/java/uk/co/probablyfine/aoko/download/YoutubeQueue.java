@@ -82,13 +82,13 @@ public class YoutubeQueue {
 						//Save file to <media-download-path>\<title>.<format>
 						File tempDir = Files.createTempDir();
 						String outputFormat = tempDir.getAbsolutePath()+File.separator+"%(stitle)s.%(ext)s";
-						Process p = Runtime.getRuntime().exec(new String[] {"python", ytdPath, "-o", outputFormat, yd.getUrl()});
+						Process p = Runtime.getRuntime().exec(new String[] {ytdPath, "-o", outputFormat, yd.getUrl()});
 						
 						BufferedReader outputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 						
 						String outputLine;
 						while ((outputLine = outputReader.readLine()) != null) {
-							log.trace(outputLine);
+							log.debug(outputLine);
 						}
 						
 						int code = p.waitFor();
@@ -110,16 +110,17 @@ public class YoutubeQueue {
 								if (mfDao.containsFile(hexVal)) {
 									file = mfDao.getFromUniqueId(hexVal);
 								} else {
-									File newFile = new File(mediaPath+downloadedFile.getName());
+									
+									final String extension = downloadedFile.getName().substring(downloadedFile.getName().lastIndexOf("."),downloadedFile.getName().length());
+									
+									File newFile = new File(mediaPath+hexVal+extension);
 									Files.move(downloadedFile, newFile);
 									
 									tempDir.delete();
 									
 									file = new MusicFile();
 									
-									//TRYING TO GET FILE ART HERE
-									Pattern pat = Pattern.compile("(?<=v=).*?(?=&|$)");
-									Matcher m = pat.matcher(yd.getUrl());
+									Matcher m = Pattern.compile("(?<=v=).*?(?=&|$)").matcher(yd.getUrl());
 									m.find();
 									String id = m.group(0);
 									
@@ -136,7 +137,7 @@ public class YoutubeQueue {
 									String actualName = downloadedFile.getName().substring(0,downloadedFile.getName().lastIndexOf(".")).replace("_", " ");
 									
 									data.put("name", actualName);
-									file.setLocation(mediaPath+downloadedFile.getName());
+									file.setLocation(mediaPath+newFile.getName());
 									file.setMetaData(data);
 									file.setType(FileType.YOUTUBE);
 									file.setUniqueId(hexVal);

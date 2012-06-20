@@ -124,18 +124,23 @@ public class QueueItemDao {
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
+		cq.orderBy(cb.asc(root.get(QueueItem_.bucket)));
 		
 		QueueItem qi = null;
+		
 		try {
 			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
 		} catch (Exception e) {
-			log.debug("Cannot return new track");
-			log.error("Exception",e);
+			if (e.getMessage().equals("No entity found for query")) {
+				log.debug("Cannot return track, nothing found.");
+			} else {
+				log.error("Cannot return track",e);
+			}
 			return qi;
 		}
 		
 		log.debug("Succesfully returning new track with id {}",qi.getId());
-		return qi; 
+		return qi;
 		
 	}
 	@Transactional(readOnly = true)

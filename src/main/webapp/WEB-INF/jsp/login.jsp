@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="header.html" %>
+	<div class="package">
 	<h2>Login Page</h2>
 	<c:if test="${not empty param.error}">
 		<font color="red"> Your login attempt was not successful, try again.<br />
@@ -21,4 +22,5 @@
 			</tr>
 		</table>
 	</form>
+	</div>
 <%@ include file="footer.html" %>

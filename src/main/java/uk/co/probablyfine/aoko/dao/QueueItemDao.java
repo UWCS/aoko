@@ -39,7 +39,6 @@ public class QueueItemDao {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
-		
 		//Get all queued items that haven't been played or are playing
 		
 		List<QueueItem> results = em.createQuery(cq).getResultList();

@@ -4,12 +4,16 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 	<%@ include file="header.html" %>
 		<div id="menu">
-			${queued}
 			<c:forEach items="${queued}" var="qi">
 					<div class="package">
-						<span class="title">
-							${qi.url} queued by ${qi.queuedBy}
-						</span>
+						<div class="info">
+								<div class="track-data">
+									${qi.url} - ${qi.state}
+								</div>
+								<div class="user">
+									${qi.queuedBy}
+								</div>
+							</div>
 					</div>
 					<br />
 			</c:forEach>

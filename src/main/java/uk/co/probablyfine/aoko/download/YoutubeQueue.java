@@ -46,7 +46,7 @@ public class YoutubeQueue {
 	String artPath;
 	
 	@Autowired
-	YoutubeDao ytDao;
+	YoutubeDao videos;
 	
 	@Autowired
 	MusicFileDao mfDao;
@@ -74,7 +74,7 @@ public class YoutubeQueue {
 						e1.printStackTrace();
 					}
 					
-					YoutubeDownload yd = ytDao.next();
+					YoutubeDownload yd = videos.next();
 					if (null != yd) {
 					
 					log.debug("Attempting to download {}",yd.getUrl());
@@ -82,6 +82,9 @@ public class YoutubeQueue {
 						//Save file to <media-download-path>\<title>.<format>
 						File tempDir = Files.createTempDir();
 						String outputFormat = tempDir.getAbsolutePath()+File.separator+"%(stitle)s.%(ext)s";
+						
+						videos.markStartDownloading(yd);
+						
 						Process p = Runtime.getRuntime().exec(new String[] {ytdPath, "-o", outputFormat, yd.getUrl()});
 						
 						BufferedReader outputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -144,22 +147,19 @@ public class YoutubeQueue {
 								}
 								
 								qiDao.queueTrack(user, file);
-								ytDao.dlSuccess(yd);
+								videos.markSuccessful(yd);
 							} catch (NoSuchAlgorithmException e) {
 								log.error("No such algorithm. ",e);
-															
 							} 
-			
-							
 						} else {
-							ytDao.dlFail(yd);
+							videos.markFailure(yd);
 						}
 					} catch (IOException e) {
 						log.error("IOException: ",e);
-						ytDao.dlFail(yd);
+						videos.markFailure(yd);
 					} catch (InterruptedException e) {
 						log.error("Thread was interrupted: ",e);
-						ytDao.dlFail(yd);
+						videos.markFailure(yd);
 					}
 					
 				}

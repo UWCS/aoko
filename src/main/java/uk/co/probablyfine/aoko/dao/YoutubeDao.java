@@ -59,17 +59,26 @@ public class YoutubeDao {
 		
 	}
 	
+	
+	
 	@Transactional
-	public void dlSuccess(YoutubeDownload dl) {
+	public void markSuccessful(YoutubeDownload dl) {
 		dl.setState(DownloadState.DOWNLOADED);
 		em.merge(dl);
 	}
 	
 	@Transactional
-	public void dlFail(YoutubeDownload dl) {
+	public void markFailure(YoutubeDownload dl) {
 		dl.setState(DownloadState.ERROR);
 		em.merge(dl);
 	}
+	
+	@Transactional
+	public void markStartDownloading(YoutubeDownload dl) {
+		dl.setState(DownloadState.DOWNLOADING);
+		em.merge(dl);
+	}
+	
 	
 	@Transactional
 	public void queueDownload(final YoutubeDownload download) {
@@ -124,7 +133,13 @@ public class YoutubeDao {
 		CriteriaQuery<YoutubeDownload> cq = cb.createQuery(YoutubeDownload.class);
 		final Root<YoutubeDownload> dl = cq.from(YoutubeDownload.class);
 		
-		cq.where(cb.equal(dl.get(YoutubeDownload_.state), DownloadState.WAITING));
+		cq.where(
+				cb.or(
+						cb.equal(dl.get(YoutubeDownload_.state), DownloadState.WAITING),
+						cb.equal(dl.get(YoutubeDownload_.state), DownloadState.DOWNLOADING)
+				)
+		);
+		
 		cq.orderBy(cb.asc(dl.get(YoutubeDownload_.bucket)));
 		
 		List<YoutubeDownload> videoList = new ArrayList<YoutubeDownload>();

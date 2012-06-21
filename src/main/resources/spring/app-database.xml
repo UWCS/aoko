@@ -14,17 +14,16 @@
 		</bean>
 
 		<!-- MySQL connection config -->
-
-		<!-- 
+		<!-- Needs "ALTER DATABASE musicserver charset=utf8;" -->
+	
 		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 			<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-			<property name="url" value="jdbc:mysql://localhost/musicserver" />
+			<property name="url" value="jdbc:mysql://localhost/musicserver?characterEncoding=UTF-8" />
 			<property name="username" value="musicserver" />
 			<property name="password" value="ponies" />
 		</bean>
-		-->
 		
-		<!-- In-memory database connection config -->
+		<!-- In-memory database connection config 
 		  
 		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 			<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
@@ -33,13 +32,14 @@
 			<property name="password" value="" />
 		</bean>
 		
+		-->
+		
 		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 			<property name="dataSource" ref="dataSource" />
 			<property name="jpaVendorAdapter">
 				<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-					
-					<!--  <property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect" /> -->
-					<property name="databasePlatform" value="org.hibernate.dialect.DerbyDialect" />
+					<property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect" />
+					<!-- <property name="databasePlatform" value="org.hibernate.dialect.DerbyDialect" />  -->
 					<property name="showSql" value="false" />
 					<property name="generateDdl" value="true" />
 				</bean>

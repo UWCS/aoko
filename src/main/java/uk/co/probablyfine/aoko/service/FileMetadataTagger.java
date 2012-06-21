@@ -39,8 +39,17 @@ public class FileMetadataTagger {
 			}	
 				
 			log.debug("Found {}: {}",key.name(),tag.getFirst(key));
-			if (tag.getFirst(key) != null && tag.getFirst(key) != "")
-				metadata.put(key.name().toLowerCase(), tag.getFirst(key));
+			if (tag.getFirst(key) != null && tag.getFirst(key) != "") {
+				
+				if (tag.getFirst(key).length() >= 255) {
+					metadata.put(key.name().toLowerCase(), tag.getFirst(key).substring(0, 254));
+				} else {
+					metadata.put(key.name().toLowerCase(), tag.getFirst(key));
+				}
+				
+				
+			}
+				
 			 
 		}
 		

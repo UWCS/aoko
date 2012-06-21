@@ -43,13 +43,11 @@
 						
 						
 							<div class="info">
-							<div class="track-data">
-									<a href="<c:url value="/resources/${qi.file.location}"/>">${qi}</a>
-								</div>
-								<div class="user">
+								<div class="track-data">
+									<a href="<c:url value="/resources/${qi.file.location}"/>">${qi}</a> 
+									<a style="padding-right: 5px;padding-left: 5px;">queued by</a>
 									<a href="<c:url value="/user/${qi.userName}"/>">${qi.userName}</a>
 								</div>
-							</div>
 													
 							<div class="control">
 								<c:if test="${qi.userName == username}">
@@ -64,13 +62,14 @@
 									<c:if test="${qi.userName == username}">
 										<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
 									</c:if>
-								</sec:authorize>metaData.
+								</sec:authorize>
 								
 								<sec:authorize access="hasRole('ROLE_ADMIN')">
 									<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
 								</sec:authorize>
 								</c:if>
 							
+							</div>
 							</div>
 						</div>
 					

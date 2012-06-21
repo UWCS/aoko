@@ -128,7 +128,7 @@ public class MusicFile {
 			params.add(metaData.get("originalname"));
 		}
 		
-		return Joiner.on(" -- ").skipNulls().join(params);
+		return Joiner.on(" -- ").skipNulls().join(params).replace("_", " ");
 	}
 	
 }

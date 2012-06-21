@@ -8,14 +8,10 @@
 					<div class="package">
 						<div class="info">
 								<div class="track-data">
-									${qi.url} - ${qi.state}
-								</div>
-								<div class="user">
-									${qi.queuedBy}
+									${qi.url} - ${qi.queuedBy} - ${qi.state}
 								</div>
 							</div>
 					</div>
-					<br />
 			</c:forEach>
 		</div>
 <%@ include file="footer.html" %>

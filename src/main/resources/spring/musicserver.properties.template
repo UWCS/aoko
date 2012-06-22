@@ -13,3 +13,13 @@ player.timeout=
 # Youtube-dl script. Make sure this is executable (there is a specific .exe for Windows)
 script.youtubedl=
 
+# Database
+db.username=
+db.password=
+db.url=
+
+# last.fm config
+scrobble.apikey=
+scrobble.secret=
+scrobble.name=
+scrobble.password=

@@ -17,8 +17,7 @@
 	<!-- Config properties file for injecting into variables -->
 	<context:property-placeholder location="classpath:spring/musicserver.properties" />  
 	
-		<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 		<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
         <property name="prefix" value="/WEB-INF/jsp/"></property>
@@ -26,10 +25,10 @@
     </bean>
     
     <mvc:resources mapping="/resources/**" location="/, classpath:/META-INF/resources/, file:${media.art}, file:${media.repository}"/>
-        
+       
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
    		<!-- one of the properties available; the maximum file size in bytes -->
-	    <property name="maxUploadSize" value="25000000"/>
+	    <property name="maxUploadSize" value="50000000"/>
 	</bean>
    
 </beans>

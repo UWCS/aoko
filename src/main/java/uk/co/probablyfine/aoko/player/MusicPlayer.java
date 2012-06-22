@@ -3,6 +3,13 @@ package uk.co.probablyfine.aoko.player;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PostConstruct;
 
@@ -33,10 +40,16 @@ public class MusicPlayer {
 
 	@Value("${media.repository}")
 	private String downloadPath;
+
+	private ExecutorService executor;
 	
 	@PostConstruct
 	public void play() throws InterruptedException {
+		
+		this.executor = Executors.newSingleThreadExecutor();
+		
 		new Thread(new Runnable() {
+			
 			@Override
 			public void run() {
 				while (true) {
@@ -45,47 +58,63 @@ public class MusicPlayer {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					QueueItem qi = qiDao.nextTrack();
+					
+					final QueueItem qi = qiDao.nextTrack();
+					
 					if (qi != null)
 						playTrack(qi);
 				}
 			}
 		}).start();
-	}
-	
-	public void playTrack(QueueItem qi) {
+	}    
+
+	public void playTrack(final QueueItem qi) {
+		
 		log.debug("Trying to play track - {} - {}",qi.getFile().getLocation(), qi.getFile().getMetaData().get("originalname"));
+		
 		try {
+		
 			qiDao.startedPlaying(qi);
-			
-			log.debug("Playing {}",downloadPath+qi.getFile().getLocation());
-			
-			final long startTime = System.currentTimeMillis();
-			
-			this.playTrackProcess = Runtime.getRuntime().exec(new String[] {playerPath, downloadPath+qi.getFile().getLocation()});
-			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(playTrackProcess.getInputStream()));
-			
-			String line;
-			
-			while ((line = reader.readLine()) != null) {
-				log.trace(line);
-			}
-			
-			int code = playTrackProcess.waitFor();
+
+			//Submit player job to the executor pool with a timeout
+			int code = executor.submit(new Callable<Integer>() {
+
+				@Override
+				public Integer call() throws Exception {
+					
+					playTrackProcess = Runtime.getRuntime().exec(new String[] {playerPath, downloadPath+qi.getFile().getLocation()});
+				
+					final BufferedReader reader = new BufferedReader(new InputStreamReader(playTrackProcess.getInputStream()));
+					
+					String line;
+					
+					while ((line = reader.readLine()) != null) {
+						log.trace(line);
+					}
+					
+					return playTrackProcess.waitFor();
+					
+				}
+				
+			}).get(playerTimeout, TimeUnit.SECONDS);
 			
 			log.debug("Player exited with code = {}",code);
 			
-		} catch (IOException e) {
-			log.error("IOException: ",e);
 		} catch (InterruptedException e) {
 			log.error("InterruptedException: ",e);
+		} catch (ExecutionException e) {
+			log.error("Error executing player for {}, aborting.",qi,e);
+		} catch (TimeoutException e) {
+			//This is debug, as timing out on playing a track is not an error.
+			log.debug("Player timed out on {}",qi);
+			stopTrack();
 		} finally {
 			qiDao.finishedPlaying(qi);
 		}
 	}
 	
 	public void stopTrack() {
+		log.debug("Stopping track now.");
 		this.playTrackProcess.destroy();
 	}
 	

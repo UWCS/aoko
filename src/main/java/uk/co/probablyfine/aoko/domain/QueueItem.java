@@ -1,11 +1,10 @@
 package uk.co.probablyfine.aoko.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 
 @Entity
@@ -23,7 +22,7 @@ public class QueueItem implements Comparable<QueueItem>{
 	
 	private int position;
 	
-	@OneToOne(targetEntity=MusicFile.class,cascade=CascadeType.ALL)
+	@ManyToOne(targetEntity=MusicFile.class)
 	private MusicFile musicFile;
 	
 	@Column(nullable = false)

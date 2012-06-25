@@ -14,7 +14,6 @@
 				<c:if test="${not empty error}" >
 					Error: ${error}
 				</c:if>
-				
 						
 				<div class="package">
 				<c:forEach items="${queued}" var="qi">

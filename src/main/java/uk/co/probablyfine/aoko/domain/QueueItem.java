@@ -23,7 +23,7 @@ public class QueueItem implements Comparable<QueueItem>{
 	
 	private int position;
 	
-	@OneToOne(targetEntity=MusicFile.class,cascade=CascadeType.ALL)
+	@ManyToOne(targetEntity=MusicFile.class,cascade=CascadeType.ALL)
 	private MusicFile musicFile;
 	
 	@Column(nullable = false)

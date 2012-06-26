@@ -7,7 +7,7 @@
 					<div class="package">
 						<div class="info">
 								<div class="track-data">
-									${qi.url} - ${qi.queuedBy} - ${qi.state}
+									<a href="${qi.url}">${qi.url}</a> - ${qi.queuedBy} - ${qi.state}
 								</div>
 							</div>
 					</div>

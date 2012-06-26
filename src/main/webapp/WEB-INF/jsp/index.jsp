@@ -30,7 +30,7 @@
 		<div id="menu">
 			<c:forEach items="${queue}" var="bucket">
 			
-				<div id="bucket">
+				<div class="bucket">
 				<c:forEach items="${bucket}" var="qi">
 
 					<div class="package">

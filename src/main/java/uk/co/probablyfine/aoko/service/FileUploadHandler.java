@@ -52,7 +52,7 @@ public class FileUploadHandler {
 		
 		if (mfDao.containsFile(hash)) {
 			
-			qiDao.merge(new QueueItem(accounts.getFromUsername(username), mfDao.getFromUniqueId(hash)));
+			qiDao.queueTrack(accounts.getFromUsername(username), mfDao.getFromUniqueId(hash));
 		
 		} else {
 			

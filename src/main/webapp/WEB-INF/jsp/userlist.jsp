@@ -14,12 +14,11 @@
 				<c:if test="${not empty error}" >
 					Error: ${error}
 				</c:if>
-				
 						
 				<div class="package">
 				<c:forEach items="${queued}" var="qi">
 							<div class="info">
-								<a href="<c:url value="/user/${qi.file.location}"/>">${qi}</a>
+								<a href="<c:url value="/resources/${qi.file.location}"/>">${qi}</a>
 							</div>
 						<br />
 				</c:forEach>

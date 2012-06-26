@@ -51,6 +51,7 @@ public class QueueItemDao {
 		}));
 		
 		Collections.sort(process);
+		
 		Collections.sort(results);
 		
 		final int finalBucket;
@@ -59,9 +60,10 @@ public class QueueItemDao {
 		//The bucket we're in at the moment
 		if (process.size() != 0) {
 			
-			
-			int currentbucket = process.get(0).getBucket();
-			
+			int currentbucket = Collections.min(process).getBucket();
+		
+			log.debug("Currently playing bucket {}",currentbucket);
+
 			List<QueueItem> bucketItems = new ArrayList<QueueItem>();
 			bucketItems.addAll(Collections2.filter(process, new Predicate<QueueItem>() {
 				@Override
@@ -70,9 +72,11 @@ public class QueueItemDao {
 				}
 			}));
 			
+
 			log.debug("User has currently queued, in order - {}",bucketItems);
 			
 			List<Integer> buckets = new ArrayList<Integer>();
+
 			buckets.addAll(Collections2.transform(bucketItems, new Function<QueueItem, Integer>() {
 				@Override
 				public Integer apply(QueueItem input) {
@@ -80,7 +84,14 @@ public class QueueItemDao {
 				}
 			}));
 			
+			if(!buckets.contains(currentbucket)) {
+				buckets.add(currentbucket);
+			}
+
+			log.debug("User has queued in upcoming buckets, in order - {}",buckets);
+
 			while (buckets.contains(currentbucket)) {
+				log.debug("Buckets contain {}, increasing.");
 				currentbucket++;
 			}
 			
@@ -95,22 +106,28 @@ public class QueueItemDao {
 			}));
 			
 			if (currentBucketList.size() == 0) {
+				log.debug("Nothing in selected bucket, creating a new one.");
 				position = 1;
 			} else {
+				log.debug("Appending to end of current bucket.");
 				position = Collections.max(currentBucketList).getPosition()+1;
 			}
 			
 		} else if (results.size() != 0) {
-			finalBucket = results.get(results.size()-1).getBucket()+1;
+			log.debug("Nothing belonging to user, adding to end of last bucket");
+			finalBucket = Collections.min(results).getBucket()+1;
 			position = 1;
 		} else {
+			log.debug("Queue was empty, adding to start");
 			finalBucket = 1;
 			position = 1;
 		}
 		
 		QueueItem qi = new QueueItem(user, track);
+		
 		qi.setBucket(finalBucket);
 		qi.setPosition(position);
+		
 		log.debug("Final Bucket = {}, Final Position = {}",finalBucket,position);
 
 		em.merge(qi);
@@ -195,7 +212,7 @@ public class QueueItemDao {
 	
 	@Transactional
 	public void merge(QueueItem qi) {
-			em.merge(qi);
+		em.merge(qi);
 	}
 	
 	@Transactional
@@ -235,17 +252,8 @@ public class QueueItemDao {
 		
 		Collections.sort(results);
 		
-		QueueItem qi1 = em.merge(results.get(0));
+		/*QueueItem qi1 = em.merge(results.get(0));
 		QueueItem qi2 = em.merge(results.get(1));
-		
-		int bucket1 = qi1.getBucket();
-		int bucket2 = qi2.getBucket();
-		
-		int pos1 = qi1.getPosition();
-		int pos2 = qi2.getPosition();
-
-		log.debug("Item 1. Bucket = {}, Pos = {}",bucket1,pos1);
-		log.debug("Item 2. Bucket = {}, Pos = {}",bucket2,pos1);
 		
 		qi1.setBucket(bucket2);
 		qi1.setPosition(pos2);
@@ -256,6 +264,21 @@ public class QueueItemDao {
 		qi2.setBucket(bucket1);
 		
 		//em.persist(qi2);
+		*/
+		
+		
+		QueueItem qi1 = results.get(0);
+		QueueItem qi2 = results.get(1);
+		
+		log.debug("BEFORE - Item 1. Bucket = {}, Pos = {}",qi1.getBucket(),qi1.getPosition());
+		log.debug("BEFORE - Item 2. Bucket = {}, Pos = {}",qi2.getBucket(),qi1.getPosition());
+		
+		MusicFile file1 = qi1.getFile();
+		
+		qi1.setFile(qi2.getFile());
+		qi2.setFile(file1);
+		
+		
 		
 	}
 	
@@ -271,8 +294,10 @@ public class QueueItemDao {
 		this.shift(user, bucket, 1);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public QueueItem getFromBucketAndUser(int bucket, String user) {
+		
+		log.debug("trying to remove {} in {}",user,bucket);
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
@@ -285,12 +310,17 @@ public class QueueItemDao {
 		);	
 				
 		QueueItem qi = null;
+		
 		try {
 			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
 		} catch (Exception e) {
+			log.debug("Returning null");
+			log.debug("Exception",e);
 			return qi;
 		}
 		
+		
+		log.debug("Returning {}",qi);
 		return qi; 
 	}
 	
@@ -314,7 +344,11 @@ public class QueueItemDao {
 
 	@Transactional
 	public void deleteItem(int bucket, String user) {
-		em.remove(getFromBucketAndUser(bucket, user));
+		log.debug("Deleting from {} by {}",bucket,user);
+		QueueItem qi = getFromBucketAndUser(bucket, user);
+		log.debug("Deleting {}",qi);
+		log.debug("Deleting id {}",qi.getId());
+		em.remove(qi);
 	}
 	
 	@Transactional

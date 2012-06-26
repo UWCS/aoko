@@ -128,7 +128,13 @@ public class MusicFile {
 			params.add(metaData.get("originalname"));
 		}
 		
-		return Joiner.on(" -- ").skipNulls().join(params).replace("_", " ");
+		String toString = Joiner.on(" -- ").skipNulls().join(params).replace("_", " ");
+
+		if (toString == null) {
+			return "NO DATA";
+		} else {
+			return toString;
+		}
 	}
 	
 }

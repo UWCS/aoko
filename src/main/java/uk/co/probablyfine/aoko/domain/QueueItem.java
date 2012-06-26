@@ -5,8 +5,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
+import javax.persistence.ManyToOne;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 public class QueueItem implements Comparable<QueueItem>{
@@ -23,7 +23,8 @@ public class QueueItem implements Comparable<QueueItem>{
 	
 	private int position;
 	
-	@ManyToOne(targetEntity=MusicFile.class,cascade=CascadeType.ALL)
+	@ManyToOne(targetEntity=MusicFile.class,cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH} )
+	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE)
 	private MusicFile musicFile;
 	
 	@Column(nullable = false)

@@ -6,8 +6,8 @@
 	text-align: right;
 	float: right;
 	padding-right: 7px;
-	font-size: 24px;
-	margin-top:-10px;
+	font-size: 18px;
+	
 }
 
 #header .login {
@@ -15,7 +15,7 @@
 	float: right;
 	padding-right: 7px;
 	font-size: 24px;
-	margin-top:-30px;
+	margin-top:-40px;
 }
 
 html, body, p, ul, ol, li, form, fieldset, blockquote, h1, h2, h3, h4, h5, h6, img {
@@ -580,6 +580,7 @@ pre {
   height: 50px;
   width: 50px;
   margin-right: 10px;
+  border: solid 1px gray;
 }
 
 .track-data

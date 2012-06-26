@@ -42,8 +42,10 @@ public class QueueItemDao {
 		//Get all queued items that haven't been played or are playing
 		
 		List<QueueItem> results = em.createQuery(cq).getResultList();
+		
 		log.debug("Received {} results",results.size());
-		List<QueueItem> process = new ArrayList<QueueItem>(Collections2.filter(results, new Predicate<QueueItem>() {
+		
+		final List<QueueItem> process = new ArrayList<QueueItem>(Collections2.filter(results, new Predicate<QueueItem>() {
 			@Override
 			public boolean apply(QueueItem input) {
 				return input.getStatus() != PlayerState.PLAYED;
@@ -58,20 +60,25 @@ public class QueueItemDao {
 		final int position;
 		
 		//The bucket we're in at the moment
-		if (process.size() != 0) {
+		if (!process.isEmpty()) {
+			
+			log.debug("The waiting queue is not empty, finding bucket to add into.");
 			
 			int currentbucket = Collections.min(process).getBucket();
 		
 			log.debug("Currently playing bucket {}",currentbucket);
 
 			List<QueueItem> bucketItems = new ArrayList<QueueItem>();
-			bucketItems.addAll(Collections2.filter(process, new Predicate<QueueItem>() {
+			
+			bucketItems.addAll(Collections2.filter(results, new Predicate<QueueItem>() {
+				
+				final int currentbucket = Collections.min(process).getBucket();
+				
 				@Override
 				public boolean apply(QueueItem input) {
-					return input.getUserName().equals(user.getUsername());
+					return input.getUserName().equals(user.getUsername()) && input.getBucket() >= currentbucket;
 				}
 			}));
-			
 
 			log.debug("User has currently queued, in order - {}",bucketItems);
 			
@@ -84,10 +91,6 @@ public class QueueItemDao {
 				}
 			}));
 			
-			if(!buckets.contains(currentbucket)) {
-				buckets.add(currentbucket);
-			}
-
 			log.debug("User has queued in upcoming buckets, in order - {}",buckets);
 
 			while (buckets.contains(currentbucket)) {
@@ -114,11 +117,11 @@ public class QueueItemDao {
 			}
 			
 		} else if (results.size() != 0) {
-			log.debug("Nothing belonging to user, adding to end of last bucket");
-			finalBucket = Collections.min(results).getBucket()+1;
+			log.debug("Queue not empty, but things have been played, creating new bucket.");
+			finalBucket = Collections.max(results).getBucket()+1;
 			position = 1;
 		} else {
-			log.debug("Queue was empty, adding to start");
+			log.debug("Queue was completely empty, adding to start");
 			finalBucket = 1;
 			position = 1;
 		}

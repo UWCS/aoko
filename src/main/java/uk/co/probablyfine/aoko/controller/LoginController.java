@@ -1,5 +1,8 @@
 package uk.co.probablyfine.aoko.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -33,12 +36,14 @@ public class LoginController {
 	
 	@RequestMapping(value = "register",method = RequestMethod.POST)
 	public String processNewUser(@RequestParam String j_username, @RequestParam String j_password, Model m) {
+		
 		if (users.getFromUsername(j_username) == null) {
 			Account user = new Account(j_username,pass.encode(j_password), "ROLE_USER");
 			users.merge(user);
 			m.addAttribute("register", "Succesfully registered, can now log in");
 		} else {
 			m.addAttribute("error", "Username already exists, pick another!");
+			return "redirect:/login/register";
 		}
 		
 		return "redirect:/login/";

@@ -4,10 +4,11 @@
 	<div class="package">
 	<h2>Register</h2>
 	<c:if test="${not empty param.error}">
-		<font color="red"> Error: <br />
-		<br /> Reason: <c:out value="${param.error}" />.
+		<br/>
+		Error: <c:out value="${param.error}" />
 		</font>
 	</c:if>
+	<br/>
 	<form name="register" action="<c:url value='/login/register/'/>" method="POST">
 		<table>
 			<tr>

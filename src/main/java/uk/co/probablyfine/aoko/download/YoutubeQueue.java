@@ -161,6 +161,9 @@ public class YoutubeQueue {
 					} catch (InterruptedException e) {
 						log.error("Thread was interrupted: ",e);
 						videos.markFailure(yd);
+					} catch (Exception e) {
+						log.error("Unanticipated error, failure.",e);
+						videos.markFailure(yd);
 					}
 					
 				}

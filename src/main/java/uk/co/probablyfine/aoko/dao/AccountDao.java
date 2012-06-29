@@ -27,7 +27,7 @@ public class AccountDao {
 	
 	@Transactional(readOnly = true)
 	public Account getFromUsername(String username) {
-		log.error("getFromUsername - Getting user - {}",username);
+		log.debug("getFromUsername - Getting user - {}",username);
 
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Account> cq = cb.createQuery(Account.class);
@@ -37,7 +37,7 @@ public class AccountDao {
 		
 		try {
 			Account a = em.createQuery(cq).setMaxResults(1).getSingleResult();
-			log.error("returning value - {} : {}",a.getUsername(),a.getPassword());
+			log.debug("returning value - {}",a.getUsername());
 			return a;
 			
 		} catch(Exception e) {

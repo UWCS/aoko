@@ -27,8 +27,9 @@
     <mvc:resources mapping="/resources/**" location="/, classpath:/META-INF/resources/, file:${media.art}, file:${media.repository}"/>
        
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-   		<!-- one of the properties available; the maximum file size in bytes -->
-	    <property name="maxUploadSize" value="50000000"/>
+		
+		<!-- one of the properties available; the maximum file size in bytes -->
+		<property name="maxUploadSize" value="${media.uploadlimit}"/>
 	</bean>
    
 </beans>

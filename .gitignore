@@ -7,3 +7,4 @@ derby.log
 .factorpath
 .apt-generated
 *~
+run.sh

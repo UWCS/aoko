@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,6 @@ import uk.co.probablyfine.aoko.dao.MusicFileDao;
 import uk.co.probablyfine.aoko.dao.QueueItemDao;
 import uk.co.probablyfine.aoko.domain.FileType;
 import uk.co.probablyfine.aoko.domain.MusicFile;
-import uk.co.probablyfine.aoko.domain.QueueItem;
 import uk.co.probablyfine.aoko.download.ArtDownloader;
 
 import com.google.common.io.Files;
@@ -43,6 +44,8 @@ public class FileUploadHandler {
 	@Value("${media.repository}")
 	private String downloadPath;
 	
+	private final Logger log = LoggerFactory.getLogger(FileUploadHandler.class);
+	
 	public void processFile(MultipartFile file, String username) throws IOException, NoSuchAlgorithmException {
 		
 		File hashFile = File.createTempFile(file.getName(),null);
@@ -60,7 +63,7 @@ public class FileUploadHandler {
 			
 			String newFileName = hash+extension;
 			
-			System.out.println("Moving file to "+downloadPath+newFileName);
+			log.debug("Moving file to "+downloadPath+newFileName);
 			
 			File newFile = new File(downloadPath+newFileName);
 			
@@ -74,15 +77,14 @@ public class FileUploadHandler {
 				arts.getAlbumArt(metadata, hash);
 				mf.setArtLocation(hash+".jpg");
 			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("Badly configured parser, abandoning getting art.");
+				log.error("{}",e);
 			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (RuntimeException e) {
-			}
-			catch (IOException e) {
-				e.printStackTrace();
+				log.error("XML exception, abandoning getting art.");
+				log.error("{}",e);
+			} catch (IOException e) {
+				log.error("IO Exception getting art, abandoning.");
+				log.error("{}",e);
 			}
 			
 			metadata.put("originalname", file.getOriginalFilename());
@@ -91,8 +93,6 @@ public class FileUploadHandler {
 			mf.setLocation(newFileName);
 			mf.setUniqueId(hash);
 			mf.setMetaData(metadata);
-			
-			
 			
 			qiDao.queueTrack(accounts.getFromUsername(username), mf);
 			

@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +40,10 @@ public class YoutubeQueue {
 	private final Logger log = LoggerFactory.getLogger(YoutubeQueue.class);
 	
 	@Value("${script.youtubedl}")
-	String ytdPath;
+	String scriptPath;
+	
+	@Value("${script.dltimeout}")
+	int timeout;
 	
 	@Value("${media.repository}")
 	String mediaPath;
@@ -49,139 +55,143 @@ public class YoutubeQueue {
 	YoutubeDao videos;
 	
 	@Autowired
-	MusicFileDao mfDao;
+	MusicFileDao musicFiles;
 	
 	@Autowired
-	QueueItemDao qiDao;
+	QueueItemDao queue;
 	
 	@Autowired
-	AccountDao userDao;
+	AccountDao users;
 	
-	private Thread dlThread;
+	private Process downloaderProcess;
 
 	@Autowired
 	protected ArtDownloader artDownloader;
 	
+	private ExecutorService executor;
+	
 	@PostConstruct
 	public void downloadVideos() {
-		dlThread = new Thread(new Runnable() {
+		
+		this.executor = Executors.newSingleThreadExecutor();
+		
+		final Timer downloadTimer = new Timer();
+		
+		final TimerTask downloadTask = new TimerTask() {
+			
 			@Override
 			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
+				final YoutubeDownload qi = videos.next();
+				
+				if (qi != null)
+					download(qi);
+			}
+		};
+		
+		downloadTimer.schedule(downloadTask, 0, 2000);
+		
+	}
+	
+	public void download(final YoutubeDownload download) {
+	
+		log.debug("Attempting to download {}",download.getUrl());
+		
+		try {
+			//Save file to <media-download-path>\<title>.<format>
+			final File tempDir = Files.createTempDir();
+			final String outputFormat = tempDir.getAbsolutePath()+File.separator+"%(stitle)s.%(ext)s";
+						
+			videos.markStartDownloading(download);
+			
+			int code = executor.submit(new Callable<Integer>() {
+
+				@Override
+				public Integer call() throws Exception {
 					
-					YoutubeDownload yd = videos.next();
-					if (null != yd) {
+					downloaderProcess = Runtime.getRuntime().exec(new String[] {scriptPath, "-o", outputFormat, download.getUrl()});
 					
-					log.debug("Attempting to download {}",yd.getUrl());
-					try {
-						//Save file to <media-download-path>\<title>.<format>
-						File tempDir = Files.createTempDir();
-						String outputFormat = tempDir.getAbsolutePath()+File.separator+"%(stitle)s.%(ext)s";
-						
-						videos.markStartDownloading(yd);
-						
-						Process p = Runtime.getRuntime().exec(new String[] {ytdPath, "-o", outputFormat, yd.getUrl()});
-						
-						BufferedReader outputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-						
-						String outputLine;
-						while ((outputLine = outputReader.readLine()) != null) {
+					BufferedReader outputReader = new BufferedReader(new InputStreamReader(downloaderProcess.getInputStream()));
+								
+					String outputLine;
+					
+					while ((outputLine = outputReader.readLine()) != null) {
 							log.trace(outputLine);
-						}
-						
-						int code = p.waitFor();
-						
-						if (code == 0) {
-							byte[] hash;
-							try {
-								//Get the filehash
-								File downloadedFile = tempDir.listFiles()[0];
-								hash = Files.getDigest(downloadedFile, MessageDigest.getInstance("SHA1"));
-								String hexVal = new BigInteger(hash).toString(16);
-							
-								log.debug("{} has hash {}",downloadedFile.getName(),hexVal);
-								
-								Account user = userDao.getFromUsername(yd.getQueuedBy());
-								
-								MusicFile file;
-								
-								if (mfDao.containsFile(hexVal)) {
-									file = mfDao.getFromUniqueId(hexVal);
-								} else {
-									
-									final String extension = downloadedFile.getName().substring(downloadedFile.getName().lastIndexOf("."),downloadedFile.getName().length());
-									
-									File newFile = new File(mediaPath+hexVal+extension);
-									Files.move(downloadedFile, newFile);
-									
-									tempDir.delete();
-									
-									file = new MusicFile();
-									
-									Matcher m = Pattern.compile("(?<=v=).*?(?=&|$)").matcher(yd.getUrl());
-									m.find();
-									String id = m.group(0);
-									
-									try {
-										artDownloader.getYoutubeArt(id);
-										file.setArtLocation(id+".jpg");
-									} catch (Exception e) {
-										log.error("Exception: ",e);
-									}
-									
-									Map<String,String> data = new HashMap<String, String>();
-									
-									data.put("originalname", downloadedFile.getName());
-									
-									String actualName = downloadedFile.getName().substring(0,downloadedFile.getName().lastIndexOf("."));
-									
-									data.put("name", actualName);
-									file.setLocation(newFile.getName());
-									file.setMetaData(data);
-									file.setType(FileType.YOUTUBE);
-									file.setUniqueId(hexVal);
-								}
-								
-								qiDao.queueTrack(user, file);
-								videos.markSuccessful(yd);
-							} catch (NoSuchAlgorithmException e) {
-								log.error("No such algorithm. ",e);
-							} 
-						} else {
-							videos.markFailure(yd);
-						}
-					} catch (IOException e) {
-						log.error("IOException: ",e);
-						videos.markFailure(yd);
-					} catch (InterruptedException e) {
-						log.error("Thread was interrupted: ",e);
-						videos.markFailure(yd);
-					} catch (Exception e) {
-						log.error("Unanticipated error, failure.",e);
-						videos.markFailure(yd);
 					}
+					
+					return downloaderProcess.waitFor();
 					
 				}
-			}
+				
+			}).get(timeout, TimeUnit.SECONDS);
 			
+			if (code == 0) {
+				
+				//Extract code from url
+				Matcher m = Pattern.compile("(?<=v=).*?(?=&|$)").matcher(download.getUrl());
+				m.find();
+				String videoCode = m.group(0);
+				
+				log.debug("{} has identifier {}",download.getUrl(),videoCode);
+								
+				final Account user = users.getFromUsername(download.getQueuedBy());
+								
+				MusicFile file;
+								
+				if (musicFiles.containsFile(videoCode)) {
+					file = musicFiles.getFromUniqueId(videoCode);
+				} else {
+					
+					final File downloadedFile = tempDir.listFiles()[0];
+					
+					final String extension = downloadedFile.getName().substring(downloadedFile.getName().lastIndexOf("."),downloadedFile.getName().length());
+					File newFile = new File(mediaPath+videoCode+extension);
+					Files.move(downloadedFile, newFile);
+									
+					tempDir.delete();
+					
+					file = new MusicFile();
+									
+					try {
+						artDownloader.getYoutubeArt(videoCode);
+						file.setArtLocation(videoCode+".jpg");
+					} catch (Exception e) {
+						log.error("Cannot download thumbnail for {} ",download.getUrl(),e);
+					}
+									
+					Map<String,String> data = new HashMap<String, String>();
+						
+					data.put("originalname", downloadedFile.getName());
+									
+					String actualName = downloadedFile.getName().substring(0,downloadedFile.getName().lastIndexOf("."));
+									
+					data.put("name", actualName);
+					file.setLocation(newFile.getName());
+					file.setMetaData(data);
+					file.setType(FileType.YOUTUBE);
+					file.setUniqueId(videoCode);
+				}
+								
+					queue.queueTrack(user, file);
+					videos.markSuccessful(download); 
+			} else {
+				videos.markFailure(download);
+			}
+		} catch (IOException e) {
+			log.error("IOException: ",e);
+			videos.markFailure(download);
+		} catch (InterruptedException e) {
+			log.error("Thread was interrupted: ",e);
+			videos.markFailure(download);
+		} catch (Exception e) {
+			log.error("Unanticipated error, failure.",e);
+			videos.markFailure(download);
 		}
-		});
-		dlThread.start();
+					
 	}
 	
 	public void stopDownloader() {
 		log.debug("Stopping the downloader.");
-		dlThread.interrupt();
-	}
-	
-	public void startDownloader() {
-		log.debug("Starting the downloader.");
-		dlThread.start();
+		downloaderProcess.destroy();
 	}
 	
 }

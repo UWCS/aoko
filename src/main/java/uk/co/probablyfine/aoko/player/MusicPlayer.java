@@ -2,6 +2,8 @@ package uk.co.probablyfine.aoko.player;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -46,24 +48,21 @@ public class MusicPlayer {
 		
 		this.executor = Executors.newSingleThreadExecutor();
 		
-		new Thread(new Runnable() {
+		final Timer playerTimer = new Timer();
+		
+		final TimerTask playerTask = new TimerTask() {
 			
 			@Override
 			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					
-					final QueueItem qi = qiDao.nextTrack();
-					
-					if (qi != null)
-						playTrack(qi);
-				}
+				final QueueItem qi = qiDao.nextTrack();
+				
+				if (qi != null)
+					playTrack(qi);
 			}
-		}).start();
+		};
+		
+		playerTimer.schedule(playerTask, 0, 2000);
+		
 	}    
 
 	public void playTrack(final QueueItem qi) {

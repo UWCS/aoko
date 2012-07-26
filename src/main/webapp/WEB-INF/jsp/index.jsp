@@ -15,7 +15,7 @@
 		</div>
 			
     	<div class="submitform">
-	    	YouTube
+	    	Vimeo/YouTube
     	    <form method="post" action="/submit/youtube">
         	   <input type="text" name="url"/><br/>
 		       <input type="submit"/>

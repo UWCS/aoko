@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,12 +31,13 @@ import uk.co.probablyfine.aoko.domain.FileType;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload;
 
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 
 @Service
-public class YoutubeQueue {
+public class VideoQueue {
 
-	private final Logger log = LoggerFactory.getLogger(YoutubeQueue.class);
+	private final Logger log = LoggerFactory.getLogger(VideoQueue.class);
 	
 	@Value("${script.youtubedl}")
 	String scriptPath;
@@ -63,6 +63,9 @@ public class YoutubeQueue {
 	@Autowired
 	AccountDao users;
 	
+	@Autowired
+	ApiExtractor api;
+	
 	private Process downloaderProcess;
 
 	@Autowired
@@ -78,11 +81,9 @@ public class YoutubeQueue {
 		final Timer downloadTimer = new Timer();
 		
 		final TimerTask downloadTask = new TimerTask() {
-			
 			@Override
 			public void run() {
 				final YoutubeDownload qi = videos.next();
-				
 				if (qi != null)
 					download(qi);
 			}
@@ -99,7 +100,7 @@ public class YoutubeQueue {
 		try {
 			//Save file to <media-download-path>\<title>.<format>
 			final File tempDir = Files.createTempDir();
-			final String outputFormat = tempDir.getAbsolutePath()+File.separator+"%(stitle)s.%(ext)s";
+			final String outputFormat = new File(tempDir,"%(stitle)s.%(ext)s").getAbsolutePath();
 						
 			videos.markStartDownloading(download);
 			
@@ -126,16 +127,32 @@ public class YoutubeQueue {
 			
 			if (code == 0) {
 				
-				//Extract code from url
-				Matcher m = Pattern.compile("(?<=v=).*?(?=&|$)").matcher(download.getUrl());
-				m.find();
-				String videoCode = m.group(0);
+				final MusicFile file;
+				
+				final FileType type;
+				
+				final String videoCode;
+				
+				//Identify what type of video we're dealing with
+				if (download.getUrl().contains("vimeo")) {
+					log.debug("Processing vimeo url");
+					type = FileType.VIMEO;
+					
+					final Matcher m = Pattern.compile(".*/([0-9]+)$").matcher(download.getUrl());
+					m.find();
+					videoCode = m.group(1);
+				} else {
+					log.debug("Processing youtube url");
+					type = FileType.YOUTUBE;
+					
+					final Matcher m = Pattern.compile("(?<=v=).*?(?=&|$)").matcher(download.getUrl());
+					m.find();
+					videoCode = m.group(0);
+				}
 				
 				log.debug("{} has identifier {}",download.getUrl(),videoCode);
 								
 				final Account user = users.getFromUsername(download.getQueuedBy());
-								
-				MusicFile file;
 								
 				if (musicFiles.containsFile(videoCode)) {
 					file = musicFiles.getFromUniqueId(videoCode);
@@ -144,35 +161,46 @@ public class YoutubeQueue {
 					final File downloadedFile = tempDir.listFiles()[0];
 					
 					final String extension = downloadedFile.getName().substring(downloadedFile.getName().lastIndexOf("."),downloadedFile.getName().length());
-					File newFile = new File(mediaPath+videoCode+extension);
+					File newFile = new File(mediaPath,videoCode+extension);
 					Files.move(downloadedFile, newFile);
 									
 					tempDir.delete();
 					
 					file = new MusicFile();
-									
-					try {
-						artDownloader.getYoutubeArt(videoCode);
-						file.setArtLocation(videoCode+".jpg");
-					} catch (Exception e) {
-						log.error("Cannot download thumbnail for {} ",download.getUrl(),e);
-					}
-									
-					Map<String,String> data = new HashMap<String, String>();
+					
+					Map<String,String> data;
+					
+					if (type == FileType.VIMEO) {
+
+						data = api.getVimeoData(videoCode);
+						if (data.containsKey("artlocation"))
+								file.setArtLocation(videoCode+".jpg");
 						
+					} else {
+					
+						data = Maps.newHashMap();
+						
+						try {
+							artDownloader.getYoutubeArt(videoCode);
+							file.setArtLocation(videoCode+".jpg");
+							String actualName = downloadedFile.getName().substring(0,downloadedFile.getName().lastIndexOf("."));
+							data.put("name", actualName);
+						} catch (Exception e) {
+							log.error("Cannot download thumbnail for {} ",download.getUrl(),e);
+						}
+
+					}
+					
 					data.put("originalname", downloadedFile.getName());
-									
-					String actualName = downloadedFile.getName().substring(0,downloadedFile.getName().lastIndexOf("."));
-									
-					data.put("name", actualName);
+					
+					file.setType(type);
 					file.setLocation(newFile.getName());
 					file.setMetaData(data);
-					file.setType(FileType.YOUTUBE);
 					file.setUniqueId(videoCode);
 				}
 								
-					queue.queueTrack(user, file);
-					videos.markSuccessful(download); 
+				queue.queueTrack(user, file);
+				videos.markSuccessful(download); 
 			} else {
 				videos.markFailure(download);
 			}

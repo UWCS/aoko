@@ -1,5 +1,6 @@
 package uk.co.probablyfine.aoko.download;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,6 +15,8 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -28,19 +31,39 @@ public class ArtDownloader {
 	@Value("${media.art}")
 	private String downloadPath;
 		
+	private final Logger log = LoggerFactory.getLogger(ArtDownloader.class);
+	
+	public void getVimeoArt(String vimeoUrl, String vimeoId) throws IOException {
+
+		final String path = new File(downloadPath,vimeoId+".jpg").getAbsolutePath();
+		
+		log.debug("Downloading art from {} to {}", vimeoUrl, path);
+		
+		URL imageRequest = new URL(vimeoUrl);
+	    
+		ReadableByteChannel rbc = Channels.newChannel(imageRequest.openStream());
+		
+		FileOutputStream fos = new FileOutputStream(path);
+	    
+		fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+		
+		fos.close();
+		
+	}
+	
 	public void getYoutubeArt(String youtubeId) throws IOException {
 		
-		String url = "http://img.youtube.com/vi/"+youtubeId+"/1.jpg";
+		final String url = "http://img.youtube.com/vi/"+youtubeId+"/1.jpg";
 		
-		System.out.println(url);
+		final String path = new File(downloadPath,youtubeId+".jpg").getAbsolutePath();
+		
+		log.debug("Downloading art from {} to {}", url, path);
 		
 		URL imageRequest = new URL(url);
 	    
 		ReadableByteChannel rbc = Channels.newChannel(imageRequest.openStream());
-	    
-		System.out.println(downloadPath+youtubeId+".jpg");
 		
-		FileOutputStream fos = new FileOutputStream(downloadPath+youtubeId+".jpg");
+		FileOutputStream fos = new FileOutputStream(path);
 	    
 		fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 		

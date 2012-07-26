@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -21,6 +23,8 @@ import uk.co.probablyfine.aoko.service.FileUploadHandler;
 @RequestMapping(value = "/submit/")
 public class UploadController {
 	
+	private final Logger log = LoggerFactory.getLogger(UploadController.class);
+	
 	@Autowired
 	FileUploadHandler fuh;
 	
@@ -30,10 +34,10 @@ public class UploadController {
 	@RequestMapping(value = "upload", method = RequestMethod.POST)
 	public String fileUpload(@ModelAttribute(value="FORM") FileUpload form,BindingResult result, Principal p) {
 		 
-		 System.out.println(form.getFile().getOriginalFilename());
 		 if (null != p) {
 			 try {
-				fuh.processFile(form.getFile(), p.getName());
+				 log.debug("Processing upload of {} from {}",form.getFile().getName(), p.getName());
+				 fuh.processFile(form.getFile(), p.getName());
 			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -45,7 +49,7 @@ public class UploadController {
 	}
 	
 	@RequestMapping(value = "youtube", method = RequestMethod.POST)
-	public String youtubeDownload(@RequestParam("url") String url, Principal p) {
+	public String videoDownload(@RequestParam("url") String url, Principal p) {
 		
 		if (null != p) {
 			System.out.println(url);

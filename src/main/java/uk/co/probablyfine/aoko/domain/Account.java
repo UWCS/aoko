@@ -72,4 +72,9 @@ public class Account {
 		this.role = role;
 	}
 	
+	@Override
+	public String toString() {
+		return this.username;
+	}
+	
 }

@@ -1,7 +1,8 @@
 package uk.co.probablyfine.aoko.dao;
 
+import java.util.Collection;
+
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -12,10 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
 import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.Account_;
-import uk.co.probablyfine.aoko.domain.PlayerState;
-import uk.co.probablyfine.aoko.domain.QueueItem;
 
 @Repository
 public class AccountDao {
@@ -58,5 +59,26 @@ public class AccountDao {
 		final Account account = getFromUsername(username);
 		account.setRole("ROLE_ADMIN");
 		em.merge(account);
+	}
+
+	@Transactional(readOnly=true)
+	public Collection<Account> getAdmins() {
+		log.debug("getFromUsername - Getting all admins");
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Account> cq = cb.createQuery(Account.class);
+		Root<Account> root = cq.from(Account.class);
+		
+		cq.where(cb.equal(root.get(Account_.role), "ROLE_ADMIN"));
+		
+		try {
+			Collection<Account> a = em.createQuery(cq).getResultList();
+			log.debug("returning admins - {}",a);
+			return a;
+		} catch(Exception e) {
+			log.error("Exception",e);
+			return Lists.newArrayList();
+		}
+		
 	}
 }

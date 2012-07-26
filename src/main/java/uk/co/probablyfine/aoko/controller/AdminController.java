@@ -42,7 +42,6 @@ public class AdminController {
 	
 	@RequestMapping("remove/{username}")
 	public String removeUser(@PathVariable("username") String username) {
-		//TODO
 		return "redirect:/";
 	}
 	

@@ -5,11 +5,11 @@
 		<div class="menu">
 			<div class="package">
 			<h2>Music server</h2>
-			<p>
-			Here some stuff about the music server will go
-			</p>
-			<p>
-			Submit bug reports and browse the source <a href="http://github.com/mrwilson/aoko">here</a>!
+			Submit bug reports and browse the source <a href="http://github.com/mrwilson/aoko">here</a>!</br>
+			Please report any problems to an admin. The admins are:<br/>
+			<c:forEach items="${admins}" var="admin">
+				${admin}<br/>
+			</c:forEach>	
 		</div>
 	</div>
 <%@ include file="footer.html" %>

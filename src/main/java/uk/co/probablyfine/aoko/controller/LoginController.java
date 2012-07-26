@@ -34,6 +34,21 @@ public class LoginController {
 	@RequestMapping(value = "register",method = RequestMethod.POST)
 	public String processNewUser(@RequestParam String j_username, @RequestParam String j_password, Model m) {
 		
+		if (j_username.length() == 0) {
+			m.addAttribute("error", "Please actually give a username.");
+			return "redirect:/login/register";
+		}
+		
+		if (j_password.length() == 0) {
+			m.addAttribute("error", "Please actually give a password.");
+			return "redirect:/login/register";
+		}
+			
+		if (!j_username.matches("[a-zA-Z_0-9]+")) {
+			m.addAttribute("error", "Illegal character in username, alphanumeric and _ only.");
+			return "redirect:/login/register";
+		}
+		
 		if (users.getFromUsername(j_username) == null) {
 			Account user = new Account(j_username,pass.encode(j_password), "ROLE_USER");
 			users.merge(user);

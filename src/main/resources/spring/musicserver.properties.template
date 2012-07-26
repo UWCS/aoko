@@ -3,7 +3,7 @@
 #Locations for media files
 media.repository=
 media.art=
-
+media.uploadlimit=
 #Path/command for music player
 player.path=
 
@@ -12,6 +12,7 @@ player.timeout=
 
 # Youtube-dl script. Make sure this is executable (there is a specific .exe for Windows)
 script.youtubedl=
+script.dltimeout=
 
 # Database
 db.username=

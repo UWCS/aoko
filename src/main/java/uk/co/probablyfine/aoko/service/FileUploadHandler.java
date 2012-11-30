@@ -85,6 +85,9 @@ public class FileUploadHandler {
 			} catch (IOException e) {
 				log.error("IO Exception getting art, abandoning.");
 				log.error("{}",e);
+			} catch (RuntimeException e) {
+				log.error("Cannot get album art data, using filename instead");
+				log.error("{}",e);
 			}
 			
 			metadata.put("originalname", file.getOriginalFilename());

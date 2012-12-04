@@ -52,8 +52,6 @@ public class VideoQueue {
 	@Value("${media.art}") String artPath;
 	
 	private Process downloaderProcess;
-
-	
 	private ExecutorService executor;
 	
 	@PostConstruct

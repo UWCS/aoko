@@ -1,8 +1,12 @@
 package uk.co.probablyfine.aoko.download;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,15 +20,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 
 @Service
 public class ApiExtractor {
 
-	@Autowired
-	ArtDownloader artDownloader;
+	@Autowired private ArtDownloader artDownloader;
 	
 	private final XPath xpath = XPathFactory.newInstance().newXPath();
 	
@@ -75,6 +80,38 @@ public class ApiExtractor {
 		return results;
 	}
 	
+	public String getAsinFromMusicbrainz(Map<String,String> metadata) throws UnsupportedEncodingException {
+		
+		//TODO: Xpath
+		
+		List<String> queryString = new ArrayList<String>();
+		
+		if (metadata.containsKey("album") && (metadata.containsKey("artist") || metadata.containsKey("album_artist"))) {
+				queryString.add("release:"+metadata.get("album"));
+				if (metadata.containsKey("artist")) {
+					queryString.add("artist:"+metadata.get("artist"));
+				} else {
+					queryString.add("artist:"+metadata.get("album_artist"));
+				}
+		} else {
+			throw new RuntimeException("Insufficient data for album art");
+		}
+		
+		String url = "http://musicbrainz.org/ws/2/release/?type=xml&query="+URLEncoder.encode(Joiner.on(" ").join(queryString),"UTF-8");
+		
+		Document doc;
+		try {
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new URL(url).openStream());
+		} catch (Exception e) {
+			log.error("Unable to retrieve information from {}", url);
+			return "";
+		}
+		
+		NodeList nodes = doc.getElementsByTagName("asin");
+		
+		return nodes.item(0).getChildNodes().item(0).getNodeValue();
+		
+	}
 	
 	
 }

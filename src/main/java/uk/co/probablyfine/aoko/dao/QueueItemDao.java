@@ -255,21 +255,6 @@ public class QueueItemDao {
 		
 		Collections.sort(results);
 		
-		/*QueueItem qi1 = em.merge(results.get(0));
-		QueueItem qi2 = em.merge(results.get(1));
-		
-		qi1.setBucket(bucket2);
-		qi1.setPosition(pos2);
-		
-		//em.merge(qi1);		
-		
-		qi2.setPosition(pos1);
-		qi2.setBucket(bucket1);
-		
-		//em.persist(qi2);
-		*/
-		
-		
 		QueueItem qi1 = results.get(0);
 		QueueItem qi2 = results.get(1);
 		
@@ -280,9 +265,7 @@ public class QueueItemDao {
 		
 		qi1.setFile(qi2.getFile());
 		qi2.setFile(file1);
-		
-		
-		
+
 	}
 	
 	@Transactional

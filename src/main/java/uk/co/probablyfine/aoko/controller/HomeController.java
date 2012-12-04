@@ -13,11 +13,8 @@ import uk.co.probablyfine.aoko.dao.QueueItemDao;
 @Controller
 public class HomeController {
 	
-	@Autowired
-	QueueItemDao queue;
-	
-	@Autowired
-	AccountDao users;
+	@Autowired private QueueItemDao queue;
+	@Autowired private AccountDao users;
 	
 	@RequestMapping("/")
 	public String home(Model m, Principal p) {

@@ -39,37 +39,20 @@ public class VideoQueue {
 
 	private final Logger log = LoggerFactory.getLogger(VideoQueue.class);
 	
-	@Value("${script.youtubedl}")
-	String scriptPath;
-	
-	@Value("${script.dltimeout}")
-	int timeout;
-	
-	@Value("${media.repository}")
-	String mediaPath;
-	
-	@Value("${media.art}")
-	String artPath;
-	
-	@Autowired
-	YoutubeDao videos;
-	
-	@Autowired
-	MusicFileDao musicFiles;
-	
-	@Autowired
-	QueueItemDao queue;
-	
-	@Autowired
-	AccountDao users;
-	
-	@Autowired
-	ApiExtractor api;
+	@Autowired private YoutubeDao videos;
+	@Autowired private MusicFileDao musicFiles;
+	@Autowired private QueueItemDao queue;
+	@Autowired private AccountDao users;
+	@Autowired private ApiExtractor api;
+	@Autowired private ArtDownloader artDownloader;
+
+	@Value("${script.youtubedl}") String scriptPath;
+	@Value("${script.dltimeout}") int timeout;
+	@Value("${media.repository}") String mediaPath;
+	@Value("${media.art}") String artPath;
 	
 	private Process downloaderProcess;
 
-	@Autowired
-	protected ArtDownloader artDownloader;
 	
 	private ExecutorService executor;
 	

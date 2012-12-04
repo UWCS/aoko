@@ -18,11 +18,8 @@ public class QueueController {
 
 	private final Logger log = LoggerFactory.getLogger(QueueController.class);
 	
-	@Autowired
-	QueueItemDao queue;
-	
-	@Autowired
-	AccountDao accounts;
+	@Autowired private QueueItemDao queue;
+	@Autowired private AccountDao accounts;
 	
 	@RequestMapping("move/{direction}/{id}")
 	public String moveSong(	@PathVariable("direction") String direction,

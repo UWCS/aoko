@@ -10,12 +10,14 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FileMetadataTagger {
 
 	private static Logger log = LoggerFactory.getLogger(FileMetadataTagger.class);
 	
-	public static Map<String,String> getMetaData(File file) {
+	public Map<String,String> getMetaData(File file) {
 		
 		Map<String,String> metadata = new HashMap<String, String>();
 		

@@ -17,7 +17,6 @@ import org.xml.sax.SAXException;
 
 import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.MusicFileDao;
-import uk.co.probablyfine.aoko.dao.QueueItemDao;
 import uk.co.probablyfine.aoko.domain.FileType;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.download.ArtDownloader;
@@ -29,7 +28,7 @@ public class FileUploadHandler {
 
 	@Autowired private ArtDownloader arts;
 	@Autowired private MusicFileDao music;
-	@Autowired private QueueItemDao queue;
+	@Autowired private QueueService queue;
 	@Autowired private AccountDao accounts;
 	@Autowired private FileUtils utils;
 	@Autowired private FileMetadataTagger tagger;

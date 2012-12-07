@@ -1,6 +1,9 @@
 package uk.co.probablyfine.aoko.service;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.MusicFileDao;
-import uk.co.probablyfine.aoko.dao.QueueItemDao;
 import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.download.ArtDownloader;
@@ -26,7 +28,7 @@ public class FileUploadHandlerTest {
 	@InjectMocks private FileUploadHandler handler;
 	@Mock private ArtDownloader mockArts;
 	@Mock private MusicFileDao mockMusic;
-	@Mock private QueueItemDao mockQueue;
+	@Mock private QueueService mockQueueService;
 	@Mock private AccountDao mockAccounts;
 	@Mock private MultipartFile mockMultipartFile;
 	@Mock private FileUtils mockUtils;
@@ -42,7 +44,7 @@ public class FileUploadHandlerTest {
 		
 		handler.processFile(mockMultipartFile, "testuser");
 		
-		verify(mockQueue).queueTrack(any(Account.class),any(MusicFile.class));
+		verify(mockQueueService).queueTrack(any(Account.class),any(MusicFile.class));
 		
 	}
 	
@@ -57,7 +59,7 @@ public class FileUploadHandlerTest {
 		
 		handler.processFile(mockMultipartFile, "testuser");
 		
-		verify(mockQueue).queueTrack(any(Account.class),any(MusicFile.class));
+		verify(mockQueueService).queueTrack(any(Account.class),any(MusicFile.class));
 		
 	}
 

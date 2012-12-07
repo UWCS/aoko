@@ -1,6 +1,7 @@
 package uk.co.probablyfine.aoko.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,122 +20,22 @@ import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.PlayerState;
 import uk.co.probablyfine.aoko.domain.QueueItem;
-import uk.co.probablyfine.aoko.domain.QueueItem_;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 
 @Repository
 public class QueueItemDao {
 	
 	private Logger log = LoggerFactory.getLogger(QueueItemDao.class);
+	@PersistenceContext EntityManager em;
 	
-	@PersistenceContext
-	EntityManager em;
-	
-	@Transactional
-	public void queueTrack(final Account user, final MusicFile track) {
-		log.debug("queueTrack - Queueing track from {}",user.getUsername());
+	@Transactional(readOnly = true) 
+	public Collection<QueueItem> getAll(){
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
-		//Get all queued items that haven't been played or are playing
 		
-		List<QueueItem> results = em.createQuery(cq).getResultList();
-		
-		log.debug("Received {} results",results.size());
-		
-		final List<QueueItem> process = new ArrayList<QueueItem>(Collections2.filter(results, new Predicate<QueueItem>() {
-			@Override
-			public boolean apply(QueueItem input) {
-				return input.getStatus() != PlayerState.PLAYED;
-			}
-		}));
-		
-		Collections.sort(process);
-		
-		Collections.sort(results);
-		
-		final int finalBucket;
-		final int position;
-		
-		//The bucket we're in at the moment
-		if (!process.isEmpty()) {
-			
-			log.debug("The waiting queue is not empty, finding bucket to add into.");
-			
-			int currentbucket = Collections.min(process).getBucket();
-		
-			log.debug("Currently playing bucket {}",currentbucket);
-
-			List<QueueItem> bucketItems = new ArrayList<QueueItem>();
-			
-			bucketItems.addAll(Collections2.filter(results, new Predicate<QueueItem>() {
-				
-				final int currentbucket = Collections.min(process).getBucket();
-				
-				@Override
-				public boolean apply(QueueItem input) {
-					return input.getUserName().equals(user.getUsername()) && input.getBucket() >= currentbucket;
-				}
-			}));
-
-			log.debug("User has currently queued, in order - {}",bucketItems);
-			
-			List<Integer> buckets = new ArrayList<Integer>();
-
-			buckets.addAll(Collections2.transform(bucketItems, new Function<QueueItem, Integer>() {
-				@Override
-				public Integer apply(QueueItem input) {
-					return input.getBucket();
-				}
-			}));
-			
-			log.debug("User has queued in upcoming buckets, in order - {}",buckets);
-
-			while (buckets.contains(currentbucket)) {
-				log.debug("Buckets contain {}, increasing.");
-				currentbucket++;
-			}
-			
-			finalBucket = currentbucket;
-			
-			List<QueueItem> currentBucketList = new ArrayList<QueueItem>();
-			currentBucketList.addAll(Collections2.filter(results, new Predicate<QueueItem>() {
-				@Override
-				public boolean apply(QueueItem input) {
-					return input.getBucket() == finalBucket;
-				}
-			}));
-			
-			if (currentBucketList.size() == 0) {
-				log.debug("Nothing in selected bucket, creating a new one.");
-				position = 1;
-			} else {
-				log.debug("Appending to end of current bucket.");
-				position = Collections.max(currentBucketList).getPosition()+1;
-			}
-			
-		} else if (results.size() != 0) {
-			log.debug("Queue not empty, but things have been played, creating new bucket.");
-			finalBucket = Collections.max(results).getBucket()+1;
-			position = 1;
-		} else {
-			log.debug("Queue was completely empty, adding to start");
-			finalBucket = 1;
-			position = 1;
-		}
-		
-		QueueItem qi = new QueueItem(user, track);
-		
-		qi.setBucket(finalBucket);
-		qi.setPosition(position);
-		
-		log.debug("Final Bucket = {}, Final Position = {}",finalBucket,position);
-
-		em.merge(qi);
-		
+		return em.createQuery(cq).getResultList();
 	}
 	
 	@Transactional(readOnly = true)
@@ -163,10 +64,12 @@ public class QueueItemDao {
 		
 	}
 	@Transactional(readOnly = true)
-	public List<List<QueueItem>> getAll() {
+	public List<List<QueueItem>> getAllUnplayed() {
 		log.debug("Trying to get all items");
+		
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
+		
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
 		List<QueueItem> resultsList = em.createQuery(cq).getResultList();
@@ -225,12 +128,6 @@ public class QueueItemDao {
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		
-		/* Get all items with:
-		 *  - Name = User
-		 *  - Bucket Index = Equal to this one or the one above/below it
-		 *  - Status = Not yet played/playing
-		 */
-
 		log.debug("Bucket = {}, Bucket+Mod = {}",bucket,bucket+mod);
 		
 		cq.where(
@@ -247,7 +144,6 @@ public class QueueItemDao {
 		List<QueueItem> results = new ArrayList<QueueItem>();
 		results.addAll(em.createQuery(cq).getResultList());
 		
-		//If we have less than 2 results, then there's nothing to do.
 		if (results.size() < 2)	{
 			log.debug("Only returned {} results",results.size());
 			return;
@@ -305,7 +201,6 @@ public class QueueItemDao {
 			return qi;
 		}
 		
-		
 		log.debug("Returning {}",qi);
 		return qi; 
 	}
@@ -358,9 +253,6 @@ public class QueueItemDao {
 		}
 		
 		return qi;
-		
 
 	}
-	
-	
 }

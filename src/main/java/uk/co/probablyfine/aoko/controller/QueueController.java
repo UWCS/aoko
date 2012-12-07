@@ -52,7 +52,7 @@ public class QueueController {
 		}
 				
 		queue.deleteItem(bucketId,p.getName());
-			
+		
 		log.debug("Returning user to homepage");
 		
 		return "redirect:/";

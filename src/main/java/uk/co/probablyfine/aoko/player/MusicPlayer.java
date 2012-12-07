@@ -27,20 +27,12 @@ public class MusicPlayer {
 
 	private final Logger log = LoggerFactory.getLogger(MusicPlayer.class);
 	
-	@Value("${player.path}")
-	String playerPath;
-	
-	@Value("${player.timeout}")
-	long playerTimeout;
-	
-	@Autowired
-	QueueItemDao qiDao;
+	@Value("${player.path}") private String playerPath;
+	@Value("${player.timeout}") private long playerTimeout;
+	@Value("${media.repository}") private String downloadPath;
+	@Autowired private QueueItemDao qiDao;
 
 	private Process playTrackProcess;
-
-	@Value("${media.repository}")
-	private String downloadPath;
-
 	private ExecutorService executor;
 	
 	@PostConstruct
@@ -51,13 +43,9 @@ public class MusicPlayer {
 		final Timer playerTimer = new Timer();
 		
 		final TimerTask playerTask = new TimerTask() {
-			
-			@Override
 			public void run() {
 				final QueueItem qi = qiDao.nextTrack();
-				
-				if (qi != null)
-					playTrack(qi);
+				if (qi != null) playTrack(qi);
 			}
 		};
 		

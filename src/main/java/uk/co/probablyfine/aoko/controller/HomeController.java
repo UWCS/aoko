@@ -22,7 +22,7 @@ public class HomeController {
 			System.out.println("Current logged in user - "+p.getName());
 			m.addAttribute("username", p.getName());
 		}
-		m.addAttribute("queue", queue.getAll());
+		m.addAttribute("queue", queue.getAllUnplayed());
 		return "index";
 	}
 	

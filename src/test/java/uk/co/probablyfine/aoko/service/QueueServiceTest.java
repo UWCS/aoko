@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,12 +36,10 @@ public class QueueServiceTest {
 	@Mock Account mockUser;
 	@Mock MusicFile mockTrack;
 	@Mock QueueItem mockQueueItem;
+	private List<QueueItem> answers;
 	
-	@Test public void shouldCreateNewBucketAndQueue_whenQueueIsEmpty() {
-		Collection<QueueItem> emptyCollection = emptyList();
-		when(mockQueueItemDao.getAll()).thenReturn(emptyCollection);
-		
-		final List<QueueItem> answers = new ArrayList<QueueItem>();
+	@Before public void setup() {
+		answers = new ArrayList<QueueItem>();
 		
 		doAnswer(new Answer<Void>() {
 			@Override
@@ -49,6 +48,11 @@ public class QueueServiceTest {
 				return null;
 			}
 		}).when(mockQueueItemDao).merge(Mockito.any(QueueItem.class));
+	}
+	
+	@Test public void queueTrack_shouldCreateNewBucketAndQueue_whenQueueIsEmpty() {
+		Collection<QueueItem> emptyCollection = emptyList();
+		when(mockQueueItemDao.getAll()).thenReturn(emptyCollection);
 		
 		queueService.queueTrack(mockUser, mockTrack);
 
@@ -59,7 +63,7 @@ public class QueueServiceTest {
 		assertEquals(1, mergedItem.getPosition());
 	}
 
-	@Test public void shouldCreateNewBucketAndQueue_whenHasQueuedInPreviousBucket() {
+	@Test public void queueTrack_shouldCreateNewBucketAndQueue_whenHasQueuedInPreviousBucket() {
 
 		String userName = "Foo";
 		
@@ -70,16 +74,6 @@ public class QueueServiceTest {
 		when(mockUser.getUsername()).thenReturn(userName);
 		when(mockQueueItem.getUserName()).thenReturn(userName);
 		
-		final List<QueueItem> answers = new ArrayList<QueueItem>();
-		
-		doAnswer(new Answer<Void>() {
-			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
-				answers.add((QueueItem) invocation.getArguments()[0]);
-				return null;
-			}
-		}).when(mockQueueItemDao).merge(Mockito.any(QueueItem.class));
-		
 		queueService.queueTrack(mockUser, mockTrack);
 		QueueItem queueItem = answers.get(0);
 
@@ -88,23 +82,13 @@ public class QueueServiceTest {
 		assertEquals(1, queueItem.getPosition());
 	}
 	
-	@Test public void shouldCreateNewBucketAndQueue_whenAllResultsHaveBeenPlayed() {
+	@Test public void queueTrack_shouldCreateNewBucketAndQueue_whenAllResultsHaveBeenPlayed() {
 
 		when(mockQueueItemDao.getAll()).thenReturn(singletonList(mockQueueItem));
 		when(mockQueueItem.getBucket()).thenReturn(1);
 		when(mockQueueItem.getPosition()).thenReturn(1);
 		when(mockQueueItem.getStatus()).thenReturn(PlayerState.PLAYED);
 		
-		final List<QueueItem> answers = new ArrayList<QueueItem>();
-		
-		doAnswer(new Answer<Void>() {
-			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
-				answers.add((QueueItem) invocation.getArguments()[0]);
-				return null;
-			}
-		}).when(mockQueueItemDao).merge(Mockito.any(QueueItem.class));
-		
 		queueService.queueTrack(mockUser, mockTrack);
 		QueueItem queueItem = answers.get(0);
 
@@ -113,7 +97,7 @@ public class QueueServiceTest {
 		assertEquals(1, queueItem.getPosition());
 	}
 	
-	@Test public void shouldAppendToCurrentBucket_whenOtherItemsInBucket() {
+	@Test public void queueTrack_shouldAppendToCurrentBucket_whenOtherItemsInBucket() {
 
 		when(mockQueueItemDao.getAll()).thenReturn(singletonList(mockQueueItem));
 		when(mockQueueItem.getBucket()).thenReturn(1);
@@ -122,16 +106,6 @@ public class QueueServiceTest {
 		when(mockUser.getUsername()).thenReturn("Foo");
 		when(mockQueueItem.getUserName()).thenReturn("Bar");
 		
-		final List<QueueItem> answers = new ArrayList<QueueItem>();
-		
-		doAnswer(new Answer<Void>() {
-			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
-				answers.add((QueueItem) invocation.getArguments()[0]);
-				return null;
-			}
-		}).when(mockQueueItemDao).merge(Mockito.any(QueueItem.class));
-		
 		queueService.queueTrack(mockUser, mockTrack);
 		QueueItem queueItem = answers.get(0);
 
@@ -139,6 +113,5 @@ public class QueueServiceTest {
 		assertEquals(1, queueItem.getBucket());
 		assertEquals(2, queueItem.getPosition());
 	}
-	
 	
 }

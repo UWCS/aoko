@@ -8,12 +8,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import uk.co.probablyfine.aoko.dao.AccountDao;
-import uk.co.probablyfine.aoko.dao.QueueItemDao;
+import uk.co.probablyfine.aoko.service.QueueService;
 
 @Controller
 public class HomeController {
 	
-	@Autowired private QueueItemDao queue;
+	@Autowired private QueueService queue;
 	@Autowired private AccountDao users;
 	
 	@RequestMapping("/")
@@ -22,7 +22,7 @@ public class HomeController {
 			System.out.println("Current logged in user - "+p.getName());
 			m.addAttribute("username", p.getName());
 		}
-		m.addAttribute("queue", queue.getAllUnplayed());
+		m.addAttribute("queue", queue.getQueueLayout());
 		return "index";
 	}
 	

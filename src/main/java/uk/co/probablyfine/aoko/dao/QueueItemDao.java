@@ -1,5 +1,8 @@
 package uk.co.probablyfine.aoko.dao;
 
+import static uk.co.probablyfine.aoko.domain.PlayerState.PLAYED;
+import static uk.co.probablyfine.aoko.domain.PlayerState.PLAYING;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,6 +23,7 @@ import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.PlayerState;
 import uk.co.probablyfine.aoko.domain.QueueItem;
+import uk.co.probablyfine.aoko.domain.QueueItem_;
 
 import com.google.common.base.Function;
 
@@ -64,55 +68,30 @@ public class QueueItemDao {
 		
 	}
 	@Transactional(readOnly = true)
-	public List<List<QueueItem>> getAllUnplayed() {
+	public List<QueueItem> getAllUnplayed() {
 		log.debug("Trying to get all items");
 		
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		
 		Root<QueueItem> root = cq.from(QueueItem.class);
-		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
+		cq.where(cb.notEqual(root.get(QueueItem_.status), PLAYED));
 		List<QueueItem> resultsList = em.createQuery(cq).getResultList();
 	
-		List<List<QueueItem>> bucketList = new ArrayList<List<QueueItem>>();
-		
-		if (resultsList.size() == 0)
-			return new ArrayList<List<QueueItem>>();
-		
-		Collections.sort(resultsList);
-		
-		int firstBucket = resultsList.get(0).getBucket();
-		
-		List<QueueItem> currentBucket = new ArrayList<QueueItem>();
-		
-		for(int i = 0; i < resultsList.size(); i++) {
-			if (resultsList.get(i).getBucket() == firstBucket) {
-				currentBucket.add(resultsList.get(i));
-			} else {
-				firstBucket = resultsList.get(i).getBucket();
-				bucketList.add(currentBucket);
-				currentBucket = new ArrayList<QueueItem>();
-				currentBucket.add(resultsList.get(i));
-			}
-		}
-		
-		if (!currentBucket.isEmpty()) 
-			bucketList.add(currentBucket);
-		
-		return bucketList;
+		return resultsList;
 	}
 	
 	@Transactional
 	public void finishedPlaying(QueueItem qi) {
 		log.debug("Setting {} as finished playing",qi.getFile().getUniqueId());
-		qi.setStatus(PlayerState.PLAYED);
+		qi.setStatus(PLAYED);
 		em.merge(qi);
 	}
 	
 	@Transactional
 	public void startedPlaying(QueueItem qi) {
 		log.debug("Setting {} as playing",qi.getFile().getUniqueId());
-		qi.setStatus(PlayerState.PLAYING);
+		qi.setStatus(PLAYING);
 		em.merge(qi);
 	}
 	
@@ -141,8 +120,7 @@ public class QueueItemDao {
 				)
 			);
 		
-		List<QueueItem> results = new ArrayList<QueueItem>();
-		results.addAll(em.createQuery(cq).getResultList());
+		List<QueueItem> results = new ArrayList<QueueItem>(em.createQuery(cq).getResultList());
 		
 		if (results.size() < 2)	{
 			log.debug("Only returned {} results",results.size());
@@ -167,13 +145,13 @@ public class QueueItemDao {
 	@Transactional
 	public void shiftUp(String user, int bucket) {
 		log.debug("Starting upshift on {}, {}",user,bucket);
-		this.shift(user, bucket, -1);
+		shift(user, bucket, -1);
 	}
 	
 	@Transactional
 	public void shiftDown(String user, int bucket) {
 		log.debug("Starting downshift on {}, {}",user,bucket);
-		this.shift(user, bucket, 1);
+		shift(user, bucket, 1);
 	}
 
 	@Transactional

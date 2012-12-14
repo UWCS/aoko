@@ -44,12 +44,12 @@ public class FileMetadataTagger {
 				continue;
 			}	
 				
-			log.debug("Found {}: {}",key.name(),tagValue);
-
-			if (null == tagValue || tagValue == "" || tagValue.length() > 255) {
+			if (null == tagValue || tagValue.equals("") || tagValue.length() > 255) {
 				continue;
 			}
 
+			log.debug("Found {}: {}",key.name(),tagValue);
+			
 			metadata.put(key.name().toLowerCase(), tagValue);
 			 
 		}

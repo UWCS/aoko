@@ -1,10 +1,12 @@
 package uk.co.probablyfine.aoko.service;
 
 import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Multimaps.index;
 import static java.util.Collections.min;
 import static uk.co.probablyfine.aoko.domain.PlayerState.PLAYED;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,21 +23,41 @@ import uk.co.probablyfine.aoko.domain.QueueItem;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 
 @Component
 public class QueueService {
 
+	private final Function<QueueItem, Integer> INDEX_BY_BUCKET = new Function<QueueItem, Integer>() {
+		public Integer apply(QueueItem arg0) {
+			return arg0.getBucket();
+		}
+	};
+
+	private final Predicate<QueueItem> UNPLAYED = new Predicate<QueueItem>() {
+		public boolean apply(QueueItem input) { return input.getStatus() != PLAYED; }
+	};
+	
+	private final Function<QueueItem, Integer> QUEUE_ITEM_TO_BUCKET = new Function<QueueItem, Integer>() {
+		public Integer apply(QueueItem input) {	return input.getBucket(); }
+	};
+	
 	@Autowired private QueueItemDao queue;
 	
 	private Logger log = LoggerFactory.getLogger(QueueService.class);
 	
-	private Predicate<QueueItem> UNPLAYED = new Predicate<QueueItem>() {
-		public boolean apply(QueueItem input) { return input.getStatus() != PLAYED; }
-	};
-	
-	private Function<QueueItem, Integer> QUEUE_ITEM_TO_BUCKET = new Function<QueueItem, Integer>() {
-		public Integer apply(QueueItem input) {	return input.getBucket(); }
-	};
+	public Collection<Collection<QueueItem>> getQueueLayout() {
+		
+		List<QueueItem> resultsList = queue.getAllUnplayed();
+		
+		if (resultsList.size() == 0)
+			return new ArrayList<Collection<QueueItem>>();
+		
+		Collections.sort(resultsList);
+		
+		return index(resultsList, INDEX_BY_BUCKET).asMap().values();
+	}
 	
 	public void queueTrack(final Account user, final MusicFile track) {
 		

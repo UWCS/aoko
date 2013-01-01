@@ -1,5 +1,7 @@
 package uk.co.probablyfine.aoko.dao;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.util.Collection;
 
 import javax.persistence.EntityManager;
@@ -23,8 +25,7 @@ public class AccountDao {
 
 	private final Logger log = LoggerFactory.getLogger(AccountDao.class);
 	
-	@PersistenceContext
-	EntityManager em;
+	@PersistenceContext EntityManager em;
 	
 	@Transactional(readOnly = true)
 	public Account getFromUsername(String username) {
@@ -36,17 +37,15 @@ public class AccountDao {
 		
 		cq.where(cb.equal(root.get(Account_.username), username));
 		
+		Account a = null;
 		try {
-			Account a = em.createQuery(cq).setMaxResults(1).getSingleResult();
+			a = em.createQuery(cq).setMaxResults(1).getSingleResult();
 			log.debug("returning value - {}",a.getUsername());
-			return a;
-			
 		} catch(Exception e) {
 			log.error("Exception",e);
-			log.error("returning null");
-			return null;
 		}
-		
+
+		return a;
 	}
 	
 	@Transactional
@@ -71,14 +70,15 @@ public class AccountDao {
 		
 		cq.where(cb.equal(root.get(Account_.role), "ROLE_ADMIN"));
 		
+		Collection<Account> admins = newArrayList();
+		
 		try {
-			Collection<Account> a = em.createQuery(cq).getResultList();
-			log.debug("returning admins - {}",a);
-			return a;
+			admins = em.createQuery(cq).getResultList();
+			log.debug("returning admins - {}",admins);
 		} catch(Exception e) {
-			log.error("Exception",e);
-			return Lists.newArrayList();
+			log.error("Exception query database for admins",e);
 		}
 		
+		return admins;
 	}
 }

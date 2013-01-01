@@ -23,8 +23,6 @@ import uk.co.probablyfine.aoko.domain.QueueItem;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 
 @Component
 public class QueueService {
@@ -62,13 +60,10 @@ public class QueueService {
 	public void queueTrack(final Account user, final MusicFile track) {
 		
 		List<QueueItem> results = new ArrayList<QueueItem>(queue.getAll());
-		
 		log.debug("Queueing track from {}",user.getUsername());
-		
 		final List<QueueItem> process = new ArrayList<QueueItem>(filter(results, UNPLAYED));
 		
 		Collections.sort(process);
-		
 		Collections.sort(results);
 		
 		final int finalBucket, position;

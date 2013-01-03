@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
-
 import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.Account_;
 
@@ -80,5 +78,12 @@ public class AccountDao {
 		}
 		
 		return admins;
+	}
+
+	@Transactional
+	public void removeAdmin(String username) {
+		final Account account = getFromUsername(username);
+		account.setRole("ROLE_USER");
+		em.merge(account);
 	}
 }

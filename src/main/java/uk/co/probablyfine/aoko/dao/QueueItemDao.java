@@ -24,9 +24,6 @@ import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.PlayerState;
 import uk.co.probablyfine.aoko.domain.QueueItem;
 import uk.co.probablyfine.aoko.domain.QueueItem_;
-
-import com.google.common.base.Function;
-
 @Repository
 public class QueueItemDao {
 	
@@ -37,8 +34,7 @@ public class QueueItemDao {
 	public Collection<QueueItem> getAll(){
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
-		Root<QueueItem> root = cq.from(QueueItem.class);
-		
+		cq.from(QueueItem.class);
 		return em.createQuery(cq).getResultList();
 	}
 	

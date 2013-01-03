@@ -47,6 +47,7 @@ public class MusicFileDao {
 		return em.createQuery(cq).getSingleResult();
 	}
 
+	@Transactional(readOnly = true)
 	public List<MusicFile> getAll() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<MusicFile> cq = cb.createQuery(MusicFile.class);

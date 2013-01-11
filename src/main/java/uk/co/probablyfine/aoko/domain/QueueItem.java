@@ -77,7 +77,16 @@ public class QueueItem implements Comparable<QueueItem>{
 	public void setFile(MusicFile file) {
 		this.musicFile = file;
 	}
-
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof QueueItem)) {
+			return false;
+		}
+		QueueItem item = (QueueItem) other;
+		return this.bucket == item.bucket & this.position == item.position;
+	}
+	
 	@Override
 	public int compareTo(QueueItem arg0) {
 		if (arg0.getBucket() < this.getBucket()) {
@@ -91,7 +100,6 @@ public class QueueItem implements Comparable<QueueItem>{
 		} else {
 			return 0;
 		}
-		
 	}
 
 	public void setStatus(PlayerState state) {
@@ -103,7 +111,7 @@ public class QueueItem implements Comparable<QueueItem>{
 	}
 	
 	public String toString() {
-		return musicFile.toString();		
+		return this.userName + "--" + musicFile.toString();		
 	}
 	
 }

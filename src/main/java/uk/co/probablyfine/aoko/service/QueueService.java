@@ -28,17 +28,11 @@ import com.google.common.collect.Collections2;
 public class QueueService {
 
 	private final Function<QueueItem, Integer> INDEX_BY_BUCKET = new Function<QueueItem, Integer>() {
-		public Integer apply(QueueItem arg0) {
-			return arg0.getBucket();
-		}
+		public Integer apply(QueueItem input) { return input.getBucket(); }
 	};
 
 	private final Predicate<QueueItem> UNPLAYED = new Predicate<QueueItem>() {
 		public boolean apply(QueueItem input) { return input.getStatus() != PLAYED; }
-	};
-	
-	private final Function<QueueItem, Integer> QUEUE_ITEM_TO_BUCKET = new Function<QueueItem, Integer>() {
-		public Integer apply(QueueItem input) {	return input.getBucket(); }
 	};
 	
 	@Autowired private QueueItemDao queue;
@@ -91,7 +85,7 @@ public class QueueService {
 			
 			List<Integer> buckets = new ArrayList<Integer>();
 			
-			buckets.addAll(Collections2.transform(bucketItems, QUEUE_ITEM_TO_BUCKET));
+			buckets.addAll(Collections2.transform(bucketItems, INDEX_BY_BUCKET));
 			
 			log.debug("User has queued in upcoming buckets, in order - {}",buckets);
 

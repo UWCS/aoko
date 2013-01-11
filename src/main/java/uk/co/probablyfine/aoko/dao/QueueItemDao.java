@@ -24,6 +24,7 @@ import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.PlayerState;
 import uk.co.probablyfine.aoko.domain.QueueItem;
 import uk.co.probablyfine.aoko.domain.QueueItem_;
+
 @Repository
 public class QueueItemDao {
 	
@@ -172,7 +173,6 @@ public class QueueItemDao {
 		} catch (Exception e) {
 			log.debug("Returning null");
 			log.debug("Exception",e);
-			return qi;
 		}
 		
 		log.debug("Returning {}",qi);
@@ -186,13 +186,16 @@ public class QueueItemDao {
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		
-		cq.where(cb.notEqual(root.get(QueueItem_.id), trackId));
+		cq.where(cb.equal(root.get(QueueItem_.id), trackId));
 		QueueItem qi = null;
+		
 		try {
 			 qi = em.createQuery(cq).setMaxResults(1).getSingleResult();
 		} catch (Exception e) {
-			return qi;
+			log.error("Could not get queue item from id: {}",qi);
 		}
+		
+		log.debug("{}",qi);
 		
 		return qi; 
 	}

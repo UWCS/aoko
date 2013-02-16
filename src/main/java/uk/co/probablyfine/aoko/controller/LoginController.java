@@ -15,11 +15,8 @@ import uk.co.probablyfine.aoko.domain.Account;
 @RequestMapping("/login/")
 public class LoginController {
 
-	@Autowired
-	AccountDao users;
-	
-	@Autowired
-	PasswordEncoder pass;
+	@Autowired private AccountDao users;
+	@Autowired private PasswordEncoder pass;
 	
 	@RequestMapping("/")
 	public String home() {
@@ -31,7 +28,7 @@ public class LoginController {
 		return "register";
 	}
 	
-	@RequestMapping(value = "register",method = RequestMethod.POST)
+	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public String processNewUser(@RequestParam String j_username, @RequestParam String j_password, Model m) {
 		
 		if (j_username.length() == 0) {

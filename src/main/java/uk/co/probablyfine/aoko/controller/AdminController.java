@@ -18,11 +18,9 @@ import uk.co.probablyfine.aoko.player.MusicPlayer;
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
 
-	@Autowired
-	private AccountDao accounts;
+	@Autowired private AccountDao accounts;
 	
-	@Autowired
-	private MusicPlayer player;
+	@Autowired private MusicPlayer player;
 
 	private final Logger log = LoggerFactory.getLogger(AdminController.class);
 

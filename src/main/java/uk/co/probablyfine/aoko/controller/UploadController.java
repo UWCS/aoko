@@ -25,11 +25,8 @@ public class UploadController {
 	
 	private final Logger log = LoggerFactory.getLogger(UploadController.class);
 	
-	@Autowired
-	FileUploadHandler fuh;
-	
-	@Autowired
-	YoutubeDao ytDao;
+	@Autowired private FileUploadHandler handler;
+	@Autowired private YoutubeDao videos;
 	
 	@RequestMapping(value = "upload", method = RequestMethod.POST)
 	public String fileUpload(@ModelAttribute(value="FORM") FileUpload form,BindingResult result, Principal p) {
@@ -37,7 +34,7 @@ public class UploadController {
 		 if (null != p) {
 			 try {
 				 log.debug("Processing upload of {} from {}",form.getFile().getName(), p.getName());
-				 fuh.processFile(form.getFile(), p.getName());
+				 handler.processFile(form.getFile(), p.getName());
 			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -55,7 +52,7 @@ public class UploadController {
 			System.out.println(url);
 			YoutubeDownload yd = new YoutubeDownload(url);
 			yd.setQueuedBy(p.getName());
-			ytDao.queueDownload(yd);
+			videos.queueDownload(yd);
 		} else {
 			//return error?
 		}

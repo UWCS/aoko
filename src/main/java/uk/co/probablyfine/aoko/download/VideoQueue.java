@@ -24,12 +24,12 @@ import org.springframework.stereotype.Service;
 
 import uk.co.probablyfine.aoko.dao.AccountDao;
 import uk.co.probablyfine.aoko.dao.MusicFileDao;
-import uk.co.probablyfine.aoko.dao.QueueItemDao;
 import uk.co.probablyfine.aoko.dao.YoutubeDao;
 import uk.co.probablyfine.aoko.domain.Account;
 import uk.co.probablyfine.aoko.domain.FileType;
 import uk.co.probablyfine.aoko.domain.MusicFile;
 import uk.co.probablyfine.aoko.domain.YoutubeDownload;
+import uk.co.probablyfine.aoko.service.QueueService;
 
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
@@ -39,38 +39,19 @@ public class VideoQueue {
 
 	private final Logger log = LoggerFactory.getLogger(VideoQueue.class);
 	
-	@Value("${script.youtubedl}")
-	String scriptPath;
-	
-	@Value("${script.dltimeout}")
-	int timeout;
-	
-	@Value("${media.repository}")
-	String mediaPath;
-	
-	@Value("${media.art}")
-	String artPath;
-	
-	@Autowired
-	YoutubeDao videos;
-	
-	@Autowired
-	MusicFileDao musicFiles;
-	
-	@Autowired
-	QueueItemDao queue;
-	
-	@Autowired
-	AccountDao users;
-	
-	@Autowired
-	ApiExtractor api;
+	@Autowired private YoutubeDao videos;
+	@Autowired private MusicFileDao musicFiles;
+	@Autowired private AccountDao users;
+	@Autowired private QueueService queue;
+	@Autowired private ApiExtractor api;
+	@Autowired private ArtDownloader artDownloader;
+
+	@Value("${script.youtubedl}") String scriptPath;
+	@Value("${script.dltimeout}") int timeout;
+	@Value("${media.repository}") String mediaPath;
+	@Value("${media.art}") String artPath;
 	
 	private Process downloaderProcess;
-
-	@Autowired
-	protected ArtDownloader artDownloader;
-	
 	private ExecutorService executor;
 	
 	@PostConstruct

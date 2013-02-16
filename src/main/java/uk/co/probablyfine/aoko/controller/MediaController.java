@@ -10,12 +10,11 @@ import uk.co.probablyfine.aoko.dao.MusicFileDao;
 @Controller
 public class MediaController {
 
-	@Autowired
-	MusicFileDao dao;
+	@Autowired private MusicFileDao musicFiles;
 	
 	@RequestMapping("/media/")
 	public String getAllQueuedTracks(Model m) {
-		m.addAttribute("tracks", dao.getAll());
+		m.addAttribute("tracks", musicFiles.getAll());
 		return "media";
 		
 	}

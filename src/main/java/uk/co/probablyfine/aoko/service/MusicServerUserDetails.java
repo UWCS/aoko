@@ -13,8 +13,7 @@ import uk.co.probablyfine.aoko.dao.AccountDao;
 @Service
 public class MusicServerUserDetails implements UserDetailsService {
 
-	@Autowired
-	AccountDao users;
+	@Autowired private AccountDao users;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

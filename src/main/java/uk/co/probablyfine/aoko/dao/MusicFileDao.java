@@ -28,7 +28,7 @@ public class MusicFileDao {
 		cq.where(cb.equal(root.get(MusicFile_.uniqueId),hexVal));
 		
 		try {
-			MusicFile mf = em.createQuery(cq).getSingleResult();
+			em.createQuery(cq).getSingleResult();
 		} catch (Exception e) {
 			return false;
 		}
@@ -37,6 +37,11 @@ public class MusicFileDao {
 		
 	}
 
+	@Transactional
+	public void persist(MusicFile file) {
+		em.merge(file);
+	}
+	
 	@Transactional(readOnly = true)
 	public MusicFile getFromUniqueId(String hexVal) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -47,6 +52,7 @@ public class MusicFileDao {
 		return em.createQuery(cq).getSingleResult();
 	}
 
+	@Transactional(readOnly = true)
 	public List<MusicFile> getAll() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<MusicFile> cq = cb.createQuery(MusicFile.class);

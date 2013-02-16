@@ -33,6 +33,7 @@ public class FileUploadHandlerTest {
 	@Mock private MultipartFile mockMultipartFile;
 	@Mock private FileUtils mockUtils;
 	@Mock private FileMetadataTagger mockTagger;
+	@Mock private MusicFile mockMusicfile;
 	
 	@Test public void shouldQueueOriginalFile_whenFileExistsInDatabase() throws IOException, NoSuchAlgorithmException {
 		File mockFile = mock(File.class);
@@ -41,6 +42,7 @@ public class FileUploadHandlerTest {
 		when(mockUtils.downloadToTemporaryFile(mockMultipartFile)).thenReturn(mockFile);
 		when(mockUtils.getHashFromFile(mockFile)).thenReturn(hexVal);
 		when(mockMusic.containsFile(hexVal)).thenReturn(true);
+		when(mockMusic.getFromUniqueId(hexVal)).thenReturn(mockMusicfile);
 		
 		handler.processFile(mockMultipartFile, "testuser");
 		

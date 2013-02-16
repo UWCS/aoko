@@ -48,19 +48,26 @@ public class FileUploadHandler {
 			musicFile = getAudioTagsAndArt(download, hash, file.getOriginalFilename());
 		}
 		
-		queue.queueTrack(accounts.getFromUsername(username), musicFile);
+		if (musicFile != null) {
+			queue.queueTrack(accounts.getFromUsername(username), musicFile);
+		}
 		
 		download.delete();
 	}
 			
 	public MusicFile getAudioTagsAndArt(File download, String hash, String originalName) throws IOException {
 			
-		String extension = originalName.substring(originalName.lastIndexOf("."));
+		int extensionStart = originalName.lastIndexOf(".");
+		
+		if (extensionStart == -1) return null;
+		
+		String extension = originalName.substring(extensionStart);
 		String newFileName = hash+extension;
 		
 		log.debug("Moving file to {}",downloadPath+newFileName);
 			
 		File newFile = utils.moveFile(download, downloadPath+newFileName);
+		
 		MusicFile mf = new MusicFile();
 		
 		Map<String,String> metadata = tagger.getMetaData(newFile);

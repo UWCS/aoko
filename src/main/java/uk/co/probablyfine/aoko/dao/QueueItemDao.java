@@ -211,7 +211,8 @@ public class QueueItemDao {
 	
 	@Transactional
 	public void deleteItem(QueueItem qi) {
-		em.remove(qi);
+        QueueItem toBeRemoved = getFromId(qi.getId());
+		em.remove(toBeRemoved);
 	}
 
 	@Transactional(readOnly = true)

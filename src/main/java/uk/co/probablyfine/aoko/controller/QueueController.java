@@ -42,21 +42,14 @@ public class QueueController {
 		return "redirect:/";
 		
 	}
-	
-	@RequestMapping("delete/{id}")
-	public String deleteSong(@PathVariable("id") int bucketId, Principal p) {
-		
-		if (null == p) {
-			log.debug("User not logged in, redirecting to home");
-			return "redirect:/";
-		}
-				
-		queue.deleteItem(bucketId,p.getName());
-		
-		log.debug("Returning user to homepage");
-		
-		return "redirect:/";
-		
-	}
+
+    @RequestMapping("/delete/{queueItemID}")
+    public String deleteSong(@PathVariable("queueItemID") int id, Principal p) {
+        if (p == null) return "redirect:/";
+
+        queue.deleteItem(queue.getFromId(id));
+
+        return "redirect:/";
+    }
 	
 }

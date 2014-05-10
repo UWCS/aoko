@@ -60,12 +60,12 @@
 								<c:if test='${qi.status != "PLAYING"}'>
 								<sec:authorize access="!hasRole('ROLE_ADMIN')">	
 									<c:if test="${qi.userName == username}">
-										<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
+										<a href="<c:url value="/a/delete/${qi.id}"/>">Del</a>
 									</c:if>
 								</sec:authorize>
 								
 								<sec:authorize access="hasRole('ROLE_ADMIN')">
-									<a href="<c:url value="/a/delete/${qi.bucket}"/>">Del</a>
+									<a href="<c:url value="/a/delete/${qi.id}"/>">Del</a>
 								</sec:authorize>
 								</c:if>
 							

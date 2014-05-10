@@ -200,14 +200,14 @@ public class QueueItemDao {
 		return qi; 
 	}
 
-	@Transactional
-	public void deleteItem(int bucket, String user) {
-		log.debug("Deleting from {} by {}",bucket,user);
-		QueueItem qi = getFromBucketAndUser(bucket, user);
-		log.debug("Deleting {}",qi);
-		log.debug("Deleting id {}",qi.getId());
-		em.remove(qi);
-	}
+//	@Transactional
+//	public void deleteItem(int bucket, String user) {
+//		log.debug("Deleting from {} by {}",bucket,user);
+//		QueueItem qi = getFromBucketAndUser(bucket, user);
+//		log.debug("Deleting {}",qi);
+//		log.debug("Deleting id {}",qi.getId());
+//		em.remove(qi);
+//	}
 	
 	@Transactional
 	public void deleteItem(QueueItem qi) {

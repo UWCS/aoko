@@ -1,6 +1,7 @@
 .classpath
 .project
 .settings/
+.idea/
 target/
 musicserver.properties
 derby.log

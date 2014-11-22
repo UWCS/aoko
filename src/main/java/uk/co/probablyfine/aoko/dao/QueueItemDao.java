@@ -45,7 +45,8 @@ public class QueueItemDao {
 		CriteriaQuery<QueueItem> cq = cb.createQuery(QueueItem.class);
 		Root<QueueItem> root = cq.from(QueueItem.class);
 		cq.where(cb.notEqual(root.get(QueueItem_.status), PlayerState.PLAYED));
-		cq.orderBy(cb.asc(root.get(QueueItem_.bucket)));
+		cq.orderBy(cb.asc(root.get(QueueItem_.bucket)),
+                cb.asc(root.get(QueueItem_.position)));
 		
 		QueueItem qi = null;
 		

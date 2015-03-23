@@ -3,6 +3,8 @@ package uk.co.probablyfine.aoko.download;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -32,9 +34,9 @@ public class ArtDownloader {
 	}
 	
 	public void getYoutubeArt(String youtubeId) throws IOException {
-		final String url = "http://img.youtube.com/vi/"+youtubeId+"/1.jpg";
+		final String url = "http://img.youtube.com/vi/"+youtubeId+"/default.jpg";
 		final String path = new File(downloadPath,youtubeId+".jpg").getAbsolutePath();
-		downloadFile(path, url);
+		downloadFile(url, path);//flipped the order of the arguments from (path, url) to (url, path)
 	}
 	
 	public void getAlbumArt(Map<String,String> args, String filename) throws ParserConfigurationException, MalformedURLException, SAXException, IOException {
@@ -57,11 +59,36 @@ public class ArtDownloader {
 	
 	public void downloadFile(String url, String downloadLocation) throws IOException {
 		log.debug("Downloading art from {} to {}", url, downloadLocation);
+		
+		try {
+			URL imageUrl = new URL(url);
+			InputStream is = imageUrl.openStream();
+			OutputStream os = new FileOutputStream(downloadLocation);
+			
+			byte[] b = new byte[2048];
+			int length;
+			
+			while ((length = is.read(b)) != -1) {
+				os.write(b, 0, length);
+			}
+			
+			is.close();
+			os.close();
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		/*
 		URL imageRequest = new URL(url);
 		ReadableByteChannel rbc = Channels.newChannel(imageRequest.openStream());
 		FileOutputStream fos = new FileOutputStream(downloadLocation);
 		fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 		fos.close();
+		*/
+		
+		
 	}
 	
 }
